@@ -1,0 +1,62 @@
+.Timer {
+    width: 100%;
+    margin-top: 50px;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+h1 {
+    color: rgb(35, 156, 204)
+}
+
+.minutes-seconds{
+    background-color: rgb(35, 156, 204);
+    color: white;
+    font-size: 70pt;
+    width: 300pt;
+    height: 100pt;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 150px;
+}
+
+.bi-play-circle-fill {
+    color: rgb(35, 156, 204)
+}
+
+.bi-pause-circle-fill {
+    color: rgb(35, 156, 204)
+}
+
+.bi-stop-circle-fill{
+    color: rgb(35, 156, 204)
+}
+
+.bi-plus-circle-fill{
+    color: rgb(27, 123, 161)
+}
+
+.icona {
+  font-size: 4em;
+  color: #1466c4;
+  margin-left: 10pt;
+  margin-right: 10pt;
+}
+
+.buttons {
+    width: 400pt;
+    margin: 0 auto; 
+}
+
+.timer-buttons {
+    width: 300pt;
+    float:left;
+    padding-left: 80pt;
+}
+
+.add-buttons {
+    width: 80pt;
+    float:right
+}
