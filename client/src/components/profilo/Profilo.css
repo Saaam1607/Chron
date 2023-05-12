@@ -1,0 +1,21 @@
+.bottoni{
+    margin-top: 20pt;
+    margin-left: 10pt;
+}
+
+.auth-button {
+    border: 1px solid green;
+    background-color: rgb(35, 156, 204);
+    color: white;
+    font-size: 20pt;
+    width: 150pt;
+    height: 35pt;
+    border: 0;
+    border-radius: 15pt;
+    margin: 10pt;
+    
+}
+
+.auth-button:hover {
+    background-color: rgb(27, 123, 161);
+}

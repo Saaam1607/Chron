@@ -11,7 +11,7 @@ export default function Sidebar(){
     return(
         <div className="sidebar">
             <Logo/>
-            <SidebarItem title="HOME" icon="bi bi-house"></SidebarItem>
+            <SidebarItem title="HOME" icon="bi bi-house"/>
             <SidebarItem title="GRUPPI" icon="bi bi-microsoft-teams"/>
             <SidebarItem title="TO-DO" icon="bi bi-clipboard-check"/>
             <SidebarItem title="TIMER" icon="bi bi-clock"/>

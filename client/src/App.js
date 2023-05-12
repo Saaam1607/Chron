@@ -10,6 +10,7 @@ import Logo from "./components/navigation/Logo"
 // pages components
 import Home from "./components/home/Home"
 import Timer from "./components/timer/Timer"
+import Profilo from "./components/profilo/Profilo"
 
 // routing elements
 import {
@@ -69,6 +70,7 @@ function App() {
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/timer" element={<Timer />} />
+        <Route path="/profilo" element={<Profilo />} />
       </Routes>
     </div>
     </Router>
