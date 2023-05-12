@@ -1,7 +1,9 @@
+let prova = 0.05;
+
 class Settings {
-    durataPomodoro = 25;
-    durataPausaCorta = 5;
-    durataPausaLunga = 15;
+    durataPomodoro = prova;
+    durataPausaCorta = prova;
+    durataPausaLunga = prova;
     pomodoriPerSessione = 4;
 }
 

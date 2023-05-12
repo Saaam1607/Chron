@@ -4,15 +4,21 @@ import './Timer.css';
 export default function Timer(){
 
     const [time, setTime] = useState(1);
-    const [timerState, setTimerState] = useState(false);
+    const [timerState, setTimerState] = useState("stopped");
+    const [fase, setFase] = useState(0);
     const [message, setMessage] = useState("");
   
     const readTimerData = async () =>{
       await fetch("api/v1/timer/stato", {method: 'GET'})
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        //console.log(data)
+
+        // setting up timer
         setTime(data.durata * 60)
+        setFase(data.fase)
+
+        // setting up message
         switch (data.fase) {
           case 0:
             setMessage("TIME TO GET FOCUSED!")
@@ -30,52 +36,48 @@ export default function Timer(){
     }
 
     const fetchData = async () =>{
-      await fetch("api/v1/timer/end", {method: 'PUT'})
+      await fetch(`api/v1/timer/end?time=${time}&fase=${fase}&stato=${timerState}`, {method: 'PUT'})
     }
+
+    // at the beginning the data is read and setted up
+      useEffect(() => {
+      readTimerData()
+    },[])
+
+    // quando il timer viene fermato (o dall'utente o perchè è finito)
+    useEffect(() => {
+      if ((timerState == "stoppato")){
+        fetchData()                    // aggiorna la fase (fase <- fase-successiva)
+        readTimerData()                // aggiorna il timer (durata, fase, messaggio)
+      }
+    },[timerState])
 
     useEffect(() => {
       let interval = null;
+
       // timer avviato
-      if (timerState) {
+      if (timerState == "avviato") {
         interval = setInterval(() => {
           setTime((prevTime) => prevTime - 1)
         }, 1000);
+
       // timer fermo
-      } else if (!timerState) {
+      } else if (timerState != "avviato") {
         clearInterval(interval);
       }
       if (time <= 0){
-        //console.log('timer finito')
-        setTimerState(false)
+        setTimerState("stoppato")
       }
   
       return () => clearInterval(interval);
     }, [timerState, time]);
 
-    useEffect(() => {
-      readTimerData()
-      console.log("time")
-    },[])
-
-    useEffect(() => {
-      if (!timerState && time <= 0){
-        console.log(time)
-        fetchData()
-        readTimerData()
-      }
-      
-    },[timerState])
-
     let minuti = (time - (time % 60)) / 60;
     let secondi = time - minuti * 60;
 
-
-
-    // disabled={ user.role === 'Student' ? true : false }
-  
     return (
       <div className="Timer">
-        <h1 style={message == "TIME TO GET FOCUSED!" ? {color: "rgb(35, 156, 204)"} :  {color: "green"}}>{message}</h1>
+        <h1 style={fase == 0 ? {color: "rgb(35, 156, 204)"} : {color: "green"}}>{message}</h1>
         <div className="minutes-seconds">
           <span>{minuti < 10 ? "0" + minuti: minuti}:</span>
           <span>{secondi < 10 ? "0" + secondi: secondi}</span>
@@ -83,22 +85,26 @@ export default function Timer(){
   
         <div className="buttons">
           <div className='timer-buttons'>
-            {!timerState &&
-              <span className="icona"onClick={() => setTimerState(true)}>
+
+            {/* PLAY */}
+            {(timerState != "avviato") &&
+              <span className="icona"onClick={() => setTimerState("avviato")}>
                 <i className="bi bi-play-circle-fill" title="START"></i>
               </span>
-              }
-            {timerState &&
-              <span className="icona" onClick={() => setTimerState(false)}>
+            }
+
+            {/* PAUSE */}
+            {(timerState == "avviato") &&
+              <span className="icona" onClick={() => setTimerState("sospeso")}>
                 <i className="bi bi-pause-circle-fill" title="SUSPEND"></i>
               </span>
             }
-            <span className="icona" onClick={() => {
-              setTimerState(false)
-              setTime(25 * 60)
-            }}>
+
+            {/* STOP */}
+            <span className="icona" onClick={() => setTimerState("stoppato")}>
               <i className="bi bi-stop-circle-fill" title="STOP"></i>
             </span>
+
           </div>
           <div className='add-buttons'>
             <span className="icona">

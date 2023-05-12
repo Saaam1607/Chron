@@ -28,7 +28,7 @@ class Timer {
     constructor() {
         this.fase = Fase.Pomodoro;
         this.streak = 0;
-        this.durata = 25;
+        this.durata = impostazioni.durataPomodoro;
     }
     stampa(){
         console.log(`Fase: ${this.fase}, Streak: ${this.streak}, Durata: ${this.durata}`)
@@ -71,8 +71,9 @@ router.get("/stato", (req, res) => {
 })
 
 router.put("/end", (req, res) => {
-    timer.aggiorna();
-    timer.stampa();
+    if (req.query.time <= 0 || (((req.query.fase == 1) || req.query.fase == 2) && req.query.stato == "stoppato")){
+        timer.aggiorna();
+    }
     res.json({fase: timer.fase, durata: timer.durata})
 })
 
