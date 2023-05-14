@@ -1,33 +1,31 @@
 import { useFormik } from 'formik';
 import { basicSchema  } from './schemas';
 
-export default function Login({setAuthenticated}){
+export default function Registrazione({setAuthenticated}){
 
     const onSubmit = (values, actions) => {
         actions.resetForm();
-        fetch('api/v1/profilo/login', {
+        fetch('api/v1/profilo/registrazione', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({email: values.email, password: values.password})
+            body: JSON.stringify({username: values.username, email: values.email, password: values.password})
         })
             .then(res => res.json())
             .then(data => {
                 if (data.success === "true") {
-                    setAuthenticated(true);
-                    console.log(data)
-                    console.log("setting to true")
+                    console.log("fine registrazione")
                 } else {
-                    setAuthenticated(false);
-                    console.log("setting to false")
+                    console.log("registrazoine fallita")
                 }
             })
     };
 
     const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
         initialValues: {
+            username: '',
             email: '',
             password: '',
         },
@@ -38,6 +36,21 @@ export default function Login({setAuthenticated}){
     return (
       <div className="login-div">
             <form onSubmit={handleSubmit} autoComplete='off'>
+            <div className='field-div'>
+                    <div className='input-div'>
+                        <label className='email-label' htmlFor="username">Username</label>
+                        <input
+                            value={values.username}
+                            type='username'
+                            id="username" 
+                            placeholder="username"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={errors.username && touched.username ? 'input-error' : ''}
+                        />
+                    </div>
+                    {errors.email && touched.email && <p className="error">{errors.email}</p>}
+                </div>
                 <div className='field-div'>
                     <div className='input-div'>
                         <label className='email-label' htmlFor="email">Email</label>

@@ -1,6 +1,7 @@
-const mongoose = require("../../config/db");
+mongoose = require("../../config/db");
 
 let Schema = new mongoose.Schema({
+    username: {type: String},
     email: {type: String},
     password: {type: String}
 });
@@ -8,36 +9,54 @@ let Schema = new mongoose.Schema({
 // NOTA: "user" è il nome della collection al singolare (quindi "users")
 let Credenziali = mongoose.model('user', Schema); 
 
-class GestoreDB {
-    static async login(email, password) {
 
-        Credenziali.countDocuments({email: email, password: password})
-        .then((result) => {
-            if (result) {
-                console.log("Entry exists");
-            } else {
-                console.log("Entry does not exist");
+class GestoreDB {
+
+    static registra(username, email, password) {
+        return new Promise((resolve, reject) => {
+            // controllo se l'utente esiste già
+            if (!this.login(email, password)) {
+                console.log("utente già esistente")
+                // l'utente esiste già
+            } else{
+                const user = new Credenziali({
+                    username: username,
+                    email: email,
+                    password: password
+                });
+                user.save({ username: username, email: email, password: password })
+                    .then((result) => {
+                        if (result) {
+                        resolve(true); // Resolve with true if the entry exists
+                        } else {
+                        resolve(false); // Resolve with false if the entry does not exist
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        reject(error); // Reject with the error if there was an error
+                    });
             }
-        })
-        .catch((error) => {
-            console.error(error);
         });
+    }
+
+    static login(email, password) {
+        return new Promise((resolve, reject) => {
+            Credenziali.countDocuments({ email: email, password: password })
+                .then((result) => {
+                    if (result) {
+                        resolve(true); // Resolve with true if the entry exists
+                    } else {
+                        resolve(false); // Resolve with false if the entry does not exist
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                    reject(error); // Reject with the error if there was an error
+                });
+          });
+        }
 
     }   
-}
 
 module.exports = GestoreDB;
-
-
-
-
-// mongoose.connect('mongodb://localhost:27017/eBookStore',{useNewUrlParser:true});
-
-// //Schema model
-// let newBookSchema = new mongoose.Schema({
-//   bookName: {type: String},
-//   bookSubtitle: {type: String},
-//   publicationDate: {type: Number, default: new Date().getTime()} // i will have used new Date() only for future data query based on date
-// });
-
-// let Book = mongoose.model('Book', newBookSchema); // Capital letter will be better for distinguish from a normal variable and to remember easly

@@ -20,6 +20,10 @@ body {
   height: 100vh;
 }
 
+h1 {
+  color: rgb(35, 156, 204)
+}
+
 .sidebar{
   width: 200px;
   flex-shrink: 0;
