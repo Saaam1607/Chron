@@ -1,7 +1,7 @@
 const express = require("express")
 const impostazioni = require("./../components/timer/timerSettings")
 const { Data, Tempo, Sessione } = require('../components/utils/utils');
-const { GestoreDB } = require('../components/gestoreDB/gestoreDB');
+const GestoreDB = require("../components/gestoreDB/gestoreDB")
 const router = express.Router()
 
 const Fase = Object.freeze({ 
