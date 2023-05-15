@@ -1,4 +1,5 @@
 mongoose = require("../../config/db");
+const SessioneModel = require("../../models/Sessione");
 
 let Schema = new mongoose.Schema({
     username: {type: String},
