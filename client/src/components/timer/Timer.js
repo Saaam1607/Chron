@@ -41,7 +41,7 @@ export default function Timer(){
     }
 
     const fetchData = async () =>{
-      await fetch(`api/v1/timer/end?time=${time}&fase=${fase}&stato=${timerState}`, {method: 'PUT'})
+      await fetch(`api/v1/timer/end?time=${time}&fase=${fase}&stato=${timerState}`, {method: 'PUT'}) 
     }
 
     // at the beginning the data is read and setted up
