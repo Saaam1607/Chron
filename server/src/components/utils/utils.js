@@ -28,10 +28,10 @@ class Tempo {
 }
 
 class Sessione {
-    constructor(data, tempo, idUtente) {
+    constructor(data, tempo, ID_utente) {
         this.data = data;
         this.tempo = tempo;
-        this.idUtente = idUtente;
+        this.ID_utente = ID_utente;
 }
 }
 

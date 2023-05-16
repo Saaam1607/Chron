@@ -58,32 +58,29 @@ class GestoreDB {
           });
     }
 
-    static salvaSessione(sessione, ID_utente) {
-        return new Promise(async (resolve, reject) => {
-            try {
-            const nuovaSessione = new SessioneModel({
-                ID_utente: ID_utente,
-                data: new Date(Date.UTC(sessione.data.anno, sessione.data.mese - 1, sessione.data.giorno)),
-                minuti: sessione.tempo.ore * 60 + sessione.tempo.minuti,
+    static salvaSessione(sessione) {
+        return new Promise((resolve, reject) => {
+            SessioneModel.findOne({
+                ID_utente: sessione.ID_utente,
+                data: new Date(Date.UTC(sessione.data.anno, sessione.data.mese - 1, sessione.data.giorno))
+            }).then(sessioneDB => {
+                if (sessioneDB) {
+                    sessioneDB.minuti += sessione.tempo.ore * 60 + sessione.tempo.minuti;
+                    return sessioneDB.save();
+                } else {
+                    const nuovaSessione = new SessioneModel({
+                        ID_utente: sessione.ID_utente,
+                        data: new Date(Date.UTC(sessione.data.anno, sessione.data.mese - 1, sessione.data.giorno)),
+                        minuti: sessione.tempo.ore * 60 + sessione.tempo.minuti,
+                    });
+                    return nuovaSessione.save();
+                }
+            }).then(() => {
+                resolve();
+            }).catch(error => {
+                console.error(error);
+                reject({ message: `Non è possibile effettuare il salvataggio della sessione. Messaggio errore: ${error}` });
             });
-        
-            await nuovaSessione.save();
-            resolve();
-            } catch (error) {
-            console.error(`Errore durante il salvataggio della sessione per l'utente ${ID_utente}: ${error}`);
-        
-            // Gestione degli errori specifici
-            if (error.name === 'ValidationError') {
-                // Validazione fallita
-                reject({ errorCode: 1001, message: 'Errore di validazione dei dati' });
-            } else if (error.name === 'MongoError' && error.code === 11000) {
-                // Chiave duplicata
-                reject({ errorCode: 1002, message: 'Duplicazione della chiave unica' });
-            } else {
-                // Altro errore generico
-                reject({ errorCode: 1000, message: 'Errore generico durante il salvataggio della sessione' });
-            }
-            }
         });
     }
 

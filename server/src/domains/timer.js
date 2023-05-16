@@ -79,19 +79,21 @@ router.put("/end", (req, res) => {
     res.json({fase: timer.fase, durata: timer.durata})
 })
 
-router.post('/salva-sessione', async (req, res) => {
-    const minuti = req.body.minuti; // Supponiamo che il parametro minuti sia inviato nel body della richiesta
-  
-    try {
-      const tempo = new Tempo();
-      tempo.aggiungiTempo(minuti);
-      const sessione = new Sessione(new Data(), tempo, 1);
-      await GestoreDB.salvaSessione(sessione, 1);
-      res.json({ success: true, message: 'Sessione salvata con successo.' });
-    } catch (error) {
-      console.error(`Errore durante il salvataggio della sessione: ${error.message}`);
-      res.status(500).json({ success: false, message: `Si è verificato un errore durante il salvataggio della sessione: ${error.message}` });
-    }
+router.put('/salva-sessione', (req, res) => {
+    const minuti = req.body.minuti;
+
+    const tempo = new Tempo();
+    tempo.aggiungiTempo(minuti);
+    const sessione = new Sessione(new Data(), tempo, 2);
+
+    GestoreDB.salvaSessione(sessione)
+        .then(() => {
+            res.status(201).json({ success: true, message: 'Sessione salvata con successo.' });
+        })
+        .catch(error => {
+            console.error(`Non è stato possibile salvare la sessione. ${error.message}`);
+            res.status(500).json({ success: false, message: error.message });
+        });
 });
 
 module.exports = router
