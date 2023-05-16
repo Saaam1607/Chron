@@ -13,12 +13,15 @@ const jwt = require("jsonwebtoken")
 router.post("/login", bodyParser.json(), (req, res) => {
     GestoreDB.login(req.body.email, req.body.password)
         .then((esito) => {
-            console.log(esito)
+            //console.log(esito)
             if (esito) {
-                return res.json({
-                    success: "true",
-                    token: jwt.sign({ emal: `${req.body.email}` }, process.env.ACCESS_TOKEN_SECRET),
-                  });
+                GestoreDB.getIDfromEmail(req.body.email)
+                    .then((esito) => {
+                        return res.json({
+                            success: "true",
+                            token: jwt.sign({ id: esito }, process.env.ACCESS_TOKEN_SECRET),
+                        });
+                    })
             } else{
                 res.json({success: "false"})
             }
@@ -47,5 +50,15 @@ router.post("/registrazione", bodyParser.json(), (req, res) => {
             res.json({success: "false"})
         });
 })
+
+router.get("/data", (req, res) => {
+    GestoreDB.getDataFromID(req.id)
+        .then((esito) => {
+            res.json(esito)
+        })
+})
+
+const Credenziali = require("../models/Schema");
+const mongoose = require('mongoose')
 
 module.exports = router

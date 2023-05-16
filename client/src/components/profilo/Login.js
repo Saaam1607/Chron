@@ -1,5 +1,6 @@
 import { useFormik } from 'formik';
 import { basicSchema  } from './schemas';
+const tokenManager = require('../tokenManager/cookieManager');
 
 export default function Login({setAuthenticated}){
 
@@ -19,6 +20,7 @@ export default function Login({setAuthenticated}){
                     setAuthenticated(true);
                     console.log(data)
                     console.log("setting to true")
+                    tokenManager.setAuthToken(data.token);
                 } else {
                     setAuthenticated(false);
                     console.log("setting to false")

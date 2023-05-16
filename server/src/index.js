@@ -1,4 +1,5 @@
 const server = require('./server')
+const db = require('./components/gestoreDB/gestoreDB')
 
 const port = process.env.PORT || 8000
 

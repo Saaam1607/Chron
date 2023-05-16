@@ -1,13 +1,6 @@
 mongoose = require("../../config/db");
 
-let Schema = new mongoose.Schema({
-    username: {type: String},
-    email: {type: String},
-    password: {type: String}
-});
-
-// NOTA: "user" è il nome della collection al singolare (quindi "users")
-let Credenziali = mongoose.model('user', Schema); 
+const Credenziali = require("../../models/Schema");
 
 
 class GestoreDB {
@@ -54,9 +47,38 @@ class GestoreDB {
                     console.error(error);
                     reject(error); // Reject with the error if there was an error
                 });
-          });
-        }
+        });
+    }
 
-    }   
+  
+
+    static getIDfromEmail(email) {
+        return new Promise((resolve, reject) => {
+            Credenziali.findOne({ email: email })
+                .then((result) => {
+                    if (result) {
+                        resolve(result._id); // Resolve with true if the entry exists
+                    } else {
+                        resolve(false); // Resolve with false if the entry does not exist
+                    }
+                })
+        });
+    }
+
+    static getDataFromID(id) {
+        return new Promise((resolve, reject) => {
+            Credenziali.findById(id)
+                .then((result) => {
+                    if (result) {
+                        resolve({success: true, username: result.username, email: result.email}); // Resolve with true if the entry exists
+                    } else {
+                        resolve({success: false}); // Resolve with false if the entry does not exist
+                    }
+                })
+        });
+    }
+
+}
+
 
 module.exports = GestoreDB;
