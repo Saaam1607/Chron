@@ -82,9 +82,14 @@ router.put("/end", (req, res) => {
 router.put('/salva-sessione', (req, res) => {
     const minuti = req.body.minuti;
 
+    // Validazione dell'input
+    if (!minuti || typeof minuti !== 'number') {
+        return res.status(400).json({ success: false, message: 'Parametro "minuti" mancante o non valido.' });
+    }
+
     const tempo = new Tempo();
     tempo.aggiungiTempo(minuti);
-    const sessione = new Sessione(new Data(), tempo, 2);
+    const sessione = new Sessione(new Data(), tempo, req.id);
 
     GestoreDB.salvaSessione(sessione)
         .then(() => {
