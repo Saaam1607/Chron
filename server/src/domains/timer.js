@@ -77,5 +77,4 @@ router.put("/end", (req, res) => {
     res.json({fase: timer.fase, durata: timer.durata})
 })
 
-
 module.exports = router

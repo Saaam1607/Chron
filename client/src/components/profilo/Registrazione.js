@@ -13,14 +13,20 @@ export default function Registrazione({setAuthenticated}){
             },
             body: JSON.stringify({username: values.username, email: values.email, password: values.password})
         })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success === "true") {
-                    console.log("fine registrazione")
-                } else {
-                    console.log("registrazoine fallita")
+            .then(response => {
+                if (response.ok) {
+                    return
+                } else if (response.status === 409) {
+                    throw new Error("Email già esistente");
+                } else if (response.status === 500){
+                    throw new Error("Errore durante la registrazione");
                 }
             })
+                .then(data => {
+                })
+                .catch(error => {
+                    alert(error.message);
+                })
     };
 
     const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
@@ -49,7 +55,7 @@ export default function Registrazione({setAuthenticated}){
                             className={errors.username && touched.username ? 'input-error' : ''}
                         />
                     </div>
-                    {errors.email && touched.email && <p className="error">{errors.email}</p>}
+                    {errors.username && touched.username && <p className="error">{errors.username}</p>}
                 </div>
                 <div className='field-div'>
                     <div className='input-div'>

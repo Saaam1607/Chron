@@ -4,6 +4,7 @@ import Login from "./Login"
 import Registrazione from './Registrazione';
 import DatiProfilo from "./DatiProfilo"
 import './Profilo.css';
+const tokenManager = require('../tokenManager/cookieManager');
 
 
 export default function Profilo(){
@@ -14,35 +15,50 @@ export default function Profilo(){
     const [registrazioneClicked, setRegistrazoneClicked] = useState(false);
 
     useEffect(() => {
+        // Cerco l'id. Se è presente leggo dal db, altrimenti bottoni di auth
+        fetch("api/v1/profilo/data", {
+            method: "GET",
+            headers: tokenManager.generateHeader()
+        })
+        .then(response => response.json())
+        .then(data => {
+            //console.log(data)
+            setAuthenticated(data.success)
+        }) 
+    }, [])
+
+    useEffect(() => {
         console.log(authenticated)
     }, [authenticated])
 
     return (
       <div className="Profilo">
         <h1>Profilo</h1>
-            <div className='auth-button-div'>
-                <button
-                    className="auth-button"
-                    onClick={() => {
-                        setLoginClicked(false);
-                        setRegistrazoneClicked(true);
-                    }}
-                >
-                    REGISTRATI
-                </button>
-            </div>
-            <div className='auth-button-div'>
-                <button
-                    className="auth-button"
-                    onClick={() => {
-                        setLoginClicked(true);
-                        setRegistrazoneClicked(false);
-                    }}
-                >
-                    LOGIN
-                </button>
-            </div>
-        <div>
+            {(!authenticated) ? <div>
+                <div className='auth-button-div'>
+                    <button
+                        className="auth-button"
+                        onClick={() => {
+                            setLoginClicked(false);
+                            setRegistrazoneClicked(true);
+                        }}
+                    >
+                        REGISTRATI
+                    </button>
+                </div>
+                <div className='auth-button-div'>
+                    <button
+                        className="auth-button"
+                        onClick={() => {
+                            setLoginClicked(true);
+                            setRegistrazoneClicked(false);
+                        }}
+                    >
+                        LOGIN
+                    </button>
+                </div>
+            </div> : <></> }
+        <div>  
             {(!authenticated && loginClicked) ? <Login setAuthenticated={setAuthenticated}/> : <></> }
             {(registrazioneClicked) ? <Registrazione setAuthenticated={setAuthenticated}/> : <></> }
             

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './Timer.css';
+const tokenManager = require('../tokenManager/cookieManager');
 
 export default function Timer(){
 
@@ -9,47 +10,51 @@ export default function Timer(){
     const [message, setMessage] = useState("");
   
     const readTimerData = async () =>{
-      await fetch("api/v1/timer/stato", {method: 'GET'})
-      .then(response => response.json())
-      .then(data => {
-        //console.log(data)
 
-        // setting up timer
-        setTime(data.durata * 60)
-        setFase(data.fase)
+        // fetching data
+        await fetch("api/v1/timer/stato", {
+            method: "GET",
+            headers: tokenManager.generateHeader()
+        })
+        .then(response => response.json())
+        .then(data => {
+            
+            // setting up timer
+            setTime(data.durata * 60)
+            setFase(data.fase)
 
-        // setting up message
-        switch (data.fase) {
-          case 0:
-            setMessage("TIME TO GET FOCUSED!")
-            break;
-          case 1:
-            setMessage("TIME TO TAKE A SHORT BREAK!")
-            break;
-          case 2:
-            setMessage("TIME TO TAKE A LONG BREAK!")
-            break;
-          default:
-            break;
-        }
-      })
+            // setting up message
+            switch (data.fase) {
+                case 0:
+                    setMessage("TIME TO GET FOCUSED!");
+                    break;
+                case 1:
+                    setMessage("TIME TO TAKE A SHORT BREAK!");
+                    break;
+                case 2:
+                    setMessage("TIME TO TAKE A LONG BREAK!");
+                    break;
+                    default:
+                    break;
+            }
+        })
     }
 
     const fetchData = async () =>{
-      await fetch(`api/v1/timer/end?time=${time}&fase=${fase}&stato=${timerState}`, {method: 'PUT'})
+      await fetch(`api/v1/timer/end?time=${time}&fase=${fase}&stato=${timerState}`, {method: 'PUT'}) 
     }
 
     // at the beginning the data is read and setted up
-      useEffect(() => {
-      readTimerData()
+    useEffect(() => {
+        readTimerData()
     },[])
 
     // quando il timer viene fermato (o dall'utente o perchè è finito)
     useEffect(() => {
-      if ((timerState == "stoppato")){
-        fetchData()                    // aggiorna la fase (fase <- fase-successiva)
-        readTimerData()                // aggiorna il timer (durata, fase, messaggio)
-      }
+        if ((timerState == "stoppato")){
+            fetchData()                    // aggiorna la fase (fase <- fase-successiva)
+            readTimerData()                // aggiorna il timer (durata, fase, messaggio)
+        }
     },[timerState])
 
     useEffect(() => {

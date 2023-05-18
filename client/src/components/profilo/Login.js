@@ -1,10 +1,11 @@
 import { useFormik } from 'formik';
 import { basicSchema  } from './schemas';
+const tokenManager = require('../tokenManager/cookieManager');
 
 export default function Login({setAuthenticated}){
 
     const onSubmit = (values, actions) => {
-        actions.resetForm();
+        //actions.resetForm();
         fetch('api/v1/profilo/login', {
             method: 'POST',
             headers: {
@@ -13,17 +14,23 @@ export default function Login({setAuthenticated}){
             },
             body: JSON.stringify({email: values.email, password: values.password})
         })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success === "true") {
-                    setAuthenticated(true);
-                    console.log(data)
-                    console.log("setting to true")
-                } else {
-                    setAuthenticated(false);
-                    console.log("setting to false")
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 401) {
+                    throw new Error("Email o password non corretti");
+                } else if (response.status === 500){
+                    throw new Error("Errore durante l'autenticazione");
                 }
             })
+                .then(data => {
+                    setAuthenticated(true);
+                    tokenManager.setAuthToken(data.token);
+                })
+                .catch(error => {
+                    setAuthenticated(false);
+                    alert(error.message);
+                })
     };
 
     const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
