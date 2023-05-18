@@ -1,5 +1,7 @@
 const express = require("express")
 const impostazioni = require("./../components/timer/timerSettings")
+const { Data, Tempo, Sessione } = require('../components/utils/utils');
+const GestoreDB = require("../components/gestoreDB/gestoreDB")
 const router = express.Router()
 
 const Fase = Object.freeze({ 
@@ -76,5 +78,27 @@ router.put("/end", (req, res) => {
     }
     res.json({fase: timer.fase, durata: timer.durata})
 })
+
+router.put('/salva-sessione', (req, res) => {
+    const minuti = req.body.minuti;
+
+    // Validazione dell'input
+    if (!minuti || typeof minuti !== 'number') {
+        return res.status(400).json({ success: false, message: 'Parametro "minuti" mancante o non valido.' });
+    }
+
+    const tempo = new Tempo();
+    tempo.aggiungiTempo(minuti);
+    const sessione = new Sessione(new Data(), tempo, req.id);
+
+    GestoreDB.salvaSessione(sessione)
+        .then(() => {
+            res.status(201).json({ success: true, message: 'Sessione salvata con successo.' });
+        })
+        .catch(error => {
+            console.error(`Non è stato possibile salvare la sessione. ${error.message}`);
+            res.status(500).json({ success: false, message: error.message });
+        });
+});
 
 module.exports = router

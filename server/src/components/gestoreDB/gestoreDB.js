@@ -1,4 +1,5 @@
 mongoose = require("../../config/db");
+const SessioneModel = require("../../models/Sessione");
 
 const Credenziali = require("../../models/Schema");
 
@@ -87,7 +88,34 @@ class GestoreDB {
         });
     }
 
-}
+    static salvaSessione(sessione) {
+        return new Promise((resolve, reject) => {
+            SessioneModel.findOne({
+                ID_utente: sessione.ID_utente,
+                data: new Date(Date.UTC(sessione.data.anno, sessione.data.mese - 1, sessione.data.giorno))
+            }).then(sessioneDB => {
+                if (sessioneDB) {
+                    sessioneDB.minuti += sessione.tempo.ore * 60 + sessione.tempo.minuti;
+                    return sessioneDB.save();
+                } else {
+                    const nuovaSessione = new SessioneModel({
+                        ID_utente: sessione.ID_utente,
+                        data: new Date(Date.UTC(sessione.data.anno, sessione.data.mese - 1, sessione.data.giorno)),
+                        minuti: sessione.tempo.ore * 60 + sessione.tempo.minuti,
+                    });
+                    return nuovaSessione.save();
+                }
+            }).then(() => {
+                resolve();
+            }).catch(error => {
+                console.error(error);
+                reject({ message: `Non è possibile effettuare il salvataggio della sessione. Messaggio errore: ${error}` });
+            });
+        });
+    }
 
+}
+    
+    
 
 module.exports = GestoreDB;
