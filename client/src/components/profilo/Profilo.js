@@ -22,19 +22,14 @@ export default function Profilo(){
         })
         .then(response => response.json())
         .then(data => {
-            //console.log(data)
             setAuthenticated(data.success)
         }) 
     }, [])
 
-    useEffect(() => {
-        console.log(authenticated)
-    }, [authenticated])
-
     return (
       <div className="Profilo">
         <h1>Profilo</h1>
-            {(!authenticated) ? <div>
+            {authenticated=="false" ? <div>
                 <div className='auth-button-div'>
                     <button
                         className="auth-button"
@@ -58,11 +53,11 @@ export default function Profilo(){
                     </button>
                 </div>
             </div> : <></> }
-        <div>  
-            {(!authenticated && loginClicked) ? <Login setAuthenticated={setAuthenticated}/> : <></> }
+        {authenticated=="false" ? <div>  
+            {(loginClicked) ? <Login setAuthenticated={setAuthenticated}/> : <></> }
             {(registrazioneClicked) ? <Registrazione setAuthenticated={setAuthenticated}/> : <></> }
             
-        </div>
+        </div> : <></>}
 
       </div>
     );

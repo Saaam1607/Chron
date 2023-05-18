@@ -44,17 +44,19 @@ router.post("/registrazione", bodyParser.json(), (req, res) => {
             });
         })
         .catch((error) => {
-            console.log(error)
             res.status(500).json({success: "errore", error: error.message})
-        });
-    
+        });  
 })
 
 router.get("/data", (req, res) => {
-    GestoreDB.getDataFromID(req.id)
+    if (req.id == undefined) {
+        res.json({success: "false"})
+    } else {
+        GestoreDB.getDataFromID(req.id)
         .then((esito) => {
             res.json(esito)
         })
+    }
 })
 
 module.exports = router
