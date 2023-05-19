@@ -9,23 +9,7 @@ const Fase = Object.freeze({
     PausaCorta: 1,
     PausaLunga: 2,
 });
-/*
-    Cosa deve ricevere il client?
-        - durata timer
-        - stato: pausa corta, lunga, pomodoro
-*/
-/*
-    Ricevo fine di un timer
-    è la fine di un pomodoro?
-        - incremento streak
-        - ho finito le sessioni?
-            - reset streak
-            - pausa lunga
-    è la fine di una pausa corta?
-        - pomodoro
-    è la fine di una pausa lunga?
-        - pomodoro
-*/
+
 class Timer {
     constructor() {
         this.fase = Fase.Pomodoro;
@@ -34,6 +18,9 @@ class Timer {
     }
     stampa(){
         console.log(`Fase: ${this.fase}, Streak: ${this.streak}, Durata: ${this.durata}`)
+    }
+    aggiornaImpostazioni(){
+        this.durata = impostazioni.durataPomodoro;
     }
     aggiorna(){
         switch (this.fase) {
@@ -73,11 +60,30 @@ router.get("/stato", (req, res) => {
 })
 
 router.put("/end", (req, res) => {
-    if (req.query.time <= 0 || (((req.query.fase == 1) || req.query.fase == 2) && req.query.stato == "stoppato")){
+    // console.log(req.body)
+
+    if (req.body.time <= 0 || (((req.body.fase == 1) || req.body.fase == 2) && req.body.stato == "stoppato")){
         timer.aggiorna();
+        console.log("TEMPO RIMANENTE: " + this.durata * 60 - req.body.time)
     }
     res.json({fase: timer.fase, durata: timer.durata})
 })
+
+router.get("/impostazioni", (req, res) => {
+    const data = impostazioni.getSettingsData()
+    res.json(data)
+})
+
+router.put("/impostazioni/aggiorna", (req, res) => {
+    impostazioni.setDurataPomodoro(req.body.pomdoro);
+    impostazioni.setDurataPausaCorta(req.body.pausaCorta);
+    impostazioni.setDurataPausaLunga(req.body.pausaLunga);
+    impostazioni.setPomodoriPerSessione(req.body.sessioni);
+    res.json({message: "Ciao"})
+    timer.aggiornaImpostazioni();
+})
+
+
 
 router.put('/salva-sessione', (req, res) => {
     const minuti = req.body.minuti;

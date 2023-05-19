@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import './Timer.css';
+import SessionForm from "./SessionForm"
+import TimerSettings from "./TimerSettings"
 const tokenManager = require('../tokenManager/cookieManager');
+
 
 export default function Timer(){
 
@@ -8,6 +11,7 @@ export default function Timer(){
     const [timerState, setTimerState] = useState("stopped");
     const [fase, setFase] = useState(0);
     const [message, setMessage] = useState("");
+    const [settingsClicked, setSettingsClicked] = useState(false);
   
     const readTimerData = async () =>{
 
@@ -18,7 +22,6 @@ export default function Timer(){
         })
         .then(response => response.json())
         .then(data => {
-            
             // setting up timer
             setTime(data.durata * 60)
             setFase(data.fase)
@@ -36,13 +39,27 @@ export default function Timer(){
                     break;
                     default:
                     break;
-            }
+            };
         })
     }
 
     const fetchData = async () =>{
-      await fetch(`api/v1/timer/end?time=${time}&fase=${fase}&stato=${timerState}`, {method: 'PUT'}) 
-    }
+        const requestBody = {
+          time: time,
+          fase: fase,
+          stato: timerState
+        };
+      
+        await fetch('api/v1/timer/end', {
+          method: 'PUT',
+          body: JSON.stringify(requestBody),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      };
+
+
 
     // at the beginning the data is read and setted up
     useEffect(() => {
@@ -81,42 +98,70 @@ export default function Timer(){
     let secondi = time - minuti * 60;
 
     return (
-      <div className="Timer">
-        <h1 style={fase == 0 ? {color: "rgb(35, 156, 204)"} : {color: "green"}}>{message}</h1>
-        <div className="minutes-seconds">
-          <span>{minuti < 10 ? "0" + minuti: minuti}:</span>
-          <span>{secondi < 10 ? "0" + secondi: secondi}</span>
+        <div className="Timer">
+            <div className="timer-container">
+                <h1 style={fase == 0 ? {color: "rgb(35, 156, 204)"} : {color: "green"}}>{message}</h1>
+                <div className="minutes-seconds">
+                    <span>{minuti < 10 ? "0" + minuti: minuti}:</span>
+                    <span>{secondi < 10 ? "0" + secondi: secondi}</span>
+                </div>
+        
+                <div className="timer-buttons-div">
+                        {/* PLAY */}
+                        {(timerState != "avviato") &&
+                            <span className="icona">
+                                <i
+                                    className="bi bi-play-circle-fill"
+                                    title="START"
+                                    onClick={() => setTimerState("avviato")}
+                                ></i>
+                            </span>
+                        }
+
+                        {/* PAUSE */}
+                        {(timerState == "avviato") &&
+                            <span className="icona">
+                                <i
+                                    className="bi bi-pause-circle-fill"
+                                    title="SUSPEND"
+                                    onClick={() => setTimerState("sospeso")}
+                                ></i>
+                        </span>
+                        }
+
+                        {/* STOP */}
+                        <span className="icona">
+                            <i
+                                className="bi bi-stop-circle-fill"
+                                title="STOP"
+                                onClick={() => setTimerState("stoppato")}
+                            ></i>
+                        </span>
+
+                        <span className="icona" >
+                            <i
+                                className="bi bi-plus-circle-fill"
+                                title="ADD TIME MANUALLY"
+                            ></i>
+                        </span>
+
+                        <span className="icona" >
+                            <i
+                                className="bi bi-gear-fill"
+                                title="SETTINGS"
+                                onClick={() => setSettingsClicked(!settingsClicked)}
+                                style={{color: (settingsClicked) ? 'rgb(93, 123, 134)' : 'rgb(139, 148, 151)'}}
+                            ></i>
+                        </span>
+
+                </div>
+
+                {/* <SessionForm /> */}
+                {settingsClicked && <TimerSettings readTimerData={readTimerData}/>}
+
+            </div>
+
+            
         </div>
-  
-        <div className="buttons">
-          <div className='timer-buttons'>
-
-            {/* PLAY */}
-            {(timerState != "avviato") &&
-              <span className="icona"onClick={() => setTimerState("avviato")}>
-                <i className="bi bi-play-circle-fill" title="START"></i>
-              </span>
-            }
-
-            {/* PAUSE */}
-            {(timerState == "avviato") &&
-              <span className="icona" onClick={() => setTimerState("sospeso")}>
-                <i className="bi bi-pause-circle-fill" title="SUSPEND"></i>
-              </span>
-            }
-
-            {/* STOP */}
-            <span className="icona" onClick={() => setTimerState("stoppato")}>
-              <i className="bi bi-stop-circle-fill" title="STOP"></i>
-            </span>
-
-          </div>
-          <div className='add-buttons'>
-            <span className="icona">
-              <i className="bi bi-plus-circle-fill" title="ADD TIME MANUALLY"></i>
-            </span>
-          </div>
-        </div>
-      </div>
     );
 }

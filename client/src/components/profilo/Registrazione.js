@@ -39,50 +39,63 @@ export default function Registrazione({setAuthenticated}){
         onSubmit,
     });
 
+    function addErrorStyle(error, touched) {
+        return {
+          border: (error && touched) ? '2px solid red' : '',
+        }
+    }
+
     return (
       <div className="login-div">
-            <form onSubmit={handleSubmit} autoComplete='off'>
+            <form
+                className='auth-form'
+                onSubmit={handleSubmit}
+                autoComplete='off'
+            >
             <div className='field-div'>
                     <div className='input-div'>
-                        <label className='email-label' htmlFor="username">Username</label>
+                        <label className="auth-label" htmlFor="username">Username</label>
                         <input
+                            className='auth-input'
                             value={values.username}
                             type='username'
                             id="username" 
                             placeholder="username"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            className={errors.username && touched.username ? 'input-error' : ''}
+                            style={addErrorStyle(errors.username, touched.username)}
                         />
                     </div>
                     {errors.username && touched.username && <p className="error">{errors.username}</p>}
                 </div>
                 <div className='field-div'>
                     <div className='input-div'>
-                        <label className='email-label' htmlFor="email">Email</label>
+                        <label className="auth-label" htmlFor="email">Email</label>
                         <input
+                            className='auth-input'
                             value={values.email}
                             type='email'
                             id="email" 
                             placeholder="email"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            className={errors.email && touched.email ? 'input-error' : ''}
+                            style={addErrorStyle(errors.email, touched.email)}
                         />
                     </div>
                     {errors.email && touched.email && <p className="error">{errors.email}</p>}
                 </div>
                 <div className='field-div'>
                     <div className='input-div'>
-                        <label htmlFor="password">Password</label>
+                        <label className="auth-label" htmlFor="password">Password</label>
                         <input
+                            className='auth-input'
                             value={values.password}
                             type='password'
                             id="password" 
                             placeholder="password"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            className={errors.password && touched.password ? 'input-error' : ''}
+                            style={addErrorStyle(errors.password, touched.password)}
                         />
                     </div>
                     {errors.password && touched.password && <p className="error">{errors.password}</p>}

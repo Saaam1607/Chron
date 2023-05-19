@@ -7,10 +7,8 @@ class CookieManager{
     static getAuthToken(){
         const token = localStorage.getItem("token")
         if (token) {
-            // console.log("Ho trovato qualcuno!")
             return token;
         } else{
-            // console.log("Non trovo nessuno")
             return false;
         }
     }

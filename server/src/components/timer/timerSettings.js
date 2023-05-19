@@ -1,10 +1,36 @@
-let prova = 0.05;
+//let prova = 0.05;
 
 class Settings {
-    durataPomodoro = prova;
-    durataPausaCorta = prova;
-    durataPausaLunga = prova;
+    durataPomodoro = 25;
+    durataPausaCorta = 5;
+    durataPausaLunga = 15;
     pomodoriPerSessione = 4;
+
+    getSettingsData() {
+        return {
+            durataPomodoro: this.durataPomodoro,
+            durataPausaCorta: this.durataPausaCorta,
+            durataPausaLunga: this.durataPausaLunga,
+            pomodoriPerSessione: this.pomodoriPerSessione
+        }
+    }
+    
+    setDurataPomodoro(durata) {
+        this.durataPomodoro = durata;
+    }
+
+    setDurataPausaCorta(durata) {
+        this.durataPausaCorta = durata;
+    }
+
+    setDurataPausaLunga(durata) {
+        this.durataPausaLunga = durata;
+    }
+
+    setPomodoriPerSessione(numero) {
+        this.pomodoriPerSessione = numero;
+    }
+
 }
 
 settings = new Settings();

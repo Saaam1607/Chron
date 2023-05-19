@@ -5,9 +5,17 @@
     margin-right: 30px;
     margin-bottom: 50px;
     text-align: center;
+    border: 3px solid red;
 }
 
+.timer-container {
+    border: 3px solid green;
+}
 
+.timer-buttons-div {
+    width: 400pt;
+    margin: 0 auto; 
+}
 
 .minutes-seconds{
     background-color: rgb(35, 156, 204);
@@ -36,25 +44,13 @@
     color: rgb(27, 123, 161)
 }
 
+.bi-gear-fill{
+    color: rgb(139, 148, 151)
+}
+
 .icona {
   font-size: 4em;
   color: #1466c4;
   margin-left: 10pt;
   margin-right: 10pt;
-}
-
-.buttons {
-    width: 400pt;
-    margin: 0 auto; 
-}
-
-.timer-buttons {
-    width: 300pt;
-    float:left;
-    padding-left: 80pt;
-}
-
-.add-buttons {
-    width: 80pt;
-    float:right
 }
