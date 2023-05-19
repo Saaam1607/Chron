@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import "./SessionForm.css"
 
 export default function SessionForm(){
 
@@ -19,9 +18,11 @@ export default function SessionForm(){
     //     });
     //   };
 
-    const [date, setDate] = useState('');
-    const [time, setTime] = useState('');
+    const today = new Date();
 
+    const [date, setDate] = useState(new Date(today).toISOString().split('T')[0]); // yyyy-mm-dd
+    const [time, setTime] = useState('');
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         // Handle form submission with date and time data
@@ -30,8 +31,7 @@ export default function SessionForm(){
     };
 
     return (
-        <div className='sessionForm-div'>
-            <form onSubmit={handleSubmit}>
+            <form className='timer-form' onSubmit={handleSubmit}>
                 <div className='form-div'>
 
                     <label htmlFor="date">Date:</label>
@@ -49,6 +49,8 @@ export default function SessionForm(){
                         id="time"
                         value={time}
                         onChange={(e) => setTime(e.target.value)}
+                        min="00:10"
+                        max="10:00"
                         required
                     />
 
@@ -59,6 +61,5 @@ export default function SessionForm(){
                 </div>
 
             </form>
-        </div>
     );
 }

@@ -174,7 +174,8 @@ export default function Timer(){
                                     } else{
                                         alert("Prima di aggiungere sessioni manualmente devi fermare il timer!")
                                     }
-                                }} 
+                                }}
+                                style={{color: (sessionFormClicked) ? 'rgb(27, 123, 161)' : 'rgb(35, 156, 204)'}}
                             ></i>
                         </span>
 
