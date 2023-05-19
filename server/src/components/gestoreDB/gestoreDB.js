@@ -115,6 +115,19 @@ class GestoreDB {
         });
     }
 
+    static ottieniTasks(ID_utente) {
+        return new Promise((resolve, reject) => {
+        TaskModel.find({ ID_utente: ID_utente })
+            .then(tasks => {
+                resolve(tasks);
+            })
+            .catch(error => {
+                console.error(`Errore durante la lettura delle tasks per l'utente ${ID_utente}: ${error}`);
+                reject({ message: error });
+            });
+        });
+    }
+
 }
     
     

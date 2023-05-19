@@ -1,4 +1,4 @@
-const { Task } = require('./task');
+const Task = require('./task');
 const  GestoreDB  = require('../gestoreDB/gestoreDB');
 
 class ListaTasks {
