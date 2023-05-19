@@ -82,7 +82,7 @@ export default function TimerSettings({readTimerData, settingsClicked, setSettin
                     id="pomdoro"
                     value={pomdoro}
                     onChange={(e) => setPomdoro(parseInt(e.target.value))}
-                    min="1"
+                    min="15"
                     max="60"
                     required
                 />
@@ -95,7 +95,7 @@ export default function TimerSettings({readTimerData, settingsClicked, setSettin
                     id="pausa-corta"
                     value={pausaCorta}
                     onChange={(e) => setPausaCorta(parseInt(e.target.value))}
-                    min="1"
+                    min="5"
                     max="15"
                     required
                 />
