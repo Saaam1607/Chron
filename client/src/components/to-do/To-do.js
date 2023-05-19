@@ -26,32 +26,30 @@ export default function Todo(){
         setIsAuthenticated(CookieManager.generateHeader() !== undefined);
     }, [CookieManager.generateHeader()]);
 
-    const GetTodos = () => {
-        fetch(api_base + "/",{
-            method: "GET",
-            headers: CookieManager.generateHeader()
-        })
-            .then((res) => {
-                if (res.status === 204) {
-                    return { success: true, message: "Non ci sono task da mostrare" };
-                } else if (res.ok) {
-                    return res.json();
-                } else {
-                    throw new Error("La richiesta non è andata a buon fine. Status:" + res.status);
-                }
-
-            })
-            .then((data) => {
+    const GetTodos = async () => {
+        try {
+            const res = await fetch(api_base + "/", {
+                method: "GET",
+                headers: CookieManager.generateHeader(),
+            });
+        
+            if (res.status === 204) {
+                return { success: true, message: "Non ci sono task da mostrare" };
+            } else if (res.ok) {
+                const data = await res.json();
                 if (data && data.tasks) {
                     setTodos(data.tasks);
                 } else {
                     setTodos([]);
                 }
-            })
-            .catch((error) => {
-                console.error("Errore: " + error);
-                alert(error);
-            });
+            } else {
+                const errorData = await res.json();
+                throw new Error(errorData.message);
+            }
+        } catch (error) {
+            console.error("Errore:", error);
+            alert(error);
+        }
     };
 
     const addTodo = async () => {
