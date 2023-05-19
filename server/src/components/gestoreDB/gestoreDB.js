@@ -1,6 +1,7 @@
-mongoose = require("../../config/db");
-const SessioneModel = require("../../models/Sessione");
+//mongoose = require("../../config/db");
+const mongoose = require('mongoose');
 
+const SessioneModel = require("../../models/Sessione");
 const Credenziali = require("../../models/Schema");
 
 
@@ -96,18 +97,18 @@ class GestoreDB {
             }).then(sessioneDB => {
                 if (sessioneDB) {
                     sessioneDB.minuti += sessione.tempo.ore * 60 + sessione.tempo.minuti;
-                    return sessioneDB.save();
+                    sessioneDB.save().then(() => { resolve({ stato: 200 }); });
                 } else {
                     const nuovaSessione = new SessioneModel({
+                        _id: new mongoose.Types.ObjectId(),
                         ID_utente: sessione.ID_utente,
                         data: new Date(Date.UTC(sessione.data.anno, sessione.data.mese - 1, sessione.data.giorno)),
                         minuti: sessione.tempo.ore * 60 + sessione.tempo.minuti,
                     });
-                    return nuovaSessione.save();
+                    nuovaSessione.save().then(() => { resolve({ stato: 201 }); });
                 }
-            }).then(() => {
-                resolve();
-            }).catch(error => {
+            })
+            .catch(error => {
                 console.error(error);
                 reject({ message: `Non è possibile effettuare il salvataggio della sessione. Messaggio errore: ${error}` });
             });
