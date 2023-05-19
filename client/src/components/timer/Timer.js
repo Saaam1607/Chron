@@ -11,7 +11,9 @@ export default function Timer(){
     const [timerState, setTimerState] = useState("stoppato");
     const [fase, setFase] = useState(0);
     const [message, setMessage] = useState("");
+
     const [settingsClicked, setSettingsClicked] = useState(false);
+    const [sessionFormClicked, setsessionFormClicked] = useState(false);
   
     const readTimerData = async () =>{
 
@@ -165,6 +167,15 @@ export default function Timer(){
                             <i
                                 className="bi bi-plus-circle-fill"
                                 title="ADD TIME MANUALLY"
+                                onClick={() =>{
+                                    if (timerState == "stoppato") {
+                                        setsessionFormClicked(!sessionFormClicked)
+                                        setSettingsClicked(false)
+                                    } else{
+                                        alert("Prima di aggiungere sessioni manualmente devi fermare il timer!")
+                                    }
+                                }}
+                                style={{color: (sessionFormClicked) ? 'rgb(27, 123, 161)' : 'rgb(35, 156, 204)'}}
                             ></i>
                         </span>
 
@@ -175,6 +186,7 @@ export default function Timer(){
                                 onClick={() =>{
                                     if (timerState == "stoppato") {
                                         setSettingsClicked(!settingsClicked)
+                                        setsessionFormClicked(false)
                                     } else{
                                         alert("Prima di cambiare le impostazioni devi fermare il timer!")
                                     }
@@ -187,6 +199,9 @@ export default function Timer(){
 
                 {/* <SessionForm /> */}
                 {settingsClicked && <TimerSettings readTimerData={readTimerData} settingsClicked={settingsClicked} setSettingsClicked={setSettingsClicked}/>}
+
+                {/* <SessionForm /> */}
+                {sessionFormClicked && <SessionForm sessionFromClicked={sessionFormClicked} setsessionFromClicked={setsessionFormClicked}/>}
 
             </div>
 
