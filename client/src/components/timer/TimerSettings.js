@@ -73,7 +73,7 @@ export default function TimerSettings({readTimerData, settingsClicked, setSettin
     };
   
     return (
-        <form className="settings-form" onSubmit={handleSubmit}>
+        <form className="timer-form" onSubmit={handleSubmit}>
         
             <div className='setting-div'>
                 <label htmlFor="pomdoro">Durata pomodoro:</label>
