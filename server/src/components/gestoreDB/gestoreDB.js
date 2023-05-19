@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const SessioneModel = require("../../models/Sessione");
 const Credenziali = require("../../models/Schema");
+const TaskModel = require("../../models/Task");
 
 
 class GestoreDB {
@@ -166,7 +167,6 @@ class GestoreDB {
                             resolve(result); // Restituisci la task aggiornata
                         
                         } else {
-                            console.log("Nuova task creata: " + result);
                             resolve(result); // Restituisci la nuova task creata
     
                         }
