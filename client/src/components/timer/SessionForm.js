@@ -2,23 +2,7 @@ import { useState, useEffect } from 'react';
 const tokenManager = require('../tokenManager/cookieManager');
 
 export default function SessionForm(){
-
-    // const fetchData = async () =>{
-    //     const requestBody = {
-    //       time: time,
-    //       fase: fase,
-    //       stato: timerState
-    //     };
-      
-    //     await fetch('api/v1/timer/end', {
-    //       method: 'PUT',
-    //       body: JSON.stringify(requestBody),
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       }
-    //     });
-    //   };
-
+    
     const today = new Date();
 
     const [date, setDate] = useState(new Date(today).toISOString().split('T')[0]); // yyyy-mm-dd

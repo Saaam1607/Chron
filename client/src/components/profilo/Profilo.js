@@ -26,7 +26,7 @@ export default function Profilo(){
                         .then(data => {
                             setAuthenticated(data.success)
                         })
-                } else if (response.status === 401) {
+                } else if (response.status === 401 || response.status === 500) {
                     console.log("token non trovato");
                 }
             })
