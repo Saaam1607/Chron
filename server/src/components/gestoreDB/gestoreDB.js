@@ -128,6 +128,59 @@ class GestoreDB {
         });
     }
 
+    static aggiornaTask(_id, ID_utente, nome, dataScadenza, contrassegna, gruppoID, rimuovi) {
+        return new Promise((resolve, reject) => {
+          let task;
+          TaskModel.findOne({ _id: _id })
+            .then((foundTask) => {
+              task = foundTask;
+                if (rimuovi) {
+                    if (task) {
+                        return TaskModel.deleteOne({ _id: _id });
+                    } else {
+                        throw new Error("La task non esiste. Rimozione non effettuata.");
+                    }
+                } else {
+                    const nuovaTask = new TaskModel({
+                        _id: new mongoose.Types.ObjectId(),
+                        ID_utente: ID_utente,
+                        nome: nome,
+                        dataScadenza: dataScadenza,
+                        gruppoID: gruppoID,
+                        contrassegna: contrassegna
+                    });
+        
+                    if (task) {
+                    return TaskModel.updateOne({ _id: _id }, { $set: { contrassegna: contrassegna } }, { upsert: false })
+                        .then(() => TaskModel.findOne({ _id: _id }));
+                    } else {
+                        return nuovaTask.save();
+                    }
+                }
+            })
+            .then((result) => {
+                if (rimuovi && result.deletedCount > 0) {
+                        resolve("La task è stata rimossa con successo.");
+                } else if (!rimuovi && result) {
+                        if (task) {
+                            resolve(result); // Restituisci la task aggiornata
+                        
+                        } else {
+                            console.log("Nuova task creata: " + result);
+                            resolve(result); // Restituisci la nuova task creata
+    
+                        }
+                } else {
+                        resolve("Nessuna operazione effettuata.");
+                }
+            })
+            .catch((error) => {
+                console.error(`Errore durante l'aggiornamento della task per l'utente ${ID_utente}: ${error}`);
+                reject({ message: error });
+            });
+        });
+      }
+
 }
     
     
