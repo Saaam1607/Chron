@@ -102,19 +102,20 @@ router.put("/impostazioni/aggiorna", async (req, res) => {
 
 router.put('/salva-sessione', (req, res) => {
     const minuti = req.body.minuti;
+    const date =  new Date(req.body.date);
 
-    // Validazione dell'input
-    if (!minuti || typeof minuti !== 'number') {
-        return res.status(400).json({ success: false, message: 'Parametro "minuti" mancante o non valido.' });
+    if (!minuti || typeof minuti !== 'number' || !date || isNaN(Date.parse(date))) {
+      return res.status(400).json({ success: false, message: 'Parametro "minuti" o "date" mancante o non valido.' });
     }
 
     const tempo = new Tempo();
     tempo.aggiungiTempo(minuti);
-    const sessione = new Sessione(new Data(), tempo, req.id);
+
+    const sessione = new Sessione(new Data(date.getDate(), date.getMonth() + 1,date.getFullYear()), tempo, req.id);
 
     GestoreDB.salvaSessione(sessione)
-        .then(() => {
-            res.status(201).json({ success: true, message: 'Sessione salvata con successo.' });
+        .then((result) => {
+            res.status(result.stato).json({ success: true, message: 'Sessione salvata con successo.' });
         })
         .catch(error => {
             console.error(`Non è stato possibile salvare la sessione. ${error.message}`);
