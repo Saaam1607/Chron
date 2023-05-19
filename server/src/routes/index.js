@@ -21,7 +21,6 @@ function authenticateToken(req, res, next) {
 }
 
 function verificaAutenticazione(req, res, next) {
-    console.log("Sono nel middleware verificaAutenticazione")
       if (!req.id) {
         // Utente non autenticato
         res.status(401).json({ success:false,  errore: 'Utente non autenticato' });
