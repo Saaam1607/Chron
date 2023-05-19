@@ -414,3 +414,126 @@ paths:
                   message:
                     type: string
                     example: Errore durante la modifica delle impostazioni
+  /timer/salva-sessione:
+    x-summary: Salva o crea sessione
+    put:
+      summary: Salva o crea sessione
+      description: >-
+        Crea o aggiorna una sessione nel database.
+        Se esiste già una sessione con la stessa data e ID_utente,
+        aggiorna il campo "minuti". Altrimenti, crea una nuova sessione.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - minuti
+                - date
+              properties:
+                minuti:
+                  type: integer
+                  description: 'tempo in minuti'
+                date:
+                  type: string
+                  description: 'data nella quale si è effettualta la sessione'
+      responses:
+        '201':
+          description: Sessione salvata con successo.
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  minuti:
+                    type: integer
+                    example: 10
+                  data:
+                    type: string
+                    example: "2023-05-23T00:00:00"
+        '400':
+          description: Errore, input non validi
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Parametro minuti mancante o non valido.
+        '500':
+          description: Errore del server.
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Non è stato possibile salvare la sessione. Errore del server.
+  /todos/:
+    x-summary: Ottieni elenco delle tasks
+    get:
+      summary: Ottieni elenco delle tasks
+      description: >-
+        L'API delle attività è progettata per gestire le attività degli utenti.
+        Questo endpoint consente agli utenti di ottenere l'elenco delle task salvati nel sistema.
+        Neccessita che l'utente sia autenticato quindi nel header ci deve essere il token.
+      responses:
+        '200':
+          description: Elenco delle tasks recuperato con successo
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  tasks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: "6462912e2af3e04ffc16c84d"
+                        ID_utente:
+                          type: integer
+                          example: 1
+                        nome:
+                          type: string
+                          example: "temp6"
+                        dataScadenza:
+                          type: string
+                          example: "2023-05-27T00:00:00.000Z"
+                        contrassegna:
+                          type: boolean
+                          example: false
+                        gruppoID:
+                          type: string
+                          example: "vxvc"
+        '204':
+          description: Nessuna task da mostrare. NO CONTENT
+        '500':
+          description: Errore del server.
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "L'operazione di lettura delle task non è andata a buon fine. ID_utdfente is not defined"
