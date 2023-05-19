@@ -3,12 +3,18 @@ const router = express.Router()
 const ListaTasks = require('../components/to-do/listaTasks');
 const Task = require('../components/to-do/task');
 
+let isFirstTime = true;
 const listaTask = new ListaTasks(1);
 
 
 router.get('/', async (req, res) => {
 	console.log("GET /todos");
-  
+
+    if(isFirstTime && req.id){
+        listaTask.ID_utente = req.id;
+        isFirstTime = false;
+    }
+    
 	try {
         const todos = await listaTask.leggiTasks();
 
@@ -77,7 +83,5 @@ router.delete('/delete', async (req, res) => {
         res.status(404).json({ success: false, message: `Task con id ${id} non trovata` });
     }
 });
-
-
 
 module.exports = router

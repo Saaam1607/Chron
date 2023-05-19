@@ -149,8 +149,8 @@ export default function Todo(){
         <div className="container py-5">
             {isAuthenticated ? (
                 <>
-                    <h1 className="text-center mb-5">Welcome BACK!</h1>
-                    <h4 className="mb-3">Your tasks</h4>
+                    <h1 className="text-center mb-5">The Path to Efficiency</h1>
+                    <h4 className="mb-3">Your Task Agenda</h4>
 
                     <div className="d-flex justify-content-between mb-3">
                         <Button variant="primary" className="add-button" onClick={() => setPopupActive(true)}>

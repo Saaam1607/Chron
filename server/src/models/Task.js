@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const TaskSchema = new mongoose.Schema({
   ID_utente: {
-      type: Number,
+      type: mongoose.ObjectId, ref: 'User',
       required: true
   },
   nome: {
