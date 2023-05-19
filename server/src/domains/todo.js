@@ -48,34 +48,34 @@ router.post('/new', async (req, res) => {
 	}
 });
 
-router.put('/complete/:id', async (req, res) => {
-	console.log("PUT /todo/complete/:id")
-	const id = req.params.id;
-	const task = listaTask.tasks.find((task) => task._id == id);
-  
-	if (task) {
+router.put('/complete', async (req, res) => {
+    console.log("PUT /complete");
+    const id = req.body.id;
+    const task = listaTask.tasks.find((task) => task._id == id);
+
+    if (task) {
         try {
             await task.contrassegnaTask();
-            res.status(200).json({success: true, result: task});
+            res.status(200).json({ success: true, result: task });
         } catch (error) {
             console.error(`Errore durante la contrassegnazione della task: ${error.message}`);
-            res.status(500).json({success:false, message:`Si è verificato un errore durante l'operazione. Messaggio: ` + error.message});
+            res.status(500).json({ success: false, message: `Si è verificato un errore durante l'operazione. Messaggio: ` + error.message });
         }
-	} else {
-	    res.status(404).json({success:false, message:`Task con id ${id} non trovata`});
-	}
+    } else {
+        res.status(404).json({ success: false, message: `Task con id ${id} non trovata` });
+    }
 });
 
-router.delete('/delete/:id', async (req, res) => {
-	console.log("DELETE /todo/:id");
-	const id = req.params.id;
-	const task = listaTask.tasks.find((task) => task._id == id);
-	if (task) {
-		await task.elimina();
-		res.status(200).json({ success:true, result: task });
-	} else {
-		res.status(404).json({success:false, message:`Task con id ${id} non trovata`});
-	}
+router.delete('/delete', async (req, res) => {
+    console.log("DELETE /delete");
+    const id = req.body.id;
+    const task = listaTask.tasks.find((task) => task._id == id);
+    if (task) {
+        await task.elimina();
+        res.status(200).json({ success: true, result: task });
+    } else {
+        res.status(404).json({ success: false, message: `Task con id ${id} non trovata` });
+    }
 });
 
 
