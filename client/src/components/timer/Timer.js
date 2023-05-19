@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react';
 import './Timer.css';
+<<<<<<< Updated upstream
+=======
+import SessionForm from "./SessionForm"
+import TimerSettings from "./TimerSettings"
+import {handleAlert} from "../alert/Alert"
+const tokenManager = require('../tokenManager/cookieManager');
+
+>>>>>>> Stashed changes
 
 export default function Timer(){
 
@@ -8,6 +16,7 @@ export default function Timer(){
     const [fase, setFase] = useState(0);
     const [message, setMessage] = useState("");
   
+
     const readTimerData = async () =>{
       await fetch("api/v1/timer/stato", {method: 'GET'})
       .then(response => response.json())
@@ -46,10 +55,20 @@ export default function Timer(){
 
     // quando il timer viene fermato (o dall'utente o perchè è finito)
     useEffect(() => {
+<<<<<<< Updated upstream
       if ((timerState == "stoppato")){
         fetchData()                    // aggiorna la fase (fase <- fase-successiva)
         readTimerData()                // aggiorna il timer (durata, fase, messaggio)
       }
+=======
+        if ((timerState == "stoppato")){
+            fetchData()                    // aggiorna la fase (fase <- fase-successiva)
+            readTimerData()                // aggiorna il timer (durata, fase, messaggio)
+            if (time == 0){
+                handleAlert()              // mostra l'alert
+            }
+        }
+>>>>>>> Stashed changes
     },[timerState])
 
     useEffect(() => {
