@@ -8,7 +8,7 @@ const tokenManager = require('../tokenManager/cookieManager');
 export default function Timer(){
 
     const [time, setTime] = useState(1);
-    const [timerState, setTimerState] = useState("stopped");
+    const [timerState, setTimerState] = useState("stoppato");
     const [fase, setFase] = useState(0);
     const [message, setMessage] = useState("");
     const [settingsClicked, setSettingsClicked] = useState(false);
@@ -149,7 +149,13 @@ export default function Timer(){
                             <i
                                 className="bi bi-gear-fill"
                                 title="SETTINGS"
-                                onClick={() => setSettingsClicked(!settingsClicked)}
+                                onClick={() =>{
+                                    if (timerState == "stoppato") {
+                                        setSettingsClicked(!settingsClicked)
+                                    } else{
+                                        alert("Prima di cambiare le impostazioni devi fermare il timer!")
+                                    }
+                                }} 
                                 style={{color: (settingsClicked) ? 'rgb(93, 123, 134)' : 'rgb(139, 148, 151)'}}
                             ></i>
                         </span>
