@@ -20,27 +20,38 @@ export default function Timer(){
             method: "GET",
             headers: tokenManager.generateHeader()
         })
-        .then(response => response.json())
-        .then(data => {
-            // setting up timer
-            setTime(data.durata * 60)
-            setFase(data.fase)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 500){
+                    throw new Error("Errore durante la lettura dello stato del timer");
+                }
+            })
+                .then(data => {
+                    
+                    // setting up timer
+                    setTime(data.durata * 60)
+                    setFase(data.fase)
 
-            // setting up message
-            switch (data.fase) {
-                case 0:
-                    setMessage("TIME TO GET FOCUSED!");
-                    break;
-                case 1:
-                    setMessage("TIME TO TAKE A SHORT BREAK!");
-                    break;
-                case 2:
-                    setMessage("TIME TO TAKE A LONG BREAK!");
-                    break;
-                    default:
-                    break;
-            };
-        })
+                    // setting up message
+                    switch (data.fase) {
+                        case 0:
+                            setMessage("TIME TO GET FOCUSED!");
+                            break;
+                        case 1:
+                            setMessage("TIME TO TAKE A SHORT BREAK!");
+                            break;
+                        case 2:
+                            setMessage("TIME TO TAKE A LONG BREAK!");
+                            break;
+                            default:
+                            break;
+                    };
+
+                })
+                .catch(error => {
+                    alert(error.message);
+                })
     }
 
     const fetchData = async () =>{
@@ -56,7 +67,19 @@ export default function Timer(){
           headers: {
             'Content-Type': 'application/json'
           }
-        });
+        })
+            .then(response => {
+                if (response.ok) {
+                } else if (response.status === 400){
+                    throw new Error("Errore durante l'aggiornamento del timer");
+                }
+            })
+                .then(data => {
+                })
+                .catch(error => {
+                    alert(error.message);
+                })
+            
       };
 
 
@@ -163,7 +186,7 @@ export default function Timer(){
                 </div>
 
                 {/* <SessionForm /> */}
-                {settingsClicked && <TimerSettings readTimerData={readTimerData}/>}
+                {settingsClicked && <TimerSettings readTimerData={readTimerData} settingsClicked={settingsClicked} setSettingsClicked={setSettingsClicked}/>}
 
             </div>
 

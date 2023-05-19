@@ -23,6 +23,7 @@ export default function Registrazione({setAuthenticated}){
                 }
             })
                 .then(data => {
+                    alert("Registrazione Completata");
                 })
                 .catch(error => {
                     alert(error.message);

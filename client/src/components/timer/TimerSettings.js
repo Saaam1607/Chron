@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default function TimerSettings({readTimerData}){
+export default function TimerSettings({readTimerData, settingsClicked, setSettingsClicked}){
 
     const [pomdoro, setPomdoro] = useState(25);
     const [pausaCorta, setPausaCorta] = useState(5);
@@ -23,16 +23,25 @@ export default function TimerSettings({readTimerData}){
                 'Content-Type': 'application/json'
             }
         })
-            .then(response => response.json())
-            .then(data => {
-                //imposta dati
-                aggiornaImpostazioni(data.durataPomodoro, data.durataPausaCorta, data.durataPausaLunga, data.pomodoriPerSessione);
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 500){
+                    throw new Error("Errore durante la lettura delle impostazioni");
+                }
             })
-
+                .then(data => {
+                    aggiornaImpostazioni(data.durataPomodoro, data.durataPausaCorta, data.durataPausaLunga, data.pomodoriPerSessione);
+                })
+                .catch(error => {
+                    alert(error.message);
+                })
     }, []);
   
     const handleSubmit = (e) => {
       e.preventDefault();
+
+      setSettingsClicked(!settingsClicked);
 
         const requestBody = {
             pomdoro: pomdoro,
@@ -48,7 +57,19 @@ export default function TimerSettings({readTimerData}){
                 'Content-Type': 'application/json'
             }
         })
-        .then(readTimerData()) // aggiorna dati
+            .then(response => {
+                if (response.ok) {
+                } else if (response.status === 500){
+                    throw new Error("Errore durante la modifica delle impostazioni");
+                }
+            })
+                .then(() =>{
+                    readTimerData()
+                })
+                .catch(error => {
+                    alert(error.message);
+                })
+
     };
   
     return (

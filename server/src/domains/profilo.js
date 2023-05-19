@@ -50,11 +50,11 @@ router.post("/registrazione", bodyParser.json(), (req, res) => {
 
 router.get("/data", (req, res) => {
     if (req.id == undefined) {
-        res.json({success: "false"})
+        res.status(401).json()
     } else {
         GestoreDB.getDataFromID(req.id)
         .then((esito) => {
-            res.json(esito)
+            res.status(200).json(esito)
         })
     }
 })

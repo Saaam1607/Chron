@@ -11,7 +11,7 @@ function addErrorStyle(error, touched) {
 export default function Login({setAuthenticated}){
 
     const onSubmit = (values, actions) => {
-        //actions.resetForm();
+        actions.resetForm();
         fetch('api/v1/profilo/login', {
             method: 'POST',
             headers: {

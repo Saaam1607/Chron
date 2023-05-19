@@ -20,16 +20,23 @@ export default function Profilo(){
             method: "GET",
             headers: tokenManager.generateHeader()
         })
-        .then(response => response.json())
-        .then(data => {
-            setAuthenticated(data.success)
-        }) 
+            .then(response => {
+                if (response.ok) {
+                    response.json()
+                        .then(data => {
+                            setAuthenticated(data.success)
+                        })
+                } else if (response.status === 401) {
+                    console.log("token non trovato");
+                }
+            })
+
     }, [])
 
     return (
       <div className="Profilo">
         <h1>Profilo</h1>
-            {authenticated=="false" ? <div>
+            {authenticated==false ? <div>
                 <div className='auth-button-div'>
                     <button
                         className="auth-button"
@@ -53,7 +60,7 @@ export default function Profilo(){
                     </button>
                 </div>
             </div> : <></> }
-        {authenticated=="false" ? <div>  
+        {authenticated==false ? <div>  
             {(loginClicked) ? <Login setAuthenticated={setAuthenticated}/> : <></> }
             {(registrazioneClicked) ? <Registrazione setAuthenticated={setAuthenticated}/> : <></> }
             

@@ -51,36 +51,51 @@ class Timer {
 
 timer = new Timer();
 
-router.get("/", (req, res) => {
-    res.send("Timer")
-})
-
 router.get("/stato", (req, res) => {
-    res.json({fase: timer.fase, durata: timer.durata})
+    if (timer.fase != undefined && timer.durata){
+        res.status(200).json({fase: timer.fase, durata: timer.durata})
+    } else{
+        res.status(500).json()
+    }
+    
 })
 
+// DA INTEGRARE CON L'AGGIUNTA AUTO
 router.put("/end", (req, res) => {
-    // console.log(req.body)
+
+    // controlli su input
+    if (req.body.fase < 0 || req.body.fase > 2 || req.body.time < 0 || req.body.time > 60 * 60){
+        return res.status(400).json()
+    }
 
     if (req.body.time <= 0 || (((req.body.fase == 1) || req.body.fase == 2) && req.body.stato == "stoppato")){
         timer.aggiorna();
-        console.log("TEMPO RIMANENTE: " + this.durata * 60 - req.body.time)
+        //console.log("TEMPO RIMANENTE: " + this.durata * 60 - req.body.time)
     }
-    res.json({fase: timer.fase, durata: timer.durata})
+    res.status(200).json({fase: timer.fase, durata: timer.durata})
 })
 
 router.get("/impostazioni", (req, res) => {
     const data = impostazioni.getSettingsData()
-    res.json(data)
+    if (data){
+        res.status(200).json(data)
+    } else{
+        res.status(500).json({message: "Errore"})
+    }
+    
 })
 
-router.put("/impostazioni/aggiorna", (req, res) => {
-    impostazioni.setDurataPomodoro(req.body.pomdoro);
-    impostazioni.setDurataPausaCorta(req.body.pausaCorta);
-    impostazioni.setDurataPausaLunga(req.body.pausaLunga);
-    impostazioni.setPomodoriPerSessione(req.body.sessioni);
-    res.json({message: "Ciao"})
-    timer.aggiornaImpostazioni();
+router.put("/impostazioni/aggiorna", async (req, res) => {
+    try {
+        impostazioni.setDurataPomodoro(req.body.pomdoro);
+        impostazioni.setDurataPausaCorta(req.body.pausaCorta);
+        impostazioni.setDurataPausaLunga(req.body.pausaLunga);
+        impostazioni.setPomodoriPerSessione(req.body.sessioni);
+        timer.aggiornaImpostazioni();
+        res.status(200).json()
+    } catch (error) {
+        res.status(500).json()
+    }
 })
 
 
