@@ -18,6 +18,18 @@ function authenticateToken(req, res, next) {
     next(); // Call the next middleware or route handler
 }
 
+function verificaAutenticazione(req, res, next) {
+    console.log("Sono nel middleware verificaAutenticazione")
+      if (!req.id) {
+        // Utente non autenticato
+        res.status(401).json({ success:false,  errore: 'Utente non autenticato' });
+      } else {
+        // Utente autenticato, passa al middleware successivo
+        next();
+      }
+}
+
+router.use("/api/v1/timer/salva-sessione",authenticateToken, verificaAutenticazione, timer)
 router.use("/api/v1/timer", authenticateToken, timer)
 router.use("/api/v1/profilo", authenticateToken, profilo)
 
