@@ -1,0 +1,416 @@
+openapi: 3.1.0
+info:
+  version: '1.0'
+  title: "Chron"
+  description: Descrizione API per l'interazione con il sistema Chron
+  license:
+    name: MIT
+    url: https://github.com/Saaam1607/Chron
+servers:
+  - url: http://localhost:8000/api/v1
+    description: localhost
+paths:
+  /profilo/login:
+    x-summary: Effetua il login
+    put:
+      summary: Effetua il login
+      description: >-
+        Effetua il login, controllando la corrispondenza tra le credenziali ricevute (email e password).
+        Se l'autenticazione avviene con successo viene restituito un jwt token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  description: "Email ricevuta dall'utente"
+                password:
+                  type: string
+                  description: "Password ricevuta dall'utente"
+      responses:
+        '200':
+          description: Autenticazione completata con successo
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  token:
+                    type: string
+                    example: xxxx
+        '401':
+          description: Autenticazione non riuscita, credenziali non corrispondenti o valide
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Autenticazione non riuscita, credenziali non corrispondenti o valide
+        '500':
+          description: Errore durante l'autenticazione
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore durante l'autenticazione
+  /profilo/registrazione:
+    x-summary: Effetua la registrazione
+    put:
+      summary: Effetua la registrazione
+      description: >-
+        Effetua la registrazione, controllando la validità e la corrispondenza tra le credenziali ricevute (email e password).
+        Se l'autenticazione avviene con successo viene restituito un jwt token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - password
+              properties:
+                username:
+                  type: string
+                  description: "Username ricevuto dall'utente"
+                email:
+                  type: string
+                  description: "Email ricevuta dall'utente"
+                password:
+                  type: string
+                  description: "Password ricevuta dall'utente"
+      responses:
+        '200':
+          description: Registrazione e autenticazione completate con successo
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  token:
+                    type: string
+                    example: xxxx
+        '401':
+          description: Errore, credenziali non valide
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore, credenziali non valide
+        '409':
+          description: Errore, email già utilizzata
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore, email già utilizzata
+        '500':
+          description: Errore durante la registrazione
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore durante la registrazione
+  /profilo/data:
+    x-summary: Recupera i dati di un utente (email e username)
+    put:
+      summary: Recupera i dati di un utente (email e username)
+      description: >-
+        Recupera i dati di un utente (email e username). A questo proposito viene gestita l'interazione con il db
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+                  description: "ID dell'utente"
+      responses:
+        '200':
+          description: Registrazione e autenticazione completate con successo
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  username:
+                    type: string
+                    example: username
+                  email:
+                    type: string
+                    example: email
+        '401':
+          description: Errore, ID non trovato
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore, ID non trovato
+        '500':
+          description: Errore durante la lettura dei dati
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore durante la lettura dei dati
+  /timer/stato:
+    x-summary: Legge fase e durata del timer
+    put:
+      summary: Legge fase e durata del timer
+      description: >-
+        Legge e restituisce la fase e durata del timer
+      responses:
+        '200':
+          description: Modifica delle impostazioni avvenuta con successo
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  fase:
+                    type: integer
+                    example: 1
+                  durata:
+                    type: integer
+                    example: 5
+        '500':
+          description: Errore durante la lettura dello stato del timer
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore durante la lettura dello stato del timer
+  /timer/end:
+    x-summary: Aggiorna la fase e durata del timer
+    put:
+      summary: Aggiorna la fase e durata del timer
+      description: >-
+        Aggiorna la fase e durata del timer. Se il timer è nella fase pomdoro e il tempo non è terminato, la fase non verrà aggiornata e il tempo del pomdoro verra ristabilito
+        Se il timer è nella fase pomdoro e il tempo è esaurito oppure se è nella fase di pausa (lunga o corta), vengono aggiornate fase e durata
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - fase
+                - time
+              properties:
+                fase:
+                  type: integer
+                  enum: [0, 1, 2]
+                  description: 'Fase del timer (pomodoro, pausaCorta, pausaLunga)'
+                time:
+                  type: integer
+                  description: 'Durata della fase'
+      responses:
+        '200':
+          description: Modifica delle impostazioni avvenuta con successo
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  fase:
+                    type: integer
+                    example: 1
+                  durata:
+                    type: integer
+                    example: 5
+        '400':
+          description: Errore, input non validi
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore, input non validi
+  /timer/impostazioni:
+    x-summary: Legge e ritorna i valori delle impostazioni attuali del timer
+    get:
+      summary: Legge e ritorna i valori delle impostazioni attuali del timer
+      description: >-
+        Legge e ritorna i valori delle impostazioni attuali del timer.
+        I valori sono salvati in locale, quindi sono relativi unicamente alla sessione corrente
+      responses:
+        '200':
+          description: Lettura delle impostazioni avvenuta con successo
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  durataPomodoro:
+                    type: integer
+                    example: 15
+                  durataPausaCorta:
+                    type: integer
+                    example: 5
+                  durataPausaLunga:
+                    type: integer
+                    example: 15
+                  pomodoriPerSessione:
+                    type: integer
+                    example: 4
+        '500':
+          description: Errore nella lettura delle impostazioni
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore nella lettura delle impostazioni
+  /timer/impostazioni/aggiorna:
+    x-summary: Aggiorna le impostazioni del timer
+    put:
+      summary: Modifica le impostazioni del timer
+      description: >-
+        Modifica le impostazioni del timer. Le impostazoni rimangono solo localmente.
+        In particolare permette di modificare la durata della sessione di studio, la durata
+        della pausa breve, della pausa lunga e del numero di sessioni prima della pausa lunga
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - pomdoro
+                - pausaCorta
+                - pausaLunga
+                - sessioni
+              properties:
+                pomdoro:
+                  type: integer
+                  description: 'Durata del pomodoro, ovvero il tempo della singola sessione'
+                pausaCorta:
+                  type: integer
+                  description: 'Durata della pausaCorta'
+                pausaLunga:
+                  type: integer
+                  description: 'Durata della pausaLunga'
+                sessioni:
+                  type: integer
+                  description: 'Numero di sessioni prima della pausaLunga'
+      responses:
+        '200':
+          description: Modifica delle impostazioni avvenuta con successo
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Modifica delle impostazioni avvenuta con successo
+        '400':
+          description: Errore, input non validi
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore, input non validi
+        '500':
+          description: Errore durante la modifica delle impostazioni
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore durante la modifica delle impostazioni
