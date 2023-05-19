@@ -12,7 +12,7 @@ servers:
 paths:
   /profilo/login:
     x-summary: Effetua il login
-    put:
+    post:
       summary: Effetua il login
       description: >-
         Effetua il login, controllando la corrispondenza tra le credenziali ricevute (email e password).
@@ -74,7 +74,7 @@ paths:
                     example: Errore durante l'autenticazione
   /profilo/registrazione:
     x-summary: Effetua la registrazione
-    put:
+    post:
       summary: Effetua la registrazione
       description: >-
         Effetua la registrazione, controllando la validità e la corrispondenza tra le credenziali ricevute (email e password).
@@ -153,7 +153,7 @@ paths:
                     example: Errore durante la registrazione
   /profilo/data:
     x-summary: Recupera i dati di un utente (email e username)
-    put:
+    get:
       summary: Recupera i dati di un utente (email e username)
       description: >-
         Recupera i dati di un utente (email e username). A questo proposito viene gestita l'interazione con il db
@@ -213,7 +213,7 @@ paths:
                     example: Errore durante la lettura dei dati
   /timer/stato:
     x-summary: Legge fase e durata del timer
-    put:
+    get:
       summary: Legge fase e durata del timer
       description: >-
         Legge e restituisce la fase e durata del timer
