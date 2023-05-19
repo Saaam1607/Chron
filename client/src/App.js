@@ -11,6 +11,7 @@ import Logo from "./components/navigation/Logo"
 import Home from "./components/home/Home"
 import Timer from "./components/timer/Timer"
 import Profilo from "./components/profilo/Profilo"
+import Todos from "./components/to-do/To-do"
 
 // routing elements
 import {
@@ -71,6 +72,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/timer" element={<Timer />} />
         <Route path="/profilo" element={<Profilo />} />
+        <Route path="/to-do" element={<Todos />} />
       </Routes>
     </div>
     </Router>
