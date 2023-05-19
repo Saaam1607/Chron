@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+const tokenManager = require('../tokenManager/cookieManager');
 
 export default function SessionForm(){
 
@@ -25,9 +26,34 @@ export default function SessionForm(){
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission with date and time data
-        console.log('Submitted:', { date, time });
-        // You can perform any necessary operations with the date and time data here
+
+        let[hours, mins] = time.split(":");
+        const minutes = parseInt(mins) + parseInt(hours * 60);
+
+        fetch('api/v1/timer/salva-sessione', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${tokenManager.getAuthToken()}`
+            },
+            body: JSON.stringify({minuti: minutes, date: date})
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 400){
+                    throw new Error("Input non validi");
+                } else if (response.status === 500){
+                    throw new Error("Errore durante il salvataggio della sessione");
+                }
+            })
+                .then(data => {
+                    console.log("SALVATO")
+                })
+                .catch(error => {
+                    alert(error.message);
+                })
     };
 
     return (

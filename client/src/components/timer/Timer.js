@@ -205,7 +205,6 @@ export default function Timer(){
 
             </div>
 
-            
         </div>
     );
 }

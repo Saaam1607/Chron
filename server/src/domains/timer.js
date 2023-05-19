@@ -82,7 +82,6 @@ router.get("/impostazioni", (req, res) => {
     } else{
         res.status(500).json({message: "Errore"})
     }
-    
 })
 
 router.put("/impostazioni/aggiorna", async (req, res) => {
@@ -101,8 +100,9 @@ router.put("/impostazioni/aggiorna", async (req, res) => {
 
 
 router.put('/salva-sessione', (req, res) => {
+
     const minuti = req.body.minuti;
-    const date =  new Date(req.body.date);
+    const date = new Date(req.body.date);
 
     if (!minuti || typeof minuti !== 'number' || !date || isNaN(Date.parse(date))) {
       return res.status(400).json({ success: false, message: 'Parametro "minuti" o "date" mancante o non valido.' });
