@@ -1,0 +1,17 @@
+.add-button {
+	background-color: rgb(35, 156, 204);
+	border-color: rgb(35, 156, 204);
+    width: auto;
+    height: auto;
+}
+
+.add-button:hover {
+    background-color: rgb(35, 156, 204);
+    border-color: rgb(35, 156, 204);
+}
+
+.add-button:active {
+    background-color: rgb(35, 156, 204);
+    border-color: rgb(35, 156, 204);
+}
+

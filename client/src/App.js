@@ -30,7 +30,7 @@ function App() {
       <div className="sidebar">
       <Logo/>
         <div>
-          <ul>
+          <ul className='list-unstyled'>
             <li>
               <Link to="/home" style={{ textDecoration: 'none' }}>
                 <SidebarItem title="HOME" icon="bi bi-house"/>
@@ -64,9 +64,7 @@ function App() {
           </ul>
         </div>
       </div>
-      <div className="container">
 
-      </div>
 
       <Routes>
         <Route path="/home" element={<Home />} />

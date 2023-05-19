@@ -1,9 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import "./Todo.css";
+import "./To-do.css";
 import { useState, useEffect } from 'react';
 import { Button, Form, Table, Modal } from "react-bootstrap";
 
-const authenticate = require('../tokenManager/tokenAuthenticator.js');
 const CookieManager = require("../tokenManager/cookieManager.js")
 
 const api_base = "/api/v1/todos";
@@ -119,7 +118,7 @@ export default function Todo(){
         <div className="container py-5">
           {isAuthenticated ? (
                   <>
-                  <h1 className="text-center mb-5">Welcome, Name</h1>
+                  <h1 className="text-center mb-5">Welcome BACK!</h1>
                   <h4 className="mb-3">Your tasks</h4>
         
                   <div className="d-flex justify-content-between mb-3">
