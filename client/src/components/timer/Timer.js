@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import './Timer.css';
-import SessionForm from "./SessionForm"
+import SessionForm from './SessionForm';
 import TimerSettings from "./TimerSettings"
 import { handleAlert } from '../alert/Alert';
+//const tokenManager = require('../tokenManager/cookieManager');
 const tokenManager = require('../tokenManager/cookieManager');
 
 
@@ -12,7 +13,11 @@ export default function Timer(){
     const [timerState, setTimerState] = useState("stopped");
     const [fase, setFase] = useState(0);
     const [message, setMessage] = useState("");
+
+    const [settingsClicked, setSettingsClicked] = useState(false);
+    const [sessionFormClicked, setsessionFormClicked] = useState(false);
   
+    const [soundUP, setSoundUP] = useState(true);
 
     const readTimerData = async () =>{
       await fetch("api/v1/timer/stato", {method: 'GET'})
@@ -55,10 +60,11 @@ export default function Timer(){
         if ((timerState == "stoppato")){
             fetchData()                    // aggiorna la fase (fase <- fase-successiva)
             readTimerData()                // aggiorna il timer (durata, fase, messaggio)
-            if (time == 0){
-                handleAlert()              // mostra l'alert
+            if (time == 0 && soundUP){
+                handleAlert()               // lancia l'alert
             }
         }
+
     },[timerState])
 
     useEffect(() => {
@@ -85,22 +91,30 @@ export default function Timer(){
     let secondi = time - minuti * 60;
 
     return (
-      <div className="Timer">
-        <h1 style={fase == 0 ? {color: "rgb(35, 156, 204)"} : {color: "green"}}>{message}</h1>
-        <div className="minutes-seconds">
-          <span>{minuti < 10 ? "0" + minuti: minuti}:</span>
-          <span>{secondi < 10 ? "0" + secondi: secondi}</span>
-        </div>
-  
-        <div className="buttons">
-          <div className='timer-buttons'>
-
-            {/* PLAY */}
-            {(timerState != "avviato") &&
-              <span className="icona"onClick={() => setTimerState("avviato")}>
-                <i className="bi bi-play-circle-fill" title="START"></i>
-              </span>
-            }
+        <div className="Timer">
+            <div className="timer-container">
+                <h1 style={fase == 0 ? {color: "rgb(35, 156, 204)"} : {color: "green"}}>{message}</h1>
+                <div className="minutes-seconds">
+                    <span>{minuti < 10 ? "0" + minuti: minuti}:</span>
+                    <span>{secondi < 10 ? "0" + secondi: secondi}</span>
+                </div>
+                <div >
+                <button 
+                style={soundUP ? {backgroundColor: "rgb(35, 156, 204)",height: "60px"} : {backgroundColor: "red",height: "60px"}}
+                className="btn btn-primary btn-sm"
+                onClick={() => setSoundUP(!soundUP)}> {soundUP ? "NOTIFICA ON" : "NOTIFICA OFF"}</button>
+                </div>
+                <div className="timer-buttons-div">
+                        {/* PLAY */}
+                        {(timerState != "avviato") &&
+                            <span className="icona">
+                                <i
+                                    className="bi bi-play-circle-fill"
+                                    title="START"
+                                    onClick={() => setTimerState("avviato")}
+                                ></i>
+                            </span>
+                        }
 
             {/* PAUSE */}
             {(timerState == "avviato") &&
