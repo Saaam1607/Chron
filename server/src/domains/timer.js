@@ -91,24 +91,23 @@ router.get("/impostazioni", (req, res) => {
 
 router.put("/impostazioni/aggiorna", async (req, res) => {
 
+    const pomdoro = parseInt(req.body.pomdoro);
+    const pausaCorta = parseInt(req.body.pausaCorta);
+    const pausaLunga = parseInt(req.body.pausaLunga);
+    const sessioni = parseInt(req.body.sessioni);
+
     if (
-        // controllo se non è un numero
-        !isNaN(req.body.pomdoro) ||
-        !isNaN(req.body.pausaCorta) ||
-        !isNaN(req.body.pausaLunga) ||
-        !isNaN(req.body.sessioni) ||
+        // controllo che non sia Nan
+        isNaN(pomdoro) ||
+        isNaN(pausaCorta) ||
+        isNaN(pausaLunga) ||
+        isNaN(sessioni) ||
 
-        // controllo se non è un numero intero
-        (parseInt(req.body.pomdoro) != req.body.pomdoro) ||
-        (parseInt(req.body.pausaCorta) != req.body.pausaCorta) ||
-        (parseInt(req.body.pausaLunga) != req.body.pausaLunga) ||
-        (parseInt(req.body.sessioni) != req.body.sessioni) ||
-
-        // oontrollo sul range di valore
-        (req.body.pomdoro < 15 || req.body.pomdoro > 60) ||
-        (req.body.pausaCorta < 5 || req.body.pausaCorta > 15) ||
-        (req.body.pausaLunga < 10 || req.body.pausaLunga > 30) ||
-        (req.body.sessioni < 2 || req.body.sessioni > 6)
+        // coontrollo sul range di valore
+        (pomdoro < 15 || pomdoro > 60) ||
+        (pausaCorta < 5 || pausaCorta > 15) ||
+        (pausaLunga < 10 || pausaLunga > 30) ||
+        (sessioni < 2 || sessioni > 6)
     ){
         return res.status(400).json({success: false, message: "Errore, input non validi"})
     }
