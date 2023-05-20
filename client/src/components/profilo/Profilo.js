@@ -26,7 +26,7 @@ export default function Profilo(){
                         .then(data => {
                             setAuthenticated(data.success)
                         })
-                } else if (response.status === 401) {
+                } else {
                     console.log("token non trovato");
                 }
             })
@@ -36,6 +36,11 @@ export default function Profilo(){
     return (
       <div className="Profilo">
         <h1>Profilo</h1>
+
+        {authenticated==true ? <div>
+            <DatiProfilo setAuthenticated={setAuthenticated}/>
+        </div> : <></>}
+
             {authenticated==false ? <div>
                 <div className='auth-button-div'>
                     <button

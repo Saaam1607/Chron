@@ -1,8 +1,10 @@
-export default function Profilo(){
+const tokenManager = require('../tokenManager/cookieManager');
+
+export default function Profilo({setAuthenticated}){
 
     return (
       <div>
-        <h1>Profilo</h1>
+        {/* <h1>Profilo</h1>
             <div>
                 <h2> username: </h2>
                 <p>bla bla bla</p>
@@ -13,7 +15,16 @@ export default function Profilo(){
             </div>
             <div>
                 <button>Logout</button>
-            </div>
+            </div> */}
+            <button
+                onClick={() => {
+                    tokenManager.deleteAuthToken();
+                    setAuthenticated(false);
+                    }}
+            >
+                Logout
+            </button>
+            
       </div>
     );
 }

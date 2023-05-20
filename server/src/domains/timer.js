@@ -53,47 +53,74 @@ timer = new Timer();
 
 router.get("/stato", (req, res) => {
     if (timer.fase != undefined && timer.durata){
-        res.status(200).json({fase: timer.fase, durata: timer.durata})
+        res.status(200).json({success: true, fase: timer.fase, durata: timer.durata})
     } else{
-        res.status(500).json()
+        res.status(500).json({success: false, message: "Errore durante la lettura dello stato del timer"})
     }
     
 })
 
-// DA INTEGRARE CON L'AGGIUNTA AUTO
 router.put("/end", (req, res) => {
 
     // controlli su input
     if (req.body.fase < 0 || req.body.fase > 2 || req.body.time < 0 || req.body.time > 60 * 60){
-        return res.status(400).json()
+        return res.status(400).json({success: false, message: "Errore, input non validi"})
     }
 
     if (req.body.time <= 0 || (((req.body.fase == 1) || req.body.fase == 2) && req.body.stato == "stoppato")){
         timer.aggiorna();
         //console.log("TEMPO RIMANENTE: " + this.durata * 60 - req.body.time)
     }
-    res.status(200).json({fase: timer.fase, durata: timer.durata})
+    res.status(200).json({success: true, fase: timer.fase, durata: timer.durata})
 })
 
 router.get("/impostazioni", (req, res) => {
     const data = impostazioni.getSettingsData()
     if (data){
-        res.status(200).json(data)
+        res.status(200).json({
+            success: true, 
+            durataPomodoro: data.durataPomodoro,
+            durataPausaCorta: data.durataPausaCorta,
+            durataPausaLunga: data.durataPausaLunga,
+            pomodoriPerSessione: data.pomodoriPerSessione
+        })
     } else{
-        res.status(500).json({message: "Errore"})
+        res.status(500).json({success: false, message: "Errore nella lettura delle impostazioni"})
     }
 })
 
 router.put("/impostazioni/aggiorna", async (req, res) => {
+
+    const pomdoro = parseInt(req.body.pomdoro);
+    const pausaCorta = parseInt(req.body.pausaCorta);
+    const pausaLunga = parseInt(req.body.pausaLunga);
+    const sessioni = parseInt(req.body.sessioni);
+
+    if (
+        // controllo che non sia Nan
+        isNaN(pomdoro) ||
+        isNaN(pausaCorta) ||
+        isNaN(pausaLunga) ||
+        isNaN(sessioni) ||
+
+        // coontrollo sul range di valore
+        (pomdoro < 15 || pomdoro > 60) ||
+        (pausaCorta < 5 || pausaCorta > 15) ||
+        (pausaLunga < 10 || pausaLunga > 30) ||
+        (sessioni < 2 || sessioni > 6)
+    ){
+        return res.status(400).json({success: false, message: "Errore, input non validi"})
+    }
+
     try {
         impostazioni.setDurataPomodoro(req.body.pomdoro);
         impostazioni.setDurataPausaCorta(req.body.pausaCorta);
         impostazioni.setDurataPausaLunga(req.body.pausaLunga);
         impostazioni.setPomodoriPerSessione(req.body.sessioni);
         timer.aggiornaImpostazioni();
-        res.status(200).json()
+        res.status(200).json({success: true , message: "Modifica delle impostazioni avvenuta con successo"})
     } catch (error) {
-        res.status(500).json()
+        res.status(500).json({success: false, message: "Errore durante la modifica delle impostazioni"})
     }
 })
 
