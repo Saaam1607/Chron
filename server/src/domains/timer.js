@@ -70,6 +70,10 @@ router.put("/end", (req, res) => {
 
     if (req.body.time <= 0 || (((req.body.fase == 1) || req.body.fase == 2) && req.body.stato == "stoppato")){
         timer.aggiorna();
+
+        
+        
+        
         //console.log("TEMPO RIMANENTE: " + this.durata * 60 - req.body.time)
     }
     res.status(200).json({success: true, fase: timer.fase, durata: timer.durata})
@@ -128,8 +132,6 @@ router.put("/impostazioni/aggiorna", async (req, res) => {
 
 
 router.put('/salva-sessione', verificaAutenticazione, (req, res) => {
-
-    console.log("DNETOR QUA")
 
     const minuti = req.body.minuti;
     const date = new Date(req.body.date);

@@ -4,6 +4,7 @@ import SessionForm from "./SessionForm"
 import TimerSettings from "./TimerSettings"
 const tokenManager = require('../tokenManager/cookieManager');
 
+let durata = 0;
 
 export default function Timer(){
 
@@ -11,6 +12,7 @@ export default function Timer(){
     const [timerState, setTimerState] = useState("stoppato");
     const [fase, setFase] = useState(0);
     const [message, setMessage] = useState("");
+    const [firstAccess, setFirstAccess] = useState(true);
 
     const [settingsClicked, setSettingsClicked] = useState(false);
     const [sessionFormClicked, setsessionFormClicked] = useState(false);
@@ -33,6 +35,7 @@ export default function Timer(){
                     
                     // setting up timer
                     setTime(data.durata * 60)
+                    durata = (data.durata * 60)
                     setFase(data.fase)
 
                     // setting up message
@@ -94,8 +97,42 @@ export default function Timer(){
     // quando il timer viene fermato (o dall'utente o perchè è finito)
     useEffect(() => {
         if ((timerState == "stoppato")){
+            if (firstAccess == false && fase == 0 && tokenManager.getAuthToken() != false){
+                
+                //salvataggio automatico della sessione
+                fetch('api/v1/timer/salva-sessione', {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${tokenManager.getAuthToken()}`
+                    },
+                    body: JSON.stringify({minuti: (durata-time), date: new Date()})
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else if (response.status === 400){
+                            throw new Error("Input non validi");
+                        } else if (response.status === 401){
+                            throw new Error("Devi essere autenticato per poter salvare una sessione!");
+                        } else if (response.status === 500){
+                            throw new Error("Errore durante il salvataggio della sessione");
+                        }
+                    })
+                        .then(data => {
+                            //console.log("SALVATO")
+                        })
+                        .catch(error => {
+                            alert(error.message);
+                        })
+                
+
+
+            }
             fetchData()                    // aggiorna la fase (fase <- fase-successiva)
-            readTimerData()                // aggiorna il timer (durata, fase, messaggio)
+            readTimerData()               // aggiorna il timer (durata, fase, messaggio)
+            setFirstAccess(false)
         }
     },[timerState])
 

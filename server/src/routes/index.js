@@ -23,7 +23,6 @@ function authenticateToken(req, res, next) {
     next(); // Call the next middleware or route handler
 }
 
-//router.use("/api/v1/timer/salva-sessione", authenticateToken, verificaAutenticazione, timer)
 router.use("/api/v1/timer", authenticateToken, timer)
 router.use("/api/v1/profilo", authenticateToken, profilo)
 router.use("/api/v1/todos", authenticateToken, verificaAutenticazione, todos)

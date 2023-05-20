@@ -35,7 +35,7 @@ export default function SessionForm(){
                 }
             })
                 .then(data => {
-                    console.log("SALVATO")
+                    //console.log("SALVATO")
                 })
                 .catch(error => {
                     alert(error.message);
