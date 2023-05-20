@@ -1,7 +1,12 @@
 class CookieManager{
 
     static setAuthToken(token){
+        console.log(token)
         localStorage.setItem('token', token);
+    }
+
+    static deleteAuthToken(token){
+        localStorage.removeItem('token');
     }
 
     static getAuthToken(){
