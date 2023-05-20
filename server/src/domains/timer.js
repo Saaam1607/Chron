@@ -3,6 +3,7 @@ const impostazioni = require("./../components/timer/timerSettings")
 const { Data, Tempo, Sessione } = require('../components/utils/utils');
 const GestoreDB = require("../components/gestoreDB/gestoreDB")
 const router = express.Router()
+const verificaAutenticazione = require("./../routes/verificaAutenticazione") // middleware per verificare l'autenticazione
 
 const Fase = Object.freeze({ 
     Pomodoro: 0,
@@ -126,7 +127,9 @@ router.put("/impostazioni/aggiorna", async (req, res) => {
 
 
 
-router.put('/salva-sessione', (req, res) => {
+router.put('/salva-sessione', verificaAutenticazione, (req, res) => {
+
+    console.log("DNETOR QUA")
 
     const minuti = req.body.minuti;
     const date = new Date(req.body.date);

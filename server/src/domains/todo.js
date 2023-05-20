@@ -8,7 +8,6 @@ const listaTask = new ListaTasks(1);
 
 
 router.get('/', async (req, res) => {
-	console.log("GET /todos");
 
     if(isFirstTime && req.id){
         listaTask.ID_utente = req.id;
