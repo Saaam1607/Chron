@@ -3,6 +3,7 @@ import './Timer.css';
 import SessionForm from "./SessionForm"
 import TimerSettings from "./TimerSettings"
 const tokenManager = require('../tokenManager/cookieManager');
+import { handleAlert } from '../alert/Alert';
 
 
 export default function Timer(){
@@ -14,7 +15,8 @@ export default function Timer(){
 
     const [settingsClicked, setSettingsClicked] = useState(false);
     const [sessionFormClicked, setsessionFormClicked] = useState(false);
-  
+    const [soundUP, setSoundUP] = useState(true);
+
     const readTimerData = async () =>{
 
         // fetching data
@@ -96,7 +98,11 @@ export default function Timer(){
         if ((timerState == "stoppato")){
             fetchData()                    // aggiorna la fase (fase <- fase-successiva)
             readTimerData()                // aggiorna il timer (durata, fase, messaggio)
+            if (time == 0 && soundUP){
+                handleAlert()               // lancia l'alert
+            }
         }
+
     },[timerState])
 
     useEffect(() => {
@@ -130,7 +136,11 @@ export default function Timer(){
                     <span>{minuti < 10 ? "0" + minuti: minuti}:</span>
                     <span>{secondi < 10 ? "0" + secondi: secondi}</span>
                 </div>
-        
+                <div >
+                <button 
+                style={soundUP ? {backgroundColor: "rgb(35, 156, 204)",height: "60px"} : {backgroundColor: "red",height: "60px"}}
+                onClick={() => setSoundUP(!soundUP)}> {soundUP ? "NOTIFICA ON" : "NOTIFICA OFF"}</button>
+                </div>
                 <div className="timer-buttons-div">
                         {/* PLAY */}
                         {(timerState != "avviato") &&
