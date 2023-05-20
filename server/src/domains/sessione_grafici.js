@@ -14,9 +14,9 @@ router.get('/', async (req, res) => {
     //     isFirstTime = false;
     // }
     
-	try {
+	// try {
             //fetch data from db
-            const sessions = await GestoreDB.leggiStorico("6468dca871c703280cd2c29e");
+            const sessions = await GestoreDB.leggiStorico();
             
             //create unique array for sessioni.date
             const dateArray = sessions.map((sessione) => sessione.data);
@@ -33,10 +33,10 @@ router.get('/', async (req, res) => {
                 minutiArray.push(minuti);
             });
             res.status(200).json({ success: true, dateArrayUnique: dateArrayUnique, minutiArray: minutiArray });
-        } catch (error) {
-        console.error(`Errore durante la lettura delle sessioni: ${error.message}`);
-        res.status(500).json({ success: false, message: `L'operazione di lettura delle task non è andata a buon fine. ${error.message}` });
-	}
+        // } catch (error) {
+        // console.error(`Errore durante la lettura delle sessioni: ${error.message}`);
+        // res.status(500).json({ success: false, message: `L'operazione di lettura delle task non è andata a buon fine. ${error.message}` });
+	    // }
 });
 
 module.exports = router;

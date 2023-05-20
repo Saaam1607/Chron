@@ -38,7 +38,7 @@ router.use("/api/v1/timer/salva-sessione", authenticateToken, verificaAutenticaz
 router.use("/api/v1/timer", authenticateToken, timer)
 router.use("/api/v1/profilo", authenticateToken, profilo)
 router.use("/api/v1/todos", authenticateToken, verificaAutenticazione,todos)
-router.use("/api/v1/sessione_grafici", authenticateToken, verificaAutenticazione, sessione_grafici)
+router.use("/api/v1/grafici", sessione_grafici)
 
 
 module.exports = router

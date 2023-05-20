@@ -32,7 +32,6 @@ import {
     },
   };
 
-const api_base = "/api/v1/sessione_grafici"
 
 function Chron() {
 
@@ -41,9 +40,10 @@ function Chron() {
 
     const fetchData = () => {
         try {
-        fetch(api_base + "sessions", {method: 'GET'})
+        fetch( "/api/v1/grafici/", {method: 'GET'})
         .then(response => {
             if (response.ok) {
+              //console.log(response.json());
               return response.json();
             } else if (response.status === 400){
               throw new Error("Errore durante l'aggiornamento dei dati");
@@ -51,9 +51,11 @@ function Chron() {
           })
         .then(info => {
             //update minuti
-            setMinuti(info.minutiArray);
-            //update datachanged
-            setDatachanged(info.dateArrayUnique); 
+            if (info != undefined) {
+              setMinuti(info.minutiArray);
+              //update datachanged
+              setDatachanged(info.dateArrayUnique); 
+            } 
         }
         )
 
@@ -82,7 +84,6 @@ function Chron() {
 
   return (
     <div>
-      Grafici_no_calc
       <Bar data={data} options={options} />
     </div>
   )
