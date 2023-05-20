@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken")
 const timer = require("../domains/timer")
 const profilo = require("../domains/profilo")
 const todos = require("../domains/todo")
+const sessione_grafici = require("../domains/sessione_grafici")
 
 
 function authenticateToken(req, res, next) {
@@ -37,6 +38,7 @@ router.use("/api/v1/timer/salva-sessione", authenticateToken, verificaAutenticaz
 router.use("/api/v1/timer", authenticateToken, timer)
 router.use("/api/v1/profilo", authenticateToken, profilo)
 router.use("/api/v1/todos", authenticateToken, verificaAutenticazione,todos)
+router.use("/api/v1/sessione_grafici", authenticateToken, verificaAutenticazione, sessione_grafici)
 
 
 module.exports = router

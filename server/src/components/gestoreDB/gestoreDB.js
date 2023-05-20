@@ -181,8 +181,20 @@ class GestoreDB {
         });
       }
 
+      static leggiStorico(ID_utente) {
+        return new Promise((resolve, reject) => {
+        SessioneModel.find({ ID_utente: ID_utente })
+            .then(dati => {
+                resolve(dati);
+            })
+            .catch(error => {
+                console.error(`Errore durante la lettura delle ore di studio per l'utente ${ID_utente}: ${error}`);
+                reject({ message: error });
+            });
+        });
+    }
 }
-    
+
     
 
 module.exports = GestoreDB;

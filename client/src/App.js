@@ -20,6 +20,7 @@ import {
     Route,
     Link
   } from "react-router-dom";
+import Chron from './components/chron/Chron';
 
 
 
@@ -61,6 +62,11 @@ function App() {
               <SidebarItem title="SALE STUDIO" icon="bi bi-map"/>
               </Link>
             </li>
+            <li>
+              <Link to="/Chron" style={{ textDecoration: 'none' }}>
+              <SidebarItem title="CHRON" icon="bi bi-clock-history"/>
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
@@ -71,6 +77,7 @@ function App() {
         <Route path="/timer" element={<Timer />} />
         <Route path="/profilo" element={<Profilo />} />
         <Route path="/to-do" element={<Todos />} />
+        <Route path="/Chron" element={<Chron />} />
       </Routes>
     </div>
     </Router>
