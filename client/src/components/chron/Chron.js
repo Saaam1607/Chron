@@ -31,16 +31,22 @@ import {
       },
     },
   };
-
+  const CookieManager = require("../tokenManager/cookieManager.js")  
 
 function Chron() {
+    //auth
+    const [isAuthenticated, setIsAuthenticated] = useState(CookieManager.generateHeader() !== undefined);
+    useEffect(() => {
+        setIsAuthenticated(CookieManager.generateHeader() !== undefined);
+    }, [CookieManager.generateHeader()]);
 
+    //variabili per il grafico
     const [minuti, setMinuti] = React.useState([5, 10]);
     const [datachanged, setDatachanged] = React.useState(["2020-10-10", "2020-10-11"]);
 
     const fetchData = () => {
         try {
-        fetch( "/api/v1/grafici/", {method: 'GET'})
+        fetch( "/api/v1/grafici/", {method: 'GET', headers: CookieManager.generateHeader()})
         .then(response => {
             if (response.ok) {
               //console.log(response.json());
@@ -50,8 +56,9 @@ function Chron() {
             }
           })
         .then(info => {
-            //update minuti
+            
             if (info != undefined) {
+              //update minuti
               setMinuti(info.minutiArray);
               //update datachanged
               setDatachanged(info.dateArrayUnique); 

@@ -9,34 +9,36 @@ let isFirstTime = true;
 
 router.get('/', async (req, res) => {
 
-    // if(isFirstTime && req.id){
-    //     listaTask.ID_utente = req.id;
-    //     isFirstTime = false;
-    // }
+     if(isFirstTime && req.params.id){
+         isFirstTime = false;
+     }
     
-	// try {
+	try {
             //fetch data from db
-            const sessions = await GestoreDB.leggiStorico();
+            const sessions = await GestoreDB.leggiStorico(req.params.id);
             
-            //create unique array for sessioni.date
-            const dateArray = sessions.map((sessione) => sessione.data);
+            //create unique array for sessioni.date without hours
+            const dateArray = [];
+            sessions.forEach((sessione) => {
+                dateArray.push(sessione.data.toISOString().slice(0,10));
+            });
             const dateArrayUnique = [...new Set(dateArray)];
             //create array of minuti sum for each date
             const minutiArray = [];
             dateArrayUnique.forEach((date) => {
                 let minuti = 0;
                 sessions.forEach((sessione) => {
-                    if(sessione.data == date){
+                    if(sessione.data.toISOString().slice(0,10) === date){
                         minuti += sessione.minuti;
                     }
                 });
                 minutiArray.push(minuti);
             });
             res.status(200).json({ success: true, dateArrayUnique: dateArrayUnique, minutiArray: minutiArray });
-        // } catch (error) {
-        // console.error(`Errore durante la lettura delle sessioni: ${error.message}`);
-        // res.status(500).json({ success: false, message: `L'operazione di lettura delle task non è andata a buon fine. ${error.message}` });
-	    // }
+        } catch (error) {
+        console.error(`Errore durante la lettura delle sessioni: ${error.message}`);
+        res.status(500).json({ success: false, message: `L'operazione di lettura delle task non è andata a buon fine. ${error.message}` });
+	    }
 });
 
 module.exports = router;

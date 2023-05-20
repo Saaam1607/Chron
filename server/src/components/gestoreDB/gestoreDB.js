@@ -181,9 +181,9 @@ class GestoreDB {
         });
       }
 
-      static leggiStorico() {
+      static leggiStorico(ID_utente) {
         return new Promise((resolve, reject) => {
-        SessioneModel.find({ })
+        SessioneModel.find({ ID_utente: ID_utente })
             .then(dati => {
                 resolve(dati);
             })

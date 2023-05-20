@@ -1,5 +1,7 @@
 /client/node_modules
 /server/node_modules
 
+server/src/components/chron
+
 env
 .env
