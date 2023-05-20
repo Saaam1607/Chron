@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import './Timer.css';
 import SessionForm from "./SessionForm"
 import TimerSettings from "./TimerSettings"
-const tokenManager = require('../tokenManager/cookieManager');
 import { handleAlert } from '../alert/Alert';
+const tokenManager = require('../tokenManager/cookieManager');
+
 
 
 export default function Timer(){
