@@ -66,7 +66,7 @@ router.post("/registrazione", bodyParser.json(), (req, res) => {
 
 router.get("/data", (req, res) => {
     if (req.id == undefined) {
-        res.status(401).json({success: "false", message: "Errore, ID non trovato"})
+        res.status(400).json({success: "false", message: "Errore, ID non trovato"})
     } else {
         GestoreDB.getDataFromID(req.id)
         .then((esito) => {

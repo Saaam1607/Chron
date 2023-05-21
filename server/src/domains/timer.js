@@ -70,11 +70,6 @@ router.put("/end", (req, res) => {
 
     if (req.body.time <= 0 || (((req.body.fase == 1) || req.body.fase == 2) && req.body.stato == "stoppato")){
         timer.aggiorna();
-
-        
-        
-        
-        //console.log("TEMPO RIMANENTE: " + this.durata * 60 - req.body.time)
     }
     res.status(200).json({success: true, fase: timer.fase, durata: timer.durata})
 })
@@ -123,7 +118,7 @@ router.put("/impostazioni/aggiorna", async (req, res) => {
         impostazioni.setDurataPausaLunga(req.body.pausaLunga);
         impostazioni.setPomodoriPerSessione(req.body.sessioni);
         timer.aggiornaImpostazioni();
-        res.status(200).json({success: true , message: "Modifica delle impostazioni avvenuta con successo"})
+        res.status(200).json({success: true})
     } catch (error) {
         res.status(500).json({success: false, message: "Errore durante la modifica delle impostazioni"})
     }
