@@ -185,7 +185,7 @@ paths:
                   email:
                     type: string
                     example: email
-        '401':
+        '400':
           description: Errore, ID non trovato
           content:
             text/plain:
