@@ -24,7 +24,19 @@ function authenticateToken(req, res, next) {
     next(); // Call the next middleware or route handler
 }
 
-router.use(cors());
+// Imposta l'header Access-Control-Allow-Origin per consentire tutte le origini
+router.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+  router.use(cors());
+    
+  next();
+});
+
+
 router.use("/api/v1/timer", authenticateToken, timer)
 router.use("/api/v1/profilo", authenticateToken, profilo)
 router.use("/api/v1/todos", authenticateToken, verificaAutenticazione, todos)
