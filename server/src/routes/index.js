@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require("express")
 const router = express.Router()
 const cors = require("cors");
+const bodyParser = require("body-parser"); 
 const jwt = require("jsonwebtoken")
 const verificaAutenticazione = require("./verificaAutenticazione") // middleware per verificare l'autenticazione
 
@@ -36,7 +37,7 @@ router.use((req, res, next) => {
   next();
 });
 
-
+router.use(bodyParser.json());
 router.use("/api/v1/timer", authenticateToken, timer)
 router.use("/api/v1/profilo", authenticateToken, profilo)
 router.use("/api/v1/todos", authenticateToken, verificaAutenticazione, todos)
