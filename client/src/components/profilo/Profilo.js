@@ -4,7 +4,7 @@ import Login from "./Login"
 import Registrazione from './Registrazione';
 import DatiProfilo from "./DatiProfilo"
 import './Profilo.css';
-const tokenManager = require('../tokenManager/cookieManager');
+import CookieManager from'../tokenManager/cookieManager';
 
 
 export default function Profilo(){
@@ -18,7 +18,7 @@ export default function Profilo(){
         // Cerco l'id. Se è presente leggo dal db, altrimenti bottoni di auth
         fetch("api/v1/profilo/data", {
             method: "GET",
-            headers: tokenManager.generateHeader()
+            headers: CookieManager.generateHeader()
         })
             .then(response => {
                 if (response.ok) {

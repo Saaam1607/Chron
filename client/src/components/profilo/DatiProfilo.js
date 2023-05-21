@@ -1,4 +1,4 @@
-const tokenManager = require('../tokenManager/cookieManager');
+import CookieManager from'../tokenManager/cookieManager';
 
 export default function Profilo({setAuthenticated}){
 
@@ -18,7 +18,7 @@ export default function Profilo({setAuthenticated}){
             </div> */}
             <button
                 onClick={() => {
-                    tokenManager.deleteAuthToken();
+                    CookieManager.deleteAuthToken();
                     setAuthenticated(false);
                     }}
             >

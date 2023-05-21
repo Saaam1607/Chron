@@ -2,6 +2,8 @@ require('dotenv').config();
 
 const express = require("express")
 const router = express.Router()
+const cors = require("cors");
+const bodyParser = require("body-parser"); 
 const jwt = require("jsonwebtoken")
 const verificaAutenticazione = require("./verificaAutenticazione") // middleware per verificare l'autenticazione
 
@@ -23,6 +25,19 @@ function authenticateToken(req, res, next) {
     next(); // Call the next middleware or route handler
 }
 
+// Imposta l'header Access-Control-Allow-Origin per consentire tutte le origini
+router.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+  router.use(cors());
+    
+  next();
+});
+
+router.use(bodyParser.json());
 router.use("/api/v1/timer", authenticateToken, timer)
 router.use("/api/v1/profilo", authenticateToken, profilo)
 router.use("/api/v1/todos", authenticateToken, verificaAutenticazione, todos)

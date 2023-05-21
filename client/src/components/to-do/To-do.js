@@ -3,7 +3,7 @@ import "./To-do.css";
 import { useState, useEffect } from 'react';
 import { Button, Form, Table, Modal } from "react-bootstrap";
 
-const CookieManager = require("../tokenManager/cookieManager.js")
+import CookieManager from'../tokenManager/cookieManager';
 
 const api_base = "/api/v1/todos";
 
