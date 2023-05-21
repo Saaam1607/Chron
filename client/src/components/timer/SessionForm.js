@@ -28,12 +28,14 @@ export default function SessionForm(){
                     return response.json();
                 } else if (response.status === 400){
                     throw new Error("Input non validi");
+                } else if (response.status === 401){
+                    throw new Error("Devi essere autenticato per poter salvare una sessione!");
                 } else if (response.status === 500){
                     throw new Error("Errore durante il salvataggio della sessione");
                 }
             })
                 .then(data => {
-                    console.log("SALVATO")
+                    //console.log("SALVATO")
                 })
                 .catch(error => {
                     alert(error.message);
