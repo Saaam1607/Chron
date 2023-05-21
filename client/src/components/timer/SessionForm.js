@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-const tokenManager = require('../tokenManager/cookieManager');
+import CookieManager from'../tokenManager/cookieManager';
 
 export default function SessionForm(){
     
@@ -19,7 +19,7 @@ export default function SessionForm(){
             headers: {
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json',
-                "Authorization": `Bearer ${tokenManager.getAuthToken()}`
+                "Authorization": `Bearer ${CookieManager.getAuthToken()}`
             },
             body: JSON.stringify({minuti: minutes, date: date})
         })

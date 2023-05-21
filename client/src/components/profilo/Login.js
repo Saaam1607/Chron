@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import { basicSchema  } from './schemas';
-const tokenManager = require('../tokenManager/cookieManager');
+import CookieManager from'../tokenManager/cookieManager';
 
 function addErrorStyle(error, touched) {
     return {
@@ -31,7 +31,7 @@ export default function Login({setAuthenticated}){
             })
                 .then(data => {
                     setAuthenticated(true);
-                    tokenManager.setAuthToken(data.token);
+                    CookieManager.setAuthToken(data.token);
                 })
                 .catch(error => {
                     setAuthenticated(false);

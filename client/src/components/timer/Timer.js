@@ -3,7 +3,7 @@ import './Timer.css';
 import SessionForm from "./SessionForm"
 import TimerSettings from "./TimerSettings"
 import { handleAlert } from '../alert/Alert';
-const tokenManager = require('../tokenManager/cookieManager');
+import CookieManager from'../tokenManager/cookieManager';
 
 let durata = 0;
 
@@ -24,7 +24,7 @@ export default function Timer(){
         // fetching data
         await fetch("api/v1/timer/stato", {
             method: "GET",
-            headers: tokenManager.generateHeader()
+            headers: CookieManager.generateHeader()
         })
             .then(response => {
                 if (response.ok) {
@@ -99,7 +99,7 @@ export default function Timer(){
     // quando il timer viene fermato (o dall'utente o perchè è finito)
     useEffect(() => {
         if ((timerState == "stoppato")){
-            if (firstAccess == false && fase == 0 && tokenManager.getAuthToken() != false){
+            if (firstAccess == false && fase == 0 && CookieManager.getAuthToken() != false){
                 
                 //salvataggio automatico della sessione
                 fetch('api/v1/timer/salva-sessione', {
@@ -107,7 +107,7 @@ export default function Timer(){
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
                         'Content-Type': 'application/json',
-                        "Authorization": `Bearer ${tokenManager.getAuthToken()}`
+                        "Authorization": `Bearer ${CookieManager.getAuthToken()}`
                     },
                     body: JSON.stringify({minuti: (durata-time), date: new Date()})
                 })
