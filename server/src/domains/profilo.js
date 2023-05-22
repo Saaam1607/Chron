@@ -27,7 +27,8 @@ router.post("/login", bodyParser.json(), (req, res) => {
             }
         })
         .catch((error) => {
-            res.status(500).json({success: "false", message: "Errore durante l'autenticazione"})
+            console.log("errore" + error)
+            res.status(500).json({success: "false", message: "Errore durante l'autenticazione server"})
         });
 })
 

@@ -183,7 +183,8 @@ class GestoreDB {
 
       static leggiStorico(ID_utente) {
         return new Promise((resolve, reject) => {
-        SessioneModel.find({ ID_utente: ID_utente })
+            //ordered by date
+        SessioneModel.find({ ID_utente: ID_utente }).sort({ data: 1 })
             .then(dati => {
                 resolve(dati);
             })
