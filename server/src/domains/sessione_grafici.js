@@ -17,16 +17,16 @@ router.get('/', async (req, res) => {
             //fetch data from db
             const sessions = await GestoreDB.leggiStorico(req.id);
             
-            //create array for sessioni.date without hours
-            const dateArray = [];
-            sessions.forEach((sessione) => {
-                dateArray.push(sessione.data.toISOString().slice(0,10));
-            });
-            //array of minutes
-            const minutiArray = [];
-            sessions.forEach((sessione) => {
-                minutiArray.push(sessione.minuti);
-            }); 
+            // //create array for sessioni.date without hours
+            // const dateArray = [];
+            // sessions.forEach((sessione) => {
+            //     dateArray.push(sessione.data.toISOString().slice(0,10));
+            // });
+            // //array of minutes
+            // const minutiArray = [];
+            // sessions.forEach((sessione) => {
+            //     minutiArray.push(sessione.minuti);
+            // }); 
 
 
 
@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
 
 
             //console.log(`Invio di date ${dateArray} e minuti ${minutiArray}`);
-            res.status(200).json({ success: true, dateArrayUnique: dateArray, minutiArray: minutiArray });
+            res.status(200).json({ success: true, sessions: sessions});
         } catch (error) {
         console.error(`Errore durante la lettura delle sessioni: ${error.message}`);
         res.status(500).json({ success: false, message: `L'operazione di lettura delle task non è andata a buon fine. ${error.message}` });

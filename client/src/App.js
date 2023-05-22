@@ -29,7 +29,9 @@ function App() {
     <Router>
     <div className="main">
       <div className="sidebar">
-      <Logo/>
+        <Link to="/Chron" style={{ textDecoration: 'none' }}>
+            <Logo />
+        </Link>
         <div>
           <ul className='list-unstyled'>
             <li>
@@ -60,11 +62,6 @@ function App() {
             <li>
               <Link to="/sale-studio" style={{ textDecoration: 'none' }}>
               <SidebarItem title="SALE STUDIO" icon="bi bi-map"/>
-              </Link>
-            </li>
-            <li>
-              <Link to="/Chron" style={{ textDecoration: 'none' }}>
-              <SidebarItem title="CHRON" icon="bi bi-clock-history"/>
               </Link>
             </li>
           </ul>

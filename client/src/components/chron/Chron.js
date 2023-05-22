@@ -42,8 +42,13 @@ function Chron() {
     }, [CookieManager.generateHeader()]);
 
     //variabili per il grafico
-    const [minuti, setMinuti] = React.useState([5, 10]);
-    const [datachanged, setDatachanged] = React.useState(["2020-10-10", "2020-10-11"]);
+    const [minuti, setMinuti] = React.useState([0, 0]);
+    const [dataSessione, setDataSessione] = React.useState(["", ""]);
+    const [isMonth, setIsMonth] = React.useState("true");
+    //const [tempototale, setTempototale] = React.useState(0);
+
+    
+
 
     const fetchData = () => {
         try {
@@ -57,14 +62,69 @@ function Chron() {
             }
           })
         .then(info => {
+        if (info != undefined) {
             
-            if (info != undefined) {
-              //update minuti
-              setMinuti(info.minutiArray);
-              //update datachanged
-              setDatachanged(info.dateArrayUnique); 
-            } 
-        }
+              //let tempototale = 0;
+              
+              //filtro la settimana o mese
+              if (!isMonth){ 
+                //ottengo il mese corrente
+                let oggi = new Date()
+                let meseOggi= oggi.getMonth() +1;
+                let annoOggi = oggi.getFullYear();
+
+                //conto i giorni del mese corrente
+                let giorniMese = new Date(annoOggi, meseOggi, 0).getDate();
+
+                //creo un array con le date del mese corrente
+                let dateMensili = [];
+                for (let i = 1; i <= giorniMese; i++){
+                  dateMensili.push((new Date(annoOggi + "-" + meseOggi + "-" + i)).toISOString().slice(0,10));
+                }
+                
+                let minTot = [];
+                dateMensili.forEach((data) => {
+                  let minData = 0;
+                  info.sessions.forEach((sessione) => {
+                      if(sessione.data.slice(0,10) === data){
+                          minData += sessione.minuti;
+                          //tempototale += sessione.minuti;
+                      }
+                  });
+                  minTot.push(minData);
+                })
+                
+                setDataSessione(dateMensili);
+                setMinuti(minTot);
+                //setTempototale(tempototale);
+              }else{
+                let oggi = new Date() ;
+                let lunedi = new Date(oggi.setDate(oggi.getDate() - oggi.getDay()));
+
+                //map to get the last 7 days
+                let dateWeekly = [];
+                for (let i = 0; i < 7; i++){
+                  dateWeekly.push(new Date(lunedi.setDate(lunedi.getDate()+1)).toISOString().slice(0,10));
+                }
+                
+                
+                let minTot = [];
+                dateWeekly.forEach((data) => {
+                  let minData = 0;
+                  info.sessions.forEach((sessione) => {
+                      if(sessione.data.slice(0,10) === data){
+                          minData += sessione.minuti;
+                          //tempototale += sessione.minuti;
+                      }
+                  });
+                  minTot.push(minData);
+                })
+                setDataSessione(dateWeekly);
+                setMinuti(minTot); 
+                //setTempototale(tempototale);
+              }
+            }
+          }
         )
 
         } catch (error) {
@@ -74,11 +134,13 @@ function Chron() {
       }
       
       useEffect(() => {
+        console.log(dataSessione)
+        console.log(minuti)
         fetchData();
-        }, []);
-
+        }, [isMonth]);
+        
         const data = {
-            labels: datachanged,
+            labels: dataSessione,
             datasets: [
                 {
                 label: 'Minuti',
@@ -91,9 +153,17 @@ function Chron() {
             };
 
   return (
-    <div>
+    //grafico con grandezza responsive
+          
+      <div className="chart" style={{width: "70%", height: "70%"}}>
+      <button onClick={() => setIsMonth(!isMonth)}>{isMonth ? "Settimanale" : "Mensile"}</button>
       <Bar data={data} options={options} />
-    </div>
+      {/* tempototale = {tempototale} <br/> */}
+      tempototale = {minuti.reduce((a, b) => a + b, 0)} <br/>
+      media = {minuti.reduce((a, b) => a + b, 0) / minuti.length} 
+      
+      </div>
+
   )
 }
 
