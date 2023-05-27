@@ -213,11 +213,6 @@ export default function Timer(){
                     <span>{minuti < 10 ? "0" + minuti: minuti}:</span>
                     <span>{secondi < 10 ? "0" + secondi: secondi}</span>
                 </div>
-                <div >
-                <button 
-                style={soundUP ? {backgroundColor: "rgb(35, 156, 204)",height: "60px"} : {backgroundColor: "red",height: "60px"}}
-                onClick={() => setSoundUP(!soundUP)}> {soundUP ? "NOTIFICA ON" : "NOTIFICA OFF"}</button>
-                </div>
                 <div className="timer-buttons-div">
                         {/* PLAY */}
                         {(timerState != "avviato") &&
@@ -255,7 +250,7 @@ export default function Timer(){
                                 className="bi bi-plus-circle-fill"
                                 title="ADD TIME MANUALLY"
                                 onClick={() =>{
-                                    if (timerState == "stoppato") {
+                                    if (timerState == "stoppato" || timerState == "inizializzato") {
                                         setsessionFormClicked(!sessionFormClicked)
                                         setSettingsClicked(false)
                                     } else{
@@ -279,6 +274,19 @@ export default function Timer(){
                                     }
                                 }} 
                                 style={{color: (settingsClicked) ? 'rgb(93, 123, 134)' : 'rgb(139, 148, 151)'}}
+                            ></i>
+                        </span>
+
+                        <span className="icona" >
+                            <i
+                                className="bi bi-volume-up-fill"
+                                title="ALERT SOUND"
+                                onClick={() =>{
+                                    setSoundUP(!soundUP)}
+                                } 
+                                style={
+                                    {color: (soundUP) ? 'rgb(27, 123, 161)' : 'rgb(207, 212, 213)'}
+                                }
                             ></i>
                         </span>
 
