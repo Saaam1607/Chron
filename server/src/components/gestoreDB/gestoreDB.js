@@ -2,13 +2,13 @@
 const mongoose = require('mongoose');
 
 const SessioneModel = require("../../models/Sessione");
-const Credenziali = require("../../models/Schema");
+const Credenziali = require("../../models/UserSchema");
+const Gruppo = require("../../models/GruppoSchema");
 const TaskModel = require("../../models/Task");
 
 
 class GestoreDB {
 
-    // REVISIONATA [ XXX ]
     static controllaEsistenzaEmail(email) {
         Credenziali.countDocuments({ email: email })
             .then((result) => {
@@ -20,7 +20,6 @@ class GestoreDB {
             })
     }
 
-    // REVISIONATA [ XXX ]
     static registra(username, email, password) {
         return new Promise((resolve, reject) => {
             const user = new Credenziali({
@@ -39,7 +38,6 @@ class GestoreDB {
         });
     }
 
-    // REVISIONATA [ XXX ]
     static login(email, password) {
         return new Promise((resolve, reject) => {
             Credenziali.countDocuments({ email: email, password: password })
@@ -56,7 +54,6 @@ class GestoreDB {
         });
     }
 
-    // REVISIONATA [ XXX ]
     static getIDfromEmail(email) {
         return new Promise((resolve, reject) => {
             Credenziali.findOne({ email: email })
@@ -73,7 +70,6 @@ class GestoreDB {
         });
     }
 
-    // REVISIONATA [ XXX ]
     static getDataFromID(id) {
         return new Promise((resolve, reject) => {
             Credenziali.findById(id)
@@ -179,8 +175,23 @@ class GestoreDB {
                 reject({ message: error });
             });
         });
-      }
+    }
 
+    static ottieniGruppiMembro(ID_utente) {
+        //const id = new mongoose.Types.ObjectId(ID_utente)
+        return new Promise((resolve, reject) => {
+            Gruppo.find({ leader_id: { $in: [ID_utente] } })
+                .then(listaGruppi => {
+                    console.log("LISTA: ")
+                    console.log(listaGruppi)
+                    resolve(listaGruppi);
+                })
+                    .catch(error => {
+                        console.error(`Errore durante la lettura dei gruppi per l'utente ${ID_utente}: ${error}`);
+                        reject({ message: error });
+                    });
+        });
+    }
 }
     
     
