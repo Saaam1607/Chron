@@ -88,14 +88,49 @@ export default function Timer(){
                     alert(error.message);
                 })
             
-      };
+    };
+
+    const salvaSessione = async (tempo) =>{
+
+        fetch('api/v1/timer/salva-sessione', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${CookieManager.getAuthToken()}`
+            },
+            body: JSON.stringify({minuti: (durata-time), date: new Date()})
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 400){
+                    throw new Error("Input non validi");
+                } else if (response.status === 401){
+                    throw new Error("Devi essere autenticato per poter salvare una sessione!");
+                } else if (response.status === 500){
+                    throw new Error("Errore durante il salvataggio della sessione");
+                }
+            })
+                .then(data => {
+                })
+                    .catch(error => {
+                        alert(error.message);
+                    })
+    }
+
+    const inviaNotifica = async () =>{
+        if (soundUP){
+                handleAlert()               // lancia l'alert
+            }
+    }
+
 
 
 
     // at the beginning the data is read and setted up
     useEffect(() => {
         readTimerData()
-        // sessionStorage.setItem("durataPomdoro", 25);
     },[])
 
     // quando il timer viene fermato (o dall'utente o perchè è finito)
@@ -104,18 +139,32 @@ export default function Timer(){
 
             if (time == 0 && fase == 0){ // se il timer è finito ed è pomodoro (time == 0 && fase == 0)
                 aggiornaTimer() // aggiornaTimer()
-                    .then(() => {readTimerData()})
-                // salvaSession()
+                    .then(() => {
+                        readTimerData()
+                        if (CookieManager.getAuthToken() != false){
+                            salvaSessione(durata-time)
+                        }
+                        if (soundUP){
+                            handleAlert() // lancia l'alert
+                        }   
+                    })
             }
 
             if (time != 0 && fase == 0){ // se il timer non è finito ed è pomodoro (time != 0 && fase == 0)
                 readTimerData();
-                // salvaSession()  
+                if (CookieManager.getAuthToken() != false){
+                    salvaSessione(durata-time)
+                }
             }
 
             if (time == 0 && fase != 0){ // se il timer è finito ed è una pausa (time == 0 && fase != 0)
                 aggiornaTimer()
-                    .then(() => {readTimerData()})
+                    .then(() => {
+                        readTimerData()
+                        if (soundUP){
+                            handleAlert() // lancia l'alert
+                        }
+                    })
             }
 
             if (time != 0 && fase != 0){ // se il timer non è finito ed è pausa (time != 0 && fase != 0)
@@ -123,49 +172,6 @@ export default function Timer(){
                 .then(() => {readTimerData()})
             }
 
-            
-            
-
-
-            //console.log("SALVATAGGIO SESSIONE")
-            // if (firstAccess == false && fase == 0 && CookieManager.getAuthToken() != false){
-                
-            //     //salvataggio automatico della sessione
-            //     fetch('api/v1/timer/salva-sessione', {
-            //         method: 'PUT',
-            //         headers: {
-            //             'Accept': 'application/json, text/plain, */*',
-            //             'Content-Type': 'application/json',
-            //             "Authorization": `Bearer ${CookieManager.getAuthToken()}`
-            //         },
-            //         body: JSON.stringify({minuti: (durata-time), date: new Date()})
-            //     })
-            //         .then(response => {
-            //             if (response.ok) {
-            //                 return response.json();
-            //             } else if (response.status === 400){
-            //                 throw new Error("Input non validi");
-            //             } else if (response.status === 401){
-            //                 throw new Error("Devi essere autenticato per poter salvare una sessione!");
-            //             } else if (response.status === 500){
-            //                 throw new Error("Errore durante il salvataggio della sessione");
-            //             }
-            //         })
-            //             .then(data => {
-            //                 //console.log("SALVATO")
-            //             })
-            //             .catch(error => {
-            //                 alert(error.message);
-            //             })
-            // }
-
-
-
-            // console.log("INVIO NOTIFICA")
-            // if (time == 0 && soundUP){
-            //     handleAlert()               // lancia l'alert
-            // }
-            //setFirstAccess(false)
         }
 
     },[timerState])
