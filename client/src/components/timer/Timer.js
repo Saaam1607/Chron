@@ -13,7 +13,6 @@ export default function Timer(){
     const [timerState, setTimerState] = useState("inizializzato");
     const [fase, setFase] = useState(0);
     const [message, setMessage] = useState("");
-    const [firstAccess, setFirstAccess] = useState(true);
 
     const [settingsClicked, setSettingsClicked] = useState(false);
     const [sessionFormClicked, setsessionFormClicked] = useState(false);
@@ -176,7 +175,7 @@ export default function Timer(){
 
     },[timerState])
 
-    // ------------------------------------------------------
+
 
     useEffect(() => {
       let interval = null;
@@ -197,8 +196,6 @@ export default function Timer(){
   
       return () => clearInterval(interval);
     }, [timerState, time]);
-
-    // ------------------------------------------------------
 
 
 
