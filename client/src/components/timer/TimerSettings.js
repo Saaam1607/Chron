@@ -38,6 +38,8 @@ export default function TimerSettings({readTimerData, settingsClicked, setSettin
                 })
     }, []);
   
+
+    
     const handleSubmit = (e) => {
       e.preventDefault();
 

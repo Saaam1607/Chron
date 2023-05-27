@@ -10,7 +10,7 @@ let durata = 0;
 export default function Timer(){
 
     const [time, setTime] = useState(1);
-    const [timerState, setTimerState] = useState("stoppato");
+    const [timerState, setTimerState] = useState("inizializzato");
     const [fase, setFase] = useState(0);
     const [message, setMessage] = useState("");
     const [firstAccess, setFirstAccess] = useState(true);
@@ -18,6 +18,8 @@ export default function Timer(){
     const [settingsClicked, setSettingsClicked] = useState(false);
     const [sessionFormClicked, setsessionFormClicked] = useState(false);
     const [soundUP, setSoundUP] = useState(true);
+
+    // ------------------------------------------------------
 
     const readTimerData = async () =>{
 
@@ -34,7 +36,6 @@ export default function Timer(){
                 }
             })
                 .then(data => {
-                    
                     // setting up timer
                     setTime(data.durata * 60)
                     durata = (data.durata * 60)
@@ -61,11 +62,11 @@ export default function Timer(){
                 })
     }
 
-    const fetchData = async () =>{
+    // ------------------------------------------------------
+
+    const aggiornaTimer = async () =>{
         const requestBody = {
-          time: time,
           fase: fase,
-          stato: timerState
         };
       
         await fetch('api/v1/timer/end', {
@@ -94,53 +95,82 @@ export default function Timer(){
     // at the beginning the data is read and setted up
     useEffect(() => {
         readTimerData()
+        // sessionStorage.setItem("durataPomdoro", 25);
     },[])
 
     // quando il timer viene fermato (o dall'utente o perchè è finito)
     useEffect(() => {
         if ((timerState == "stoppato")){
-            if (firstAccess == false && fase == 0 && CookieManager.getAuthToken() != false){
-                
-                //salvataggio automatico della sessione
-                fetch('api/v1/timer/salva-sessione', {
-                    method: 'PUT',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json',
-                        "Authorization": `Bearer ${CookieManager.getAuthToken()}`
-                    },
-                    body: JSON.stringify({minuti: (durata-time), date: new Date()})
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        } else if (response.status === 400){
-                            throw new Error("Input non validi");
-                        } else if (response.status === 401){
-                            throw new Error("Devi essere autenticato per poter salvare una sessione!");
-                        } else if (response.status === 500){
-                            throw new Error("Errore durante il salvataggio della sessione");
-                        }
-                    })
-                        .then(data => {
-                            //console.log("SALVATO")
-                        })
-                        .catch(error => {
-                            alert(error.message);
-                        })
-                
+
+            if (time == 0 && fase == 0){ // se il timer è finito ed è pomodoro (time == 0 && fase == 0)
+                aggiornaTimer() // aggiornaTimer()
+                    .then(() => {readTimerData()})
+                // salvaSession()
+            }
+
+            if (time != 0 && fase == 0){ // se il timer non è finito ed è pomodoro (time != 0 && fase == 0)
+                readTimerData();
+                // salvaSession()  
+            }
+
+            if (time == 0 && fase != 0){ // se il timer è finito ed è una pausa (time == 0 && fase != 0)
+                aggiornaTimer()
+                    .then(() => {readTimerData()})
+            }
+
+            if (time != 0 && fase != 0){ // se il timer non è finito ed è pausa (time != 0 && fase != 0)
+                aggiornaTimer()
+                .then(() => {readTimerData()})
+            }
+
+            
+            
 
 
-            }
-            fetchData()                    // aggiorna la fase (fase <- fase-successiva)
-            readTimerData()               // aggiorna il timer (durata, fase, messaggio)
-            if (time == 0 && soundUP){
-                handleAlert()               // lancia l'alert
-            }
-            setFirstAccess(false)
+            //console.log("SALVATAGGIO SESSIONE")
+            // if (firstAccess == false && fase == 0 && CookieManager.getAuthToken() != false){
+                
+            //     //salvataggio automatico della sessione
+            //     fetch('api/v1/timer/salva-sessione', {
+            //         method: 'PUT',
+            //         headers: {
+            //             'Accept': 'application/json, text/plain, */*',
+            //             'Content-Type': 'application/json',
+            //             "Authorization": `Bearer ${CookieManager.getAuthToken()}`
+            //         },
+            //         body: JSON.stringify({minuti: (durata-time), date: new Date()})
+            //     })
+            //         .then(response => {
+            //             if (response.ok) {
+            //                 return response.json();
+            //             } else if (response.status === 400){
+            //                 throw new Error("Input non validi");
+            //             } else if (response.status === 401){
+            //                 throw new Error("Devi essere autenticato per poter salvare una sessione!");
+            //             } else if (response.status === 500){
+            //                 throw new Error("Errore durante il salvataggio della sessione");
+            //             }
+            //         })
+            //             .then(data => {
+            //                 //console.log("SALVATO")
+            //             })
+            //             .catch(error => {
+            //                 alert(error.message);
+            //             })
+            // }
+
+
+
+            // console.log("INVIO NOTIFICA")
+            // if (time == 0 && soundUP){
+            //     handleAlert()               // lancia l'alert
+            // }
+            //setFirstAccess(false)
         }
 
     },[timerState])
+
+    // ------------------------------------------------------
 
     useEffect(() => {
       let interval = null;
@@ -161,6 +191,10 @@ export default function Timer(){
   
       return () => clearInterval(interval);
     }, [timerState, time]);
+
+    // ------------------------------------------------------
+
+
 
     let minuti = (time - (time % 60)) / 60;
     let secondi = time - minuti * 60;
@@ -231,7 +265,7 @@ export default function Timer(){
                                 className="bi bi-gear-fill"
                                 title="SETTINGS"
                                 onClick={() =>{
-                                    if (timerState == "stoppato") {
+                                    if (timerState == "stoppato" || timerState == "inizializzato") {
                                         setSettingsClicked(!settingsClicked)
                                         setsessionFormClicked(false)
                                     } else{

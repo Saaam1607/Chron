@@ -1,5 +1,7 @@
 const express = require("express")
-const impostazioni = require("./../components/timer/timerSettings")
+const session = require('express-session')
+const cookieParser = require("cookie-parser");
+const DefaultSettings = require("./../components/timer/timerSettings")
 const { Data, Tempo, Sessione } = require('../components/utils/utils');
 const GestoreDB = require("../components/gestoreDB/gestoreDB")
 const router = express.Router()
@@ -11,82 +13,120 @@ const Fase = Object.freeze({
     PausaLunga: 2,
 });
 
-class Timer {
-    constructor() {
-        this.fase = Fase.Pomodoro;
-        this.streak = 0;
-        this.durata = impostazioni.durataPomodoro;
-    }
-    stampa(){
-        console.log(`Fase: ${this.fase}, Streak: ${this.streak}, Durata: ${this.durata}`)
-    }
-    aggiornaImpostazioni(){
-        this.durata = impostazioni.durataPomodoro;
-    }
-    aggiorna(){
-        switch (this.fase) {
-            case Fase.Pomodoro: //se è la fine di un pomodoro
-                    this.streak++;
-                    if (this.streak == impostazioni.pomodoriPerSessione) { //se le sessioni sono finite
-                        this.streak = 0;
-                        this.fase = Fase.PausaLunga;
-                        this.durata = impostazioni.durataPausaLunga;
-                    } else {
-                        this.fase = Fase.PausaCorta;
-                        this.durata = impostazioni.durataPausaCorta;
-                    }
-                break;
-            case Fase.PausaCorta: //se è la fine di una pausa corta
-                this.fase = Fase.Pomodoro;
-                this.durata = impostazioni.durataPomodoro;
-                break;
-            case Fase.PausaLunga: //se è la fine di una pausa lunga
-                this.fase = Fase.Pomodoro;
-                this.durata = impostazioni.durataPomodoro;
-                break;
-            default:
-                break;
-        }
+
+
+
+function getDurataFromSettings(fase, impostazioni){
+    switch (fase) {
+        case Fase.Pomodoro:
+            return impostazioni.durataPomodoro;
+        case Fase.PausaCorta:
+            return impostazioni.durataPausaCorta;
+        case Fase.PausaLunga:
+            return impostazioni.durataPausaLunga;
+        default:
+            return 0;
     }
 }
 
-timer = new Timer();
+
+router.use(cookieParser());
+router.use(
+    session({
+        secret: "some secret",
+    })
+);
+
+
 
 router.get("/stato", (req, res) => {
-    if (timer.fase != undefined && timer.durata){
-        res.status(200).json({success: true, fase: timer.fase, durata: timer.durata})
-    } else{
+
+    try{
+        if (!req.session.impostazioni || req.session.streak == undefined || req.session.fase == undefined){ // se non c'è una sessione la creo
+            
+            // creazione con impostazioni di default
+            req.session.impostazioni = DefaultSettings.getDefaultSettings();
+            req.session.streak = 0;
+            req.session.fase = 0;
+            req.session.save();
+
+            // ritorna lo stato iniziale
+            res.status(200).json({success: true, fase: 0, durata: DefaultSettings.getDefaultDurataPomodoro()})
+
+        } else{
+
+            const durata = getDurataFromSettings(req.session.fase, req.session.impostazioni);
+
+            res.status(200).json({success: true, fase: req.session.fase, durata: durata})
+            
+        }
+    } catch (err){
         res.status(500).json({success: false, message: "Errore durante la lettura dello stato del timer"})
     }
-    
+       
 })
+
+
 
 router.put("/end", (req, res) => {
 
-    // controlli su input
-    if (req.body.fase < 0 || req.body.fase > 2 || req.body.time < 0 || req.body.time > 60 * 60){
-        return res.status(400).json({success: false, message: "Errore, input non validi"})
-    }
+    if (req.session.fase != undefined){ // forse qui vanno controlli più completi
+        
+        // controlli su input
+        if (req.body.fase < 0 || req.body.fase > 2){
+            return res.status(400).json({success: false, message: "Errore, input non validi"})
+        } else{
 
-    if (req.body.time <= 0 || (((req.body.fase == 1) || req.body.fase == 2) && req.body.stato == "stoppato")){
-        timer.aggiorna();
+            switch (req.session.fase) {
+                case Fase.Pomodoro: //se è la fine di un pomodoro
+                    req.session.streak++;
+                    if (req.session.streak == req.session.impostazioni.pomodoriPerSessione) { //se le sessioni sono finite
+                        req.session.streak = 0;
+                        req.session.fase = Fase.PausaLunga;
+                    } else {
+                        req.session.fase = Fase.PausaCorta;
+                    }
+                    break;
+                case Fase.PausaCorta: //se è la fine di una pausa corta
+                    req.session.fase = Fase.Pomodoro;
+                    break;
+                case Fase.PausaLunga: //se è la fine di una pausa lunga
+                    req.session.fase = Fase.Pomodoro;
+                    break;
+                default:
+                    break;
+            }
+
+            return res.status(200).json({
+                success: true,
+                fase: req.session.fase,
+                durata: getDurataFromSettings(req.session.fase, req.session.impostazioni)
+            })
+        }
+    } else{
+        return res.status(404).json({success: false, message: "Errore, sessione mancante o non valida"})
     }
-    res.status(200).json({success: true, fase: timer.fase, durata: timer.durata})
 })
 
+
+
 router.get("/impostazioni", (req, res) => {
-    const data = impostazioni.getSettingsData()
-    if (data){
+
+
+    if (!req.session.impostazioni){ // se c'è un dato nella sessione lo uso
+        res.status(404).json({success: false, message: "Errore, impostazioni della sessione mancanti o non valide"})
+    } else{
         res.status(200).json({
             success: true, 
-            durataPomodoro: data.durataPomodoro,
-            durataPausaCorta: data.durataPausaCorta,
-            durataPausaLunga: data.durataPausaLunga,
-            pomodoriPerSessione: data.pomodoriPerSessione
+            durataPomodoro: req.session.impostazioni.durataPomodoro,
+            durataPausaCorta: req.session.impostazioni.durataPausaCorta,
+            durataPausaLunga: req.session.impostazioni.durataPausaLunga,
+            pomodoriPerSessione: req.session.impostazioni.pomodoriPerSessione
         })
-    } else{
-        res.status(500).json({success: false, message: "Errore nella lettura delle impostazioni"})
     }
+    // } else{
+    //     res.status(500).json({success: false, message: "Errore nella lettura delle impostazioni"})
+    // }
 })
 
 router.put("/impostazioni/aggiorna", async (req, res) => {
@@ -113,12 +153,11 @@ router.put("/impostazioni/aggiorna", async (req, res) => {
     }
 
     try {
-        impostazioni.setDurataPomodoro(req.body.pomdoro);
-        impostazioni.setDurataPausaCorta(req.body.pausaCorta);
-        impostazioni.setDurataPausaLunga(req.body.pausaLunga);
-        impostazioni.setPomodoriPerSessione(req.body.sessioni);
-        timer.aggiornaImpostazioni();
+
+        req.session.impostazioni = {durataPomodoro: pomdoro, durataPausaCorta: pausaCorta, durataPausaLunga: pausaLunga, pomodoriPerSessione: sessioni}
+
         res.status(200).json({success: true})
+
     } catch (error) {
         res.status(500).json({success: false, message: "Errore durante la modifica delle impostazioni"})
     }
