@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon -r dotenv/config src/index.js dotenv_config_path=env/local.env"
+    "start": "nodemon -r dotenv/config src/index.js dotenv_config_path=env/local.env",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,8 @@
     "node": "^20.1.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "jest": "^29.5.0",
+    "nodemon": "^2.0.22",
+    "supertest": "^6.3.3"
   }
 }
