@@ -22,10 +22,6 @@ export default function Todo(){
         GetTodos();
     }, []);
 
-    useEffect(() => {
-        setIsAuthenticated(CookieManager.generateHeader() !== undefined);
-    }, [CookieManager.generateHeader()]);
-
     const GetTodos = async () => {
         try {
             const res = await fetch(api_base + "/", {
