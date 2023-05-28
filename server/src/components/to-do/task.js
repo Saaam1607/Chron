@@ -20,7 +20,11 @@ class Task {
     }
 
     async elimina() {
-        return await GestoreDB.aggiornaTask(this._id, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna,this.gruppoID, true);
+        if (this.contrassegna) {
+            return await GestoreDB.aggiornaTask(this._id, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna,this.gruppoID, true);
+        } else {
+            throw new Error("Impossibile eliminare una task non contrassegnata");
+        }
     }
 }
 
