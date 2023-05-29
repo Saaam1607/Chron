@@ -37,6 +37,7 @@ button {
 
 button:hover {
   background-color: rgb(27, 123, 161);
+  transition: 0.5s;
 }
 
 .sidebar{

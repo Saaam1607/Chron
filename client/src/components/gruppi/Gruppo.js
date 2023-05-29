@@ -21,13 +21,13 @@ export default function Gruppo({ groupName, groupID, leader, isLeader}){
                         ></i>
                     </span>
                 }
-                <h1>{groupName}</h1>
+                <h4 className="nomeGruppo">{groupName}</h4>
             </div> 
 
-            <h3 className="codice">Codice<br/>{groupID}</h3>
+            <h6 className="codice">Codice<br/>{groupID}</h6>
 
             <div className="gruppo-componenti">
-                <h5>Leader: {leader}</h5>
+                <h6>Leader: {leader}</h6>
             </div>
         </div> 
 

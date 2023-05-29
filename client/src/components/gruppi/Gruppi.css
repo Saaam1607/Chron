@@ -12,6 +12,7 @@
 .gruppi-membro {
     /* border: 2px solid blue; */
     display: flex;
+    margin-bottom: 30px;
 }
 
 .gruppo-div {
@@ -32,26 +33,71 @@
     align-items: center;
 }
 
+.nomeGruppo {
+    color: rgb(27, 123, 161);
+}
+
 .bi-star-fill {
     color: rgb(249, 234, 96);
-    font-size: 40px;
+    font-size: 25px;
 }
 
 .bi-person {
-    font-size: 40px;
+    font-size: 25px;
 }
 
 .codice {
     background-color: white;
     padding: 5px;
-    border-radius: 15px;
+    border-radius: 5px;
     color: rgb(35, 156, 204);
     text-align: center;
+    margin-top: 15pt;
+    margin-bottom: 10pt;
 }
 
 .gruppo-componenti {
     background-color: rgb(35, 156, 204);
     padding: 5px;
-    border-radius: 15px;
+    border-radius: 5px;
     color: rgb(175, 225, 245);
+    margin-top: 15pt;
+    margin-bottom: 10pt;
 }
+
+.gruppi-bottoone-creazione {
+    margin-right: 10px;
+    width: 270pt;
+    display: flex;
+    align-items: center;
+    background-color: rgb(35, 156, 204);
+    border-radius: 15pt;
+    padding-left: 10pt;
+    padding-right: 10pt;
+}
+
+.gruppi-bottoone-creazione:hover {
+    background-color: rgb(27, 123, 161);
+    transition: 0.5s;
+}
+
+.bottone-creazione {
+    background-color: initial;
+    padding: 10px;
+    font-size: 15pt;
+    min-width: 200pt;
+    min-height: 40pt;
+
+}
+
+.bottone-creazione:hover {
+    background-color: initial;
+}
+
+.bi-plus-square-fill {
+    font-size: 40px;
+}
+
+.gruppo-div:hover {
+    box-shadow: 0 0 10px rgba(4, 40, 54, 0.5);
+  }
