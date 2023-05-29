@@ -7,7 +7,7 @@ import { handleAlert } from '../alert/Alert';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Gruppi.css';
-import { Button, Form, Table, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 
 
 
@@ -78,9 +78,9 @@ export default function GruppiDashboard(){
 
     }, [nuovoGruppo]);
 
-    function creaGruppo(){
 
-        console.log("PROVO")
+
+    function creaGruppo(){
 
         fetch('api/v1/gruppi/nuovoGruppo', {
             method: 'POST',
@@ -110,11 +110,59 @@ export default function GruppiDashboard(){
             })
                 .then(() => {
                     setNuovoGruppo(nomeGruppo);
-                    handleAlert("Creazione completata", false);
+                    handleAlert("Creazione completata", false, "success");
                 })
                     .catch(error => {
                         alert(error.message);
                     })
+    }
+
+
+
+    function uniscitiGruppo(codice){
+
+        fetch('api/v1/gruppi/nuovoGruppo', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${CookieManager.getAuthToken()}`
+            },
+            body: JSON.stringify({codice: codice})
+        })
+            .then(response => {
+                if (response.ok) {
+                    return
+                } else if (response.status === 400){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                } else if (response.status === 404){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                } else if (response.status === 409){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                } else if (response.status === 500){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                }
+            })
+                .then(() => {
+                    //setNuovoGruppo(nomeGruppo);
+                    handleAlert("Unione completata", false, "success");
+                })
+                    .catch(error => {
+                        //alert(error.message);
+                        handleAlert("Unione non riuscita", false, "error");
+                    })
+
+
+    
+
     }
 
 
@@ -205,9 +253,17 @@ export default function GruppiDashboard(){
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="secondary" className="add-button" onClick={() => setNewGroupPopupActive(false)}>
+                    
+                    <Button
+                        variant="secondary"
+                        className="add-button"
+                        onClick={() => {
+                            setNewGroupPopupActive(false)
+                        }}
+                        >
                         Close
                     </Button>
+
                     <Button
                         variant="primary"
                         className="add-button"
@@ -217,14 +273,14 @@ export default function GruppiDashboard(){
                             setNomeGruppo("");
                         }}
                     >
-                        Add
+                        Crea gruppo
                     </Button>
                 </Modal.Footer>
     
             </Modal>
 
 
-            <Modal show={newGroupPopupActive} onHide={() => setAddGroupPopupActive(false)}>
+            <Modal show={addGroupPopupActive} onHide={() => setAddGroupPopupActive(false)}>
                 
                 <Modal.Header closeButton>
                     <Modal.Title>Unisciti ad un gruppo</Modal.Title>
@@ -243,19 +299,19 @@ export default function GruppiDashboard(){
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="secondary" className="add-button" onClick={() => setNewGroupPopupActive(false)}>
+                    <Button variant="secondary" className="add-button" onClick={() => setAddGroupPopupActive(false)}>
                         Close
                     </Button>
                     <Button
                         variant="primary"
                         className="add-button"
                         onClick={() => {
-                            //creaGruppo(nomeGruppo);
                             setAddGroupPopupActive(false);
                             setCodice("");
+                            uniscitiGruppo(codice);
                         }}
                     >
-                        Add
+                        Unisciti
                     </Button>
                 </Modal.Footer>
     

@@ -109,7 +109,7 @@ router.get("/leader", bodyParser.json(), (req, res) => {
 
 router.post("/nuovoGruppo", (req, res) => {
     
-    if (req.body.name == undefined || req.body.name == "") {
+    if (req.body.name == undefined || req.body.name == "" || req.id == undefined) {
         return res.status(400).json({success: "false", message: `Errore, Parametri ricevuti non validi: ${error}`})
     }
 
@@ -119,6 +119,29 @@ router.post("/nuovoGruppo", (req, res) => {
                 res.status(201).json({success: "true"})
             })
                 .catch((error) => {
+                    res.status(500).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
+                })
+    } catch (error) {
+        res.status(500).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
+    }
+
+})
+
+
+router.put("/nuovoGruppo", (req, res) => {
+    
+    if (req.body.codice == undefined || req.id == undefined) {
+        return res.status(400).json({success: "false", message: `Errore, Parametri ricevuti non validi: ${error}`})
+    }
+
+    try{
+        GestoreDB.uniscitiGruppo(req.body.codice, req.id)
+            .then((result) => {
+                console.log(result.stato)
+                res.status(201).json({success: "true"})
+            })
+                .catch((error) => {
+                    console.log(error)
                     res.status(500).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
                 })
     } catch (error) {
