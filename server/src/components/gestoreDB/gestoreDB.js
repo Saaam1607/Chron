@@ -179,8 +179,9 @@ class GestoreDB {
 
     static ottieniGruppiMembro(membro_id) {
         const id = new mongoose.Types.ObjectId(membro_id)
+        console.log(id)
         return new Promise((resolve, reject) => {
-            Gruppo.find({ leader_id: { $in: [id] } })
+            Gruppo.find({ members_id: { $in: [id] } })
                 .then(listaGruppi => {
                     resolve(listaGruppi);
                 })

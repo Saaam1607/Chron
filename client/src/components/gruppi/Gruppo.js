@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
 
-export default function GruppiDashboard({ groupName, groupID, leader, members, isLeader}){
 
+export default function Gruppo({ groupName, groupID, leader, members, isLeader}){
 
     return (
         <div className="gruppo-div">
