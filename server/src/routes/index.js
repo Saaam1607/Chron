@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken")
 const verificaAutenticazione = require("./verificaAutenticazione") // middleware per verificare l'autenticazione
 
 const timer = require("../domains/timer")
+const gruppi = require("../domains/gruppi")
 const profilo = require("../domains/profilo")
 const todos = require("../domains/todo")
 
@@ -40,6 +41,7 @@ router.use((req, res, next) => {
 router.use(bodyParser.json());
 router.use("/api/v1/timer", authenticateToken, timer)
 router.use("/api/v1/profilo", authenticateToken, profilo)
+router.use("/api/v1/gruppi", authenticateToken, verificaAutenticazione, gruppi)
 router.use("/api/v1/todos", authenticateToken, verificaAutenticazione, todos)
 
 

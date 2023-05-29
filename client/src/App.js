@@ -12,6 +12,7 @@ import Home from "./components/home/Home"
 import Timer from "./components/timer/Timer"
 import Profilo from "./components/profilo/Profilo"
 import Todos from "./components/to-do/To-do"
+import Gruppi from "./components/gruppi/GruppiDasboard"
 
 // routing elements
 import {
@@ -69,7 +70,7 @@ function App() {
       <Routes>
         <Route path="/home" element={<h3>Questa funzionalità non è ancora disponibile</h3>} />
         <Route path="/profilo" element={<Profilo />} />
-        <Route path="/gruppi" element={<h3>Questa funzionalità non è ancora disponibile</h3>} />
+        <Route path="/gruppi" element={<Gruppi />} />
         <Route path="/to-do" element={<Todos />} />
         <Route path="/timer" element={<Timer />} />
         <Route path="/sale-studio" element={<h3>Questa funzionalità non è ancora disponibile</h3>} />

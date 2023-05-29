@@ -1,7 +1,6 @@
 export default class CookieManager{
 
     static setAuthToken(token){
-        console.log(token)
         localStorage.setItem('token', token);
     }
 

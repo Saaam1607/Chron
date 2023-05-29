@@ -2,13 +2,13 @@
 const mongoose = require('mongoose');
 
 const SessioneModel = require("../../models/Sessione");
-const Credenziali = require("../../models/Schema");
+const Credenziali = require("../../models/UserSchema");
+const Gruppo = require("../../models/GruppoSchema");
 const TaskModel = require("../../models/Task");
 
 
 class GestoreDB {
 
-    // REVISIONATA [ XXX ]
     static controllaEsistenzaEmail(email) {
         Credenziali.countDocuments({ email: email })
             .then((result) => {
@@ -20,7 +20,6 @@ class GestoreDB {
             })
     }
 
-    // REVISIONATA [ XXX ]
     static registra(username, email, password) {
         return new Promise((resolve, reject) => {
             const user = new Credenziali({
@@ -39,7 +38,6 @@ class GestoreDB {
         });
     }
 
-    // REVISIONATA [ XXX ]
     static login(email, password) {
         return new Promise((resolve, reject) => {
             Credenziali.countDocuments({ email: email, password: password })
@@ -56,7 +54,6 @@ class GestoreDB {
         });
     }
 
-    // REVISIONATA [ XXX ]
     static getIDfromEmail(email) {
         return new Promise((resolve, reject) => {
             Credenziali.findOne({ email: email })
@@ -73,7 +70,6 @@ class GestoreDB {
         });
     }
 
-    // REVISIONATA [ XXX ]
     static getDataFromID(id) {
         return new Promise((resolve, reject) => {
             Credenziali.findById(id)
@@ -110,7 +106,6 @@ class GestoreDB {
                 }
             })
             .catch(error => {
-                console.error(error);
                 reject({ message: `Non è possibile effettuare il salvataggio della sessione. Messaggio errore: ${error}` });
             });
         });
@@ -179,7 +174,33 @@ class GestoreDB {
                 reject({ message: error });
             });
         });
-      }
+    }
+
+    static ottieniGruppiMembro(membro_id) {
+        const id = new mongoose.Types.ObjectId(membro_id)
+        return new Promise((resolve, reject) => {
+            Gruppo.find({ members_id: { $in: [id] } })
+                .then(listaGruppi => {
+                    resolve(listaGruppi);
+                })
+                    .catch(error => {
+                        reject({ message: `Errore durante la lettura dei gruppi: ${error}` });
+                    });
+        });
+    }
+
+    static ottieniGruppiLeader(leader_id) {
+        const id = new mongoose.Types.ObjectId(leader_id)
+        return new Promise((resolve, reject) => {
+            Gruppo.find({ leader_id: { $in: [id] } })
+                .then(listaGruppi => {
+                    resolve(listaGruppi);
+                })
+                    .catch(error => {
+                        reject({ message: `Errore durante la lettura dei gruppi: ${error}` });
+                    });
+        });
+    }
 
 }
     
