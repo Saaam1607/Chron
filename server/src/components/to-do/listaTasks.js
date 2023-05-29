@@ -13,7 +13,6 @@ class ListaTasks {
       this.tasks.splice(0, this.tasks.length);
       // leggi le tasks dal database
       const tasks = await GestoreDB.ottieniTasks(this.ID_utente);
-  
       // crea oggetti Task a partire dalle tasks lette dal database
        tasks.forEach((task) => {
         const nuovaTask = new Task(task.ID_utente, task.nome, task.dataScadenza);
@@ -22,6 +21,7 @@ class ListaTasks {
         nuovaTask.gruppoID = task.gruppoID;
         this.tasks.push(nuovaTask);
       }); 
+
       return this.tasks;
     } catch (error) {
       // Gestisci eventuali errori
@@ -30,7 +30,38 @@ class ListaTasks {
     }
   }
 
-  // altre funzioni di ordinamento
+  ordinaPerNome() {
+    this.tasks.sort((a, b) => a.nome.localeCompare(b.nome));
+  }
+  
+  ordinaPerGruppo() {
+    this.tasks.sort((a, b) => {
+      if (a.gruppoID === null && b.gruppoID === null) {
+        return 0;
+      }
+      if (a.gruppoID === null) {
+        return 1;
+      }
+      if (b.gruppoID === null) {
+        return -1;
+      }
+      return a.gruppoID.localeCompare(b.gruppoID);
+    });
+  }
+
+  ordinaPerDataScadenza() {
+    this.tasks.sort((a, b) => {
+      if (a.dataScadenza === null && b.dataScadenza === null) {
+        return 0;
+      } else if (a.dataScadenza === null) {
+        return 1;
+      } else if (b.dataScadenza === null) {
+        return -1;
+      } else {
+        return a.dataScadenza.getTime() - b.dataScadenza.getTime();
+      }
+    });
+  }
 }
 
 module.exports = ListaTasks;
