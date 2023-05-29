@@ -41,7 +41,8 @@ router.use((req, res, next) => {
 router.use(bodyParser.json());
 router.use("/api/v1/timer", authenticateToken, timer)
 router.use("/api/v1/profilo", authenticateToken, profilo)
-router.use("/api/v1/gruppi", authenticateToken, gruppi)
+//router.use("/api/v1/gruppi", authenticateToken, gruppi)
+router.use("/api/v1/gruppi", gruppi)
 router.use("/api/v1/todos", authenticateToken, verificaAutenticazione, todos)
 
 

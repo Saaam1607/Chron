@@ -177,13 +177,11 @@ class GestoreDB {
         });
     }
 
-    static ottieniGruppiMembro(ID_utente) {
-        //const id = new mongoose.Types.ObjectId(ID_utente)
+    static ottieniGruppiMembro(membro_id) {
+        const id = new mongoose.Types.ObjectId(membro_id)
         return new Promise((resolve, reject) => {
-            Gruppo.find({ leader_id: { $in: [ID_utente] } })
+            Gruppo.find({ leader_id: { $in: [id] } })
                 .then(listaGruppi => {
-                    console.log("LISTA: ")
-                    console.log(listaGruppi)
                     resolve(listaGruppi);
                 })
                     .catch(error => {
@@ -192,6 +190,7 @@ class GestoreDB {
                     });
         });
     }
+
 }
     
     

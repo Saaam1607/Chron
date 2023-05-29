@@ -12,14 +12,16 @@ const jwt = require("jsonwebtoken")
 
 router.get("/membro", bodyParser.json(), (req, res) => {
     //GestoreDB.ottieniGruppiLeader(req.id)
-    GestoreDB.ottieniGruppiMembro(0000)
+    //membro_id = "645ffebeb63cbd07bd5e9fbe"
+    GestoreDB.ottieniGruppiMembro(membro_id)
         .then((results) => {
-                if (results) {
-                    results.forEach((result) => {
-                        console.log(result); // Print each result
+                // if (results) {
+                //     results.forEach((result) => {
+                //         console.log(result); // Print each result
                         
-                    })
-                }
+                //     })
+                // }
+                console.log(results)
                 res.status(200).json(results)
         })
             .catch((error) => {
@@ -28,5 +30,7 @@ router.get("/membro", bodyParser.json(), (req, res) => {
     res.status(200)
    
 })
+
+
 
 module.exports = router

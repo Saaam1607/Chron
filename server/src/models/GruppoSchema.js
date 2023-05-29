@@ -7,6 +7,6 @@ let GruppoSchema = new mongoose.Schema({
     members_id: [{ type: mongoose.ObjectId }]
 });
 
-let Gruppo = mongoose.model('gruppi', GruppoSchema);
+let Gruppo = mongoose.model('group', GruppoSchema);
 
 module.exports = Gruppo;
