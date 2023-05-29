@@ -14,33 +14,36 @@ router.get("/membro", bodyParser.json(), (req, res) => {
     GestoreDB.ottieniGruppiMembro(req.id)
         .then((results) => {
                 if (results.length > 0) {
-                    res.status(200).json(results)
+                    res.status(200).json({success: "true", result: results})
                 }
                 else {
                     res.status(204)
                 }
         })
             .catch((error) => {
-                res.status(500).json({success: "false", message: "Errore durante la lettura dei dati"})
+                res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
             });
 })
 
 
 
 router.get("/leader", bodyParser.json(), (req, res) => {
+    try{
     GestoreDB.ottieniGruppiLeader(req.id)
         .then((results) => {
                 if (results.length > 0) {
-                    console.log(results)
-                    res.status(200).json(results)
+                    res.status(200).json({success: "true", result: results})
                 }
                 else {
                     res.status(204)
                 }
         })
             .catch((error) => {
-                res.status(500).json({success: "false", message: "Errore durante la lettura dei dati"})
+                res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
             });
+    } catch (error) {
+        res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
+    }
 })
 
 

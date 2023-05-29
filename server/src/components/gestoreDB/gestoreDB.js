@@ -106,7 +106,6 @@ class GestoreDB {
                 }
             })
             .catch(error => {
-                console.error(error);
                 reject({ message: `Non è possibile effettuare il salvataggio della sessione. Messaggio errore: ${error}` });
             });
         });
@@ -179,15 +178,13 @@ class GestoreDB {
 
     static ottieniGruppiMembro(membro_id) {
         const id = new mongoose.Types.ObjectId(membro_id)
-        console.log(id)
         return new Promise((resolve, reject) => {
             Gruppo.find({ members_id: { $in: [id] } })
                 .then(listaGruppi => {
                     resolve(listaGruppi);
                 })
                     .catch(error => {
-                        console.error(`Errore durante la lettura dei gruppi per l'utente ${ID_utente}: ${error}`);
-                        reject({ message: error });
+                        reject({ message: `Errore durante la lettura dei gruppi: ${error}` });
                     });
         });
     }
@@ -200,8 +197,7 @@ class GestoreDB {
                     resolve(listaGruppi);
                 })
                     .catch(error => {
-                        console.error(`Errore durante la lettura dei gruppi per l'utente ${ID_utente}: ${error}`);
-                        reject({ message: error });
+                        reject({ message: `Errore durante la lettura dei gruppi: ${error}` });
                     });
         });
     }

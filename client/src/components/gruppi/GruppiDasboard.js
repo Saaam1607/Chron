@@ -19,39 +19,45 @@ export default function GruppiDashboard(){
             headers: CookieManager.generateHeader(),
         })
             .then(response => {
-                if (response.ok) {
+                if (response.status === 200) {
                     return response.json();
+                } else if (response.status === 204){
+                    return;
                 } else if (response.status === 500){
-                    throw new Error("Errore durante la lettura dei gruppi");
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
                 }
             })
                 .then(data => {
-                    if (Array.isArray(data) && data.length === 0){
+                    if (Array.isArray(data.result) && data.length === 0){
                     } else {
-                        setGruppiMembro(data);
+                        setGruppiMembro(data.result);
                     }
-                    
                 })
                 .catch(error => {
                     alert(error.message);
                 })
-
 
         fetch('api/v1/gruppi/leader', {
             method: "GET",
             headers: CookieManager.generateHeader(),
         })
             .then(response => {
-                if (response.ok) {
+                if (response.status === 200) {
                     return response.json();
+                } else if (response.status === 204){
+                    return;
                 } else if (response.status === 500){
-                    throw new Error("Errore durante la lettura dei gruppi");
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
                 }
             })
                 .then(data => {
-                    if (Array.isArray(data) && data.length === 0){
+                    if (Array.isArray(data.result) && data.length === 0){
                     } else {
-                        setGruppiLeader(data);
+                        setGruppiLeader(data.result);
                     }
                     
                 })
