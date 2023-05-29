@@ -101,4 +101,23 @@ router.delete('/delete', async (req, res) => {
 
 });
 
+router.get('/sort', async (req, res) => {
+    console.log("GET /sort");
+    const listaTask = new ListaTasks(req.id);
+
+    await listaTask.leggiTasks();
+    const sort = req.query.sort;
+
+    if(sort == "name"){
+        listaTask.ordinaPerNome();
+    }else if(sort == "date"){
+        listaTask.ordinaPerDataScadenza();
+    }else if(sort == "group"){
+        listaTask.ordinaPerGruppo();
+    res.status(200).json({ success: true, tasks: listaTask.tasks });
+    }
+
+
+});
+
 module.exports = router
