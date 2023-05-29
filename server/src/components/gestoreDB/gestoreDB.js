@@ -192,6 +192,20 @@ class GestoreDB {
         });
     }
 
+    static ottieniGruppiLeader(leader_id) {
+        const id = new mongoose.Types.ObjectId(leader_id)
+        return new Promise((resolve, reject) => {
+            Gruppo.find({ leader_id: { $in: [id] } })
+                .then(listaGruppi => {
+                    resolve(listaGruppi);
+                })
+                    .catch(error => {
+                        console.error(`Errore durante la lettura dei gruppi per l'utente ${ID_utente}: ${error}`);
+                        reject({ message: error });
+                    });
+        });
+    }
+
 }
     
     

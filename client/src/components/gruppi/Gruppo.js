@@ -24,7 +24,7 @@ export default function Gruppo({ groupName, groupID, leader, members, isLeader})
                 <h1>{groupName}</h1>
             </div> 
 
-            <h3 className="codice">Codice: {groupID}</h3>
+            <h3 className="codice">Codice<br/>{groupID}</h3>
 
             <div className="gruppo-componenti">
                 <h5>Leader: {leader}</h5>
