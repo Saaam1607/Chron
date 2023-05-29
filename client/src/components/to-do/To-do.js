@@ -30,7 +30,7 @@ export default function Todo(){
             });
         
             if (res.status === 204) {
-                return { success: true, message: "Non ci sono task da mostrare" };
+                return;
             } else if (res.ok) {
                 const data = await res.json();
                 if (data && data.tasks) {
@@ -185,7 +185,7 @@ export default function Todo(){
                                                 ? new Date(todo.dataScadenza).toLocaleDateString()
                                                 : "-"}
                                         </td>
-                                        <td>{todo.gruppo ? todo.gruppo : "-"}</td>
+                                        <td>{todo.gruppoID ? todo.gruppoID : "-"}</td>
                                         <td className="text-center">
                                             <Button variant="danger" onClick={() => deleteTodo(todo._id)} disabled={deleteButtonDisabled}>
                                                 Delete
@@ -196,7 +196,7 @@ export default function Todo(){
                             ) : (
                                 <tr>
                                     <td colSpan="5" className="text-center">
-                                        No tasks found.
+                                        Non ci sono task da mostrare.
                                     </td>
                                 </tr>
                             )}

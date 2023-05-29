@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
         const todos = await listaTask.leggiTasks();
 
         if(todos.length == 0){
-            res.status(204).json({ success: true, message: "Non ci sono task da mostrare" });
+            res.status(204);
         }else{
             res.status(200).json({ success: true, tasks: todos });
         }
@@ -110,7 +110,7 @@ router.get('/sort', async (req, res) => {
         const sort = req.query.sort;
 
         if(listaTask.tasks.length == 0){
-            res.status(204).json({ success: true, message: "Non ci sono task da mostrare" });
+            res.status(204);
         }else{
             if(sort == "name"){
                 listaTask.ordinaPerNome();
