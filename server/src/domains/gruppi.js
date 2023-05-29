@@ -107,6 +107,26 @@ router.get("/leader", bodyParser.json(), (req, res) => {
     }
 })
 
+router.post("/nuovoGruppo", (req, res) => {
+    
+    if (req.body.name == undefined || req.body.name == "") {
+        return res.status(400).json({success: "false", message: `Errore, Parametri ricevuti non validi: ${error}`})
+    }
+
+    try{
+        GestoreDB.creaGruppo(req.body.name, req.id)
+            .then(() => {
+                res.status(201).json({success: "true"})
+            })
+                .catch((error) => {
+                    res.status(500).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
+                })
+    } catch (error) {
+        res.status(500).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
+    }
+
+})
+
 
 
 module.exports = router

@@ -202,6 +202,29 @@ class GestoreDB {
         });
     }
 
+    static creaGruppo(nome, leader_id) {
+
+        return new Promise((resolve, reject) => {
+            
+            const nuvoGruppo = new Gruppo({
+                
+                _id: new mongoose.Types.ObjectId(),
+                name: nome,
+                leader_id: leader_id,
+                members_id: []
+
+            });
+
+            nuvoGruppo.save()
+                .then(() => {
+                    resolve({ stato: 201 });
+                })
+                    .catch(error => {
+                        reject({ message: `Non è possibile effettuare il salvataggio della sessione. Messaggio errore: ${error}` });
+                    });
+        })
+    }
+
 }
     
     

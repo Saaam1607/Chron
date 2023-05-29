@@ -1,18 +1,22 @@
 .Gruppi {
     margin-left: 20pt;
     margin-top: 20pt;
+    max-width: 83%;
 }
 
 .gruppi-leader {
-    /* border: 2px solid red; */
+    max-width: 100%;
     display: flex;
     margin-bottom: 30px;
+    overflow-x: scroll;
 }
 
 .gruppi-membro {
     /* border: 2px solid blue; */
+    max-width: 100%;
     display: flex;
     margin-bottom: 30px;
+    overflow-x: scroll;
 }
 
 .gruppo-div {
@@ -20,8 +24,7 @@
     /* border: 1px solid black; */
     border-radius: 10px;
     padding: 10px;
-    margin-bottom: 10px;
-    margin-right: 10px;
+    margin: 7pt;
 }
 
 .icona-gruppo {
@@ -87,7 +90,6 @@
     font-size: 15pt;
     min-width: 200pt;
     min-height: 40pt;
-
 }
 
 .bottone-creazione:hover {
@@ -100,4 +102,4 @@
 
 .gruppo-div:hover {
     box-shadow: 0 0 10px rgba(4, 40, 54, 0.5);
-  }
+}

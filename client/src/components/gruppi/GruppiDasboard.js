@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 
 import CookieManager from'../tokenManager/cookieManager';
 import Gruppo from './Gruppo';
+import { handleAlert } from '../alert/Alert';
+
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Gruppi.css';
@@ -16,6 +18,7 @@ export default function GruppiDashboard(){
 
     const [popupActive, setPopupActive] = useState(false);
     const [nomeGruppo, setNomeGruppo] = useState("");
+    const [nuovoGruppo, setNuovoGruppo] = useState(null);
 
     useEffect(() => {
 
@@ -70,7 +73,46 @@ export default function GruppiDashboard(){
                     alert(error.message);
                 })
 
-    }, []);
+    }, [nuovoGruppo]);
+
+    function creaGruppo(){
+
+        console.log("PROVO")
+
+        fetch('api/v1/gruppi/nuovoGruppo', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${CookieManager.getAuthToken()}`
+            },
+            body: JSON.stringify({name: nomeGruppo})
+        })
+            .then(response => {
+                if (response.ok) {
+                    return
+                } else if (response.status === 400){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                } else if (response.status === 401){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                } else if (response.status === 500){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                }
+            })
+                .then(() => {
+                    setNuovoGruppo(nomeGruppo);
+                    handleAlert("Creazione completata", false);
+                })
+                    .catch(error => {
+                        alert(error.message);
+                    })
+    }
 
 
     return (
@@ -137,7 +179,15 @@ export default function GruppiDashboard(){
                     <Button variant="secondary" className="add-button" onClick={() => setPopupActive(false)}>
                         Close
                     </Button>
-                    <Button variant="primary" className="add-button" onClick={() => {console.log("AGGIUNGO"); setPopupActive(false)}}>
+                    <Button
+                        variant="primary"
+                        className="add-button"
+                        onClick={() => {
+                            creaGruppo(nomeGruppo);
+                            setPopupActive(false);
+                            setNomeGruppo("");
+                        }}
+                    >
                         Add
                     </Button>
                 </Modal.Footer>

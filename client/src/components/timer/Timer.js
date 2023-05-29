@@ -118,14 +118,6 @@ export default function Timer(){
                     })
     }
 
-    const inviaNotifica = async () =>{
-        if (soundUP){
-                handleAlert()               // lancia l'alert
-            }
-    }
-
-
-
 
     // at the beginning the data is read and setted up
     useEffect(() => {
@@ -144,7 +136,9 @@ export default function Timer(){
                             salvaSessione(durata-time)
                         }
                         if (soundUP){
-                            handleAlert() // lancia l'alert
+                            handleAlert("OK", true) // lancia l'alert
+                        } else {
+                            handleAlert("OK", false)
                         }   
                     })
             }
@@ -161,8 +155,10 @@ export default function Timer(){
                     .then(() => {
                         readTimerData()
                         if (soundUP){
-                            handleAlert() // lancia l'alert
-                        }
+                            handleAlert("OK", true) // lancia l'alert
+                        } else {
+                            handleAlert("OK", false)
+                        } 
                     })
             }
 
