@@ -133,21 +133,17 @@ export default function GruppiDashboard(){
             .then(response => {
                 if (response.ok) {
                     return
-                } else if (response.status === 400){
-                    return response.json().then(errorData => {
-                        throw new Error(errorData.message);
-                    });
                 } else if (response.status === 404){
                     return response.json().then(errorData => {
-                        throw new Error(errorData.message);
+                        throw ({status: 404, errorData: errorData.message});
                     });
                 } else if (response.status === 409){
                     return response.json().then(errorData => {
-                        throw new Error(errorData.message);
+                        throw ({status: 409, errorData: errorData.message});
                     });
                 } else if (response.status === 500){
                     return response.json().then(errorData => {
-                        throw new Error(errorData.message);
+                        throw ({status: 500, errorData: errorData.message});
                     });
                 }
             })
@@ -156,8 +152,16 @@ export default function GruppiDashboard(){
                     handleAlert("Unione completata", false, "success");
                 })
                     .catch(error => {
-                        //alert(error.message);
-                        handleAlert("Unione non riuscita", false, "error");
+
+                        console.log(error.status);
+
+                        let message = "Unione non riuscita";
+                        if (error.status === 404){
+                            message = "Gruppo non trovato"
+                        } else if (error.status === 409){
+                            message ="Sei già componente di questo gruppo";
+                        }
+                        handleAlert(message, false, "error");
                     })
 
 
