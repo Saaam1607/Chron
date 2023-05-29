@@ -225,6 +225,60 @@ class GestoreDB {
         })
     }
 
+    static uniscitiGruppo(codice, id_utente) {
+
+        return new Promise((resolve, reject) => {
+
+            Gruppo.findOne({ leader_id: { $in: [id_utente] } })
+                .then(() => {
+                    return reject({ stato: 409 });
+                })
+
+            Gruppo.findOne({ members_id: { $in: [id_utente] } })
+                .then(() => {
+                    return reject({ stato: 409 });
+                })
+
+            Gruppo.findById(codice)
+                .then(gruppo => {
+                    if (gruppo) {
+                        gruppo.members_id.push(id_utente);
+                        gruppo.save()
+                            .then(() => {
+                                return resolve({ stato: 200 }); 
+                            });
+                    } else {
+                        return reject({ stato: 404 });
+                    }
+                })
+                    .catch(error => {
+                        reject({ message: `Non è possibile effettuare il salvataggio della sessione. Messaggio errore: ${error}` });
+                    });
+        });
+
+        
+        
+        // return new Promise((resolve, reject) => {
+            
+        //     const nuvoGruppo = new Gruppo({
+                
+        //         _id: new mongoose.Types.ObjectId(),
+        //         name: nome,
+        //         leader_id: leader_id,
+        //         members_id: []
+
+        //     });
+
+        //     nuvoGruppo.save()
+        //         .then(() => {
+        //             resolve({ stato: 201 });
+        //         })
+        //             .catch(error => {
+        //                 reject({ message: `Non è possibile effettuare il salvataggio della sessione. Messaggio errore: ${error}` });
+        //             });
+        // })
+    }
+
 }
     
     

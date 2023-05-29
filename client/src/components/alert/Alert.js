@@ -4,9 +4,9 @@ import './Alert.css';
 
 const MySwal = withReactContent(Swal)
 
-export function handleAlert (message, sound) {
+export function handleAlert (message, sound, icon) {
     MySwal.fire({
-        icon: 'success',
+        icon: icon,
         confirmButtonText: message,
         customClass: {
             confirmButton: 'custom-confirm-button'
