@@ -16,15 +16,17 @@ export default function Todo(){
     const [addButtonDisabled, setAddButtonDisabled] = useState(false);
     const [deleteButtonDisabled, setDeleteButtonDisabled] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(CookieManager.generateHeader() !== undefined);
+    const [sortOption, setSortOption] = useState("");
 
 
     useEffect(() => {
         GetTodos();
-    }, []);
+    }, [sortOption]);
 
     const GetTodos = async () => {
         try {
-            const res = await fetch(api_base + "/", {
+            const url = sortOption ? `${api_base}/sort?sort=${sortOption}` : `${api_base}/`;
+            const res = await fetch(url, {
                 method: "GET",
                 headers: CookieManager.generateHeader(),
             });
@@ -139,6 +141,13 @@ export default function Todo(){
         }
     };
 
+    const handleSortOptionChange = (e) => {
+        const selectedOption = e.target.value;
+        if (selectedOption !== "") {
+            setSortOption(selectedOption);
+        } 
+    };
+
     return (
         <div className="container py-5">
             {isAuthenticated ? (
@@ -150,11 +159,11 @@ export default function Todo(){
                         <Button variant="primary" className="add-button" onClick={() => setPopupActive(true)}>
                             Add Task
                         </Button>
-                        <Form.Select className="sort-select">
-                            <option>Sort by...</option>
-                            <option>Name</option>
-                            <option>Deadline</option>
-                            <option>Group</option>
+                        <Form.Select className="sort-select" value={sortOption} onChange={handleSortOptionChange}>
+                            <option value="">Sort by...</option>
+                            <option value="name">Name</option>
+                            <option value="date">Deadline</option>
+                            <option value="group">Group</option>
                         </Form.Select>
                     </div>
 
