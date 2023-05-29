@@ -137,12 +137,21 @@ router.put("/nuovoGruppo", (req, res) => {
     try{
         GestoreDB.uniscitiGruppo(req.body.codice, req.id)
             .then((result) => {
-                console.log(result.stato)
+                console.log(result)
                 res.status(201).json({success: "true"})
             })
                 .catch((error) => {
-                    console.log(error)
-                    res.status(500).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
+                    switch (error.stato) {
+                        case 404:
+                            res.status(404).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
+                            break;
+                        case 409:
+                            res.status(409).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
+                            break;
+                        default:
+                            res.status(500).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
+                    }
+                    
                 })
     } catch (error) {
         res.status(500).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})

@@ -229,54 +229,52 @@ class GestoreDB {
 
         return new Promise((resolve, reject) => {
 
-            Gruppo.findOne({ leader_id: { $in: [id_utente] } })
-                .then(() => {
-                    return reject({ stato: 409 });
-                })
+            codice = new mongoose.Types.ObjectId(codice);
+            id_utente = new mongoose.Types.ObjectId(id_utente);
 
-            Gruppo.findOne({ members_id: { $in: [id_utente] } })
+            console.log(codice)
+            console.log(id_utente)
+
+            Gruppo.findOne({ $and: [{ leader_id: id_utente }, { _id: codice }] })
                 .then(() => {
-                    return reject({ stato: 409 });
+                    console.log("LEADER!")
+                    reject({ stato: 409 });
                 })
+                    .catch(() => {
+                        return reject({ stato: 409 });
+                    });
+
+            Gruppo.findOne({ $and: [{ members_id: { $in: [id_utente] } }, { _id: codice }] })
+                .then(() => {
+                    console.log("MEMBRO!")
+                    reject({ stato: 409 });
+                })
+                    .catch(() => {
+                        return reject({ stato: 409 });
+                    });
 
             Gruppo.findById(codice)
                 .then(gruppo => {
+                    console.log("EH MA SE CI PENSI...")
                     if (gruppo) {
                         gruppo.members_id.push(id_utente);
                         gruppo.save()
                             .then(() => {
-                                return resolve({ stato: 200 }); 
+                                resolve({ stato: 200 }); 
+                                return;
                             });
                     } else {
-                        return reject({ stato: 404 });
+                        reject({ stato: 404 });
+                        return;
                     }
                 })
                     .catch(error => {
-                        reject({ message: `Non è possibile effettuare il salvataggio della sessione. Messaggio errore: ${error}` });
+                        reject({ stato: 500, message: `Non è possibile effettuare il salvataggio della sessione. Messaggio errore: ${error}` });
+                        return;
                     });
         });
 
-        
-        
-        // return new Promise((resolve, reject) => {
-            
-        //     const nuvoGruppo = new Gruppo({
-                
-        //         _id: new mongoose.Types.ObjectId(),
-        //         name: nome,
-        //         leader_id: leader_id,
-        //         members_id: []
 
-        //     });
-
-        //     nuvoGruppo.save()
-        //         .then(() => {
-        //             resolve({ stato: 201 });
-        //         })
-        //             .catch(error => {
-        //                 reject({ message: `Non è possibile effettuare il salvataggio della sessione. Messaggio errore: ${error}` });
-        //             });
-        // })
     }
 
 }
