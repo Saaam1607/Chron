@@ -80,7 +80,7 @@ export default function GruppiDashboard(){
 
                 {gruppiLeader.map(item => (
                     <div key={item._id}>
-                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_id} isLeader={true}/>
+                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username} isLeader={true}/>
                     </div>
                 ))}
 
@@ -91,7 +91,7 @@ export default function GruppiDashboard(){
 
                 {gruppiMembro.map(item => (
                     <div key={item._id}>
-                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_id} members={["CHRIS", "NICOLE"]}/>
+                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username} members={["CHRIS", "NICOLE"]}/>
                     </div>
                 ))}
 
@@ -116,32 +116,33 @@ export default function GruppiDashboard(){
             </div>
 
             <Modal show={popupActive} onHide={() => setPopupActive(false)}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Crea un nuovo gruppo</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <Form.Group className="mb-3" controlId="formName">
-                                <Form.Label>Name</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Nome nuovo gruppo"
-                                    value={nomeGruppo}
-                                    onChange={(e) => setNomeGruppo(e.target.value)}
-                                />
-                            </Form.Group>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" className="add-button" onClick={() => setPopupActive(false)}>
-                                Close
-                            </Button>
-                            <Button variant="primary" className="add-button" onClick={() => {console.log("AGGIUNGO"); setPopupActive(false)}}>
-                                Add
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
+                
+                <Modal.Header closeButton>
+                    <Modal.Title>Crea un nuovo gruppo</Modal.Title>
+                </Modal.Header>
+                
+                <Modal.Body>
+                    <Form.Group className="mb-3" controlId="formName">
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Nome nuovo gruppo"
+                            value={nomeGruppo}
+                            onChange={(e) => setNomeGruppo(e.target.value)}
+                        />
+                    </Form.Group>
+                </Modal.Body>
 
-            
-
+                <Modal.Footer>
+                    <Button variant="secondary" className="add-button" onClick={() => setPopupActive(false)}>
+                        Close
+                    </Button>
+                    <Button variant="primary" className="add-button" onClick={() => {console.log("AGGIUNGO"); setPopupActive(false)}}>
+                        Add
+                    </Button>
+                </Modal.Footer>
+    
+            </Modal>
 
         </div> 
 
