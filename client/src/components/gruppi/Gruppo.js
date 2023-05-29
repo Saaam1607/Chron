@@ -1,6 +1,6 @@
 
 
-export default function Gruppo({ groupName, groupID, leader, members, isLeader}){
+export default function Gruppo({ groupName, groupID, leader, isLeader}){
 
     return (
         <div className="gruppo-div">
@@ -28,11 +28,6 @@ export default function Gruppo({ groupName, groupID, leader, members, isLeader})
 
             <div className="gruppo-componenti">
                 <h5>Leader: {leader}</h5>
-                <ul>
-                    {members.map((item, index) => (
-                    <li key={index}>{item}</li>
-                    ))}
-                </ul>
             </div>
         </div> 
 

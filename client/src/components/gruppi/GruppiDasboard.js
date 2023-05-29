@@ -75,7 +75,7 @@ export default function GruppiDashboard(){
 
                 {gruppiLeader.map(item => (
                     <div key={item._id}>
-                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_id} members={["CHRIS", "NICOLE"]} isLeader={true}/>
+                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_id} isLeader={true}/>
                     </div>
                 ))}
 
