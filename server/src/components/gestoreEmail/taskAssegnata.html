@@ -1,0 +1,50 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notifica di assegnazione task</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      color: #333333;
+    }
+    h1 {
+      color: #0099cc;
+    }
+    .task-info {
+      margin-bottom: 20px;
+    }
+    .task-info p {
+      margin: 0;
+    }
+    .task-info strong {
+      font-weight: bold;
+    }
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .footer a {
+      color: #0099cc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Notifica di assegnazione task</h1>
+  <div class="task-info">
+    <p>È stata assegnata una nuova task:</p>
+    <p><strong>Nome Task:</strong> {{taskName}}</p>
+    <p><strong>Data di scadenza:</strong> {{deadline}}</p>
+    <p><strong>Gruppo:</strong> {{groupName}}</p>
+  </div>
+  <p>Grazie per l'attenzione.</p>
+  <div class="footer">
+    <p>Per ulteriori informazioni, visita <a href="https://chron-app.onrender.com/">CHRON</a>.</p>
+  </div>
+</body>
+</html>
