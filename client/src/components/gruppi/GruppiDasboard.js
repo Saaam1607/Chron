@@ -23,13 +23,16 @@ export default function GruppiDashboard(){
     const [addGroupPopupActive, setAddGroupPopupActive] = useState(false);
     const [codice, setCodice] = useState("");
 
-    useEffect(() => {
+
+
+    function getGruppiMembro(){
 
         fetch('api/v1/gruppi/membro', {
             method: "GET",
             headers: CookieManager.generateHeader(),
         })
             .then(response => {
+
                 if (response.status === 200) {
                     return response.json();
                 } else if (response.status === 204){
@@ -40,21 +43,28 @@ export default function GruppiDashboard(){
                     });
                 }
             })
-                .then(data => {
-                    if (Array.isArray(data.result) && data.length === 0){
-                    } else {
-                        setGruppiMembro(data.result);
-                    }
-                })
-                .catch(error => {
-                    alert(error.message);
-                })
+                    .then(data => {
 
+                        if (data){ // c'è qualche gruppo
+                            if (Array.isArray(data.result) && data.result.length > 0){
+                                setGruppiMembro(data.result);
+                            }
+                        } else { // non ci sono gruppi
+                            setGruppiMembro([]);
+                        }
+                    })
+                        .catch(error => {
+                            alert(error.message);
+                        })
+    }
+
+    function getGruppiLeader(){
         fetch('api/v1/gruppi/leader', {
             method: "GET",
             headers: CookieManager.generateHeader(),
         })
             .then(response => {
+
                 if (response.status === 200) {
                     return response.json();
                 } else if (response.status === 204){
@@ -66,16 +76,27 @@ export default function GruppiDashboard(){
                 }
             })
                 .then(data => {
-                    if (Array.isArray(data.result) && data.length === 0){
-                    } else {
-                        setGruppiLeader(data.result);
-                    }
-                    
-                })
-                .catch(error => {
-                    alert(error.message);
-                })
 
+                    if (data){ // c'è qualche gruppo
+                        if (Array.isArray(data.result) && data.result.length > 0){
+                            setGruppiLeader(data.result);
+                        }
+                    } else { // non ci sono gruppi
+                        setGruppiLeader([]);
+                    }
+                })
+                        .catch(error => {
+                            alert(error.message);
+                        })
+    }
+
+
+
+    useEffect(() => {
+
+        getGruppiMembro();
+        getGruppiLeader();
+        
     }, [nuovoGruppo]);
 
 
@@ -131,8 +152,13 @@ export default function GruppiDashboard(){
             body: JSON.stringify({codice: codice})
         })
             .then(response => {
+
                 if (response.ok) {
                     return
+                } else if (response.status === 400){
+                    return response.json().then(errorData => {
+                        throw ({status: 400, errorData: errorData.message});
+                    });
                 } else if (response.status === 404){
                     return response.json().then(errorData => {
                         throw ({status: 404, errorData: errorData.message});
@@ -153,10 +179,12 @@ export default function GruppiDashboard(){
                 })
                     .catch(error => {
 
-                        console.log(error.status);
-
                         let message = "Unione non riuscita";
-                        if (error.status === 404){
+
+                        if (error.status === 400){
+                            message ="Formato del codice non valido";
+                        }
+                        else if (error.status === 404){
                             message = "Gruppo non trovato"
                         } else if (error.status === 409){
                             message ="Sei già componente di questo gruppo";

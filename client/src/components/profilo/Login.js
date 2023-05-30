@@ -33,10 +33,10 @@ export default function Login({setAuthenticated}){
                     setAuthenticated(true);
                     CookieManager.setAuthToken(data.token);
                 })
-                .catch(error => {
-                    setAuthenticated(false);
-                    alert(error.message);
-                })
+                    .catch(error => {
+                        setAuthenticated(false);
+                        alert(error.message);
+                    })
     };
 
     const { values, errors, touched, handleChange, handleBlur, handleSubmit } = useFormik({
