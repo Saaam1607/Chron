@@ -13,7 +13,7 @@ const TaskSchema = new mongoose.Schema({
       default: null
   },
   gruppoID: {
-      type: Number,
+      type: String,
       default: null
   },
   contrassegna: {

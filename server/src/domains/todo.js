@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
         const todos = await listaTask.leggiTasks();
 
         if(todos.length == 0){
-            res.status(204).json({ success: true, message: "Non ci sono task da mostrare" });
+            res.status(204);
         }else{
             res.status(200).json({ success: true, tasks: todos });
         }
@@ -99,6 +99,36 @@ router.delete('/delete', async (req, res) => {
         res.status(500).json({ success: false, message: `Si è verificato un errore durante l'operazione. Messaggio: ` + error.message });
     }
 
+});
+
+router.get('/sort', async (req, res) => {
+    console.log("GET /sort");
+    const listaTask = new ListaTasks(req.id);
+
+    try {
+        await listaTask.leggiTasks();
+        const sort = req.query.sort;
+
+        if(listaTask.tasks.length == 0){
+            res.status(204);
+        }else{
+            if(sort == "name"){
+                listaTask.ordinaPerNome();
+            }else if(sort == "date"){
+                listaTask.ordinaPerDataScadenza();
+            }else if(sort == "group"){
+                listaTask.ordinaPerGruppo();
+            }else{
+                res.status(400).json({ success: false, message: "Sort non valido" });
+                return;
+            }
+            res.status(200).json({ success: true, tasks: listaTask.tasks });
+        }
+    }
+    catch (error) {
+        console.error(`Errore durante la lettura delle tasks: ${error.message}`);
+        res.status(500).json({ success: false, message: `L'operazione di ordinamento delle task non è andata a buon fine. ${error.message}` });
+    }
 });
 
 module.exports = router
