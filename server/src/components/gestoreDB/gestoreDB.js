@@ -225,6 +225,32 @@ class GestoreDB {
         })
     }
 
+    static creaTaskGruppo(_id, nome, dataScadenza, contrassegna, ID_utente, ID_gruppo) {
+        return new Promise((resolve, reject) => {
+            const nuovaTask = new TaskModel({
+                _id: new mongoose.Types.ObjectId(),
+                ID_utente: ID_utente,
+                nome: nome,
+                dataScadenza: dataScadenza,
+                gruppoID: ID_gruppo,
+                contrassegna: contrassegna
+            });
+    
+            nuovaTask.save()
+                .then((result) => {
+                    if (result) {
+                        resolve(result); // Restituisci la nuova task creata
+                    } else {
+                        resolve("Nessuna operazione effettuata.");
+                    }
+                })
+                .catch((error) => {
+                    console.error(`Errore durante l'aggiornamento della task per l'utente ${ID_utente}: ${error}`);
+                    reject({ message: error });
+                });
+        });
+    }
+
 }
     
     
