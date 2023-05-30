@@ -1,11 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Button, Modal, Table } from 'react-bootstrap';
 
+import CookieManager from'../tokenManager/cookieManager';
+
 export default function GroupDetailsModal ({ groupName, leader, members, isLeader, onClose }){
+
+
+
+
   
-    getNomeFromID = (id) => {
-        return "NOME"
-    }
+    // function getNomeFromID(id){
+    //     fetch(`api/v1/gruppi/username?id=${id}`, {
+    //         method: "GET",
+    //         headers: CookieManager.generateHeader()
+    //     })
+    //         .then(response => {
+    //             if (response.ok) {
+    //                 response.json()
+    //                     .then(data => {
+    //                         console.log("PROVO")
+    //                         console.log(data)
+    //                         return data;
+    //                     })
+    //             } else {
+    //                 return "INSOMMA";
+    //             }
+    //         })
+    // }
   
     return (
     <Modal show={true} onHide={onClose}>
@@ -33,7 +54,7 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
                     members.map((membro) => (
                         <tr key={membro}>
                             
-                            <td>{membro}</td>
+                            <td>(membro)</td>
                             
                             <td className="text-center"> 
                                 {isLeader &&

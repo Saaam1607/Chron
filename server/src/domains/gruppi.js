@@ -26,13 +26,35 @@ router.get("/membro", bodyParser.json(), (req, res) => {
                             
                                 leaderUsername = result.username;
 
-                                finalResult.push({
-                                    _id: element._id,
-                                    name: element.name,
-                                    leader_id: element.leader_id,
-                                    leader_username: leaderUsername,
-                                    members: Array.from(element.members_id)
-                                })
+                                const updatedMembers = element.members_id.map((membro_id, index) => {
+                                    return GestoreDB.getDataFromID(membro_id)
+                                      .then((result) => {
+                                        return [membro_id, result.username]; // Restituisce la coppia di ID e username
+                                      })
+                                      .catch((error) => {
+                                        throw error;
+                                      });
+                                  });
+                                  
+                                  Promise.all(updatedMembers)
+                                    .then((updatedResults) => {
+
+                                        finalResult.push({
+                                            _id: element._id,
+                                            name: element.name,
+                                            leader_id: element.leader_id,
+                                            leader_username: leaderUsername,
+                                            members: updatedResults
+                                        })
+
+                                    })
+                                        .catch((error) => {
+                                        console.error(error);
+                                        });
+
+                                
+
+                                //console.log(Array.from(element.members_id))
 
                             })
                                 .catch((error) => {
@@ -68,6 +90,8 @@ router.get("/leader", bodyParser.json(), (req, res) => {
         GestoreDB.ottieniGruppiLeader(req.id)
             .then((results) => {
                 if (results.length > 0) {
+
+                    
 
                     let finalResult = []
 
@@ -163,6 +187,20 @@ router.put("/nuovoGruppo", (req, res) => {
         res.status(500).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
     }
 
+})
+
+router.get("/username", (req, res) => {
+    if (req.query.id == undefined) {
+        res.status(400).json({success: "false", message: "Errore, ID non trovato"})
+    } else {
+        GestoreDB.getDataFromID(req.query.id)
+            .then((esito) => {
+                res.status(200).json(esito.username)
+            })
+                .catch((error) => {
+                    res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
+                });
+    }
 })
 
 
