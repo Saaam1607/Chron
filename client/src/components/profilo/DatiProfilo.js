@@ -45,17 +45,16 @@ export default function Profilo({setAuthenticated}){
 
     return (
       <div>
-            <div>
-                <h2> username: </h2>
-                <p>{username}</p>
+            <div className='data-div'>
+                <h4 className="data-h"> username: </h4>
+                <p className="data-p">{username}</p>
             </div>
-            <div>
-                <h2>email: </h2>
-                <p>{email}</p>
+
+            <div className='data-div'>
+                <h4 className="data-h">email: </h4>
+                <p className="data-p">{email}</p>
             </div>
-            <div>
-                <button>Logout</button>
-            </div>
+            
             <button
                 onClick={() => {
                     CookieManager.deleteAuthToken();
