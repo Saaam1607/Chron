@@ -2,8 +2,12 @@ require('dotenv').config();
 
 const express = require("express")
 const router = express.Router()
+const path = require('path');
+const fs = require('fs');
 const GestoreDB = require("../components/gestoreDB/gestoreDB")
+const gestoreEmail = require("../components/gestoreEmail/gestoreEmail");
 const Task = require('../components/to-do/task');
+
 
 var bodyParser = require('body-parser')
 var app = express()
@@ -141,6 +145,23 @@ router.post("/assegnaTask", async (req, res) => {
         nuovaTask.gruppoID = ID_gruppo;
         
 	  	const task  = await nuovaTask.crea();
+
+        const recipient = 'h.chaudhrymohammad@studenti.unitn.it'; 
+        const subject = 'Nuova task assegnata';
+
+        const templatePath = path.join(__dirname, '..', 'components', 'gestoreEmail', 'taskAssegnata.html');
+        const htmlBody = fs.readFileSync(templatePath, 'utf8');
+
+
+        const nomeGruppo = 'Nome del gruppo'; 
+        const formattedHtmlBody = htmlBody
+          .replace('{{taskName}}', nome)
+          .replace('{{deadline}}', dataScadenza)
+          .replace('{{groupName}}', nomeGruppo);
+    
+        // Invia l'email di notifica
+        await gestoreEmail(recipient, subject, formattedHtmlBody);
+
 		res.status(201).json({success: true, task:task}); 
 
 	} catch (error) {
