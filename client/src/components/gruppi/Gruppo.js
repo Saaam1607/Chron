@@ -23,8 +23,7 @@ export default function Gruppo({ groupName, groupID, leader, isLeader}){
             className="gruppo-div"
             onClick={() => {
                 if (!showModal){
-                    console.log(groupName)
-                handleOpenModal()
+                    handleOpenModal()
                 }
                 
             }}
@@ -58,9 +57,9 @@ export default function Gruppo({ groupName, groupID, leader, isLeader}){
             {showModal && (
                 <GroupDetailsModal
                     groupName={groupName}
-                    description={"ciao"}
-                    leader={"leader"}
-                    members={"membro"}
+                    leader={leader}
+                    members={["membro", "membro2", "membro3"]}
+                    isLeader={isLeader}
                     onClose={handleCloseModal}
                 />
             )}
