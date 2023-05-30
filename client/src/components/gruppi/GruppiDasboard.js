@@ -174,7 +174,7 @@ export default function GruppiDashboard(){
                 }
             })
                 .then(() => {
-                    //setNuovoGruppo(nomeGruppo);
+                    setNuovoGruppo("NUOVO");
                     handleAlert("Unione completata", false, "success");
                 })
                     .catch(error => {

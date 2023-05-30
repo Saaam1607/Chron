@@ -246,24 +246,13 @@ class GestoreDB {
                     
                     if (gruppo) {
 
-                        console.log("GRUPPO ESISTE")
-
-                        // Gruppo.findOne({ $and: [{ leader_id: id_utente }, { _id: codice }] })
-                        // .then(() => {
-                        //     console.log("LEADER!")
-                        //     throw new Error({status: 409});
-                        // })
-
                         if (gruppo.leader_id.equals(id_utente)) {
-                            console.log("LEADER!")
                             reject({ stato: 409 });
                             //throw new Error({status: 409});
                         } else if (gruppo.members_id.includes(id_utente)) {
-                            console.log("MEMBRO!")
                             reject({ stato: 409 })
                             //throw new Error({status: 409});
                         } else {
-                            console.log("POSSO AGGIUNGERE!")
                             gruppo.members_id.push(id_utente);
                             gruppo.save()
                                 .then(() => {
@@ -273,14 +262,11 @@ class GestoreDB {
                         }
 
                     } else {
-                        console.log("GRUPPO NON ESISTE")
                         reject({ stato: 404 })
                         //throw new Error({status: 404});
-
                     }
                 })
                     .catch(error => {
-                        console.log("ERR")
                         reject({ stato: 500, message: `${error}` });
                         return;
                     });
