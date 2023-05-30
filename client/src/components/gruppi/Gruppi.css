@@ -93,7 +93,7 @@
     padding: 10px;
     font-size: 15pt;
     width: auto;
-    min-height: 40pt;
+    height: auto;
 }
 
 .bottone:hover {

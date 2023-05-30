@@ -1,9 +1,34 @@
+import React, { useState } from 'react';
+import { Card, Button, Modal } from 'react-bootstrap';
 
+import GroupDetailsModal from'./GroupDetailsModal';
 
 export default function Gruppo({ groupName, groupID, leader, isLeader}){
 
+
+    const [showModal, setShowModal] = useState(false);
+    
+    const handleOpenModal = () => {
+        setShowModal(true);
+    };
+    
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
+
+
     return (
-        <div className="gruppo-div">
+        <div
+            className="gruppo-div"
+            onClick={() => {
+                if (!showModal){
+                    console.log(groupName)
+                handleOpenModal()
+                }
+                
+            }}
+        >
 
             <div className="gruppo-title">
                 {isLeader ?
@@ -29,6 +54,17 @@ export default function Gruppo({ groupName, groupID, leader, isLeader}){
             <div className="gruppo-componenti">
                 <h6>Leader: <b><u>{leader}</u></b></h6>
             </div>
+
+            {showModal && (
+                <GroupDetailsModal
+                    groupName={groupName}
+                    description={"ciao"}
+                    leader={"leader"}
+                    members={"membro"}
+                    onClose={handleCloseModal}
+                />
+            )}
+
         </div> 
 
     );
