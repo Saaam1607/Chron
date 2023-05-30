@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require("express")
 const router = express.Router()
 const GestoreDB = require("../components/gestoreDB/gestoreDB")
+const Task = require('../components/to-do/task');
 
 var bodyParser = require('body-parser')
 var app = express()
@@ -126,6 +127,27 @@ router.post("/nuovoGruppo", (req, res) => {
     }
 
 })
+
+router.post("/assegnaTask", async (req, res) => {
+    const { nome, dataScadenza, ID_utenti, ID_gruppo } = req.body;
+  
+	if (!nome || !ID_utenti) {
+        res.status(400).json({ success: false, message: "Nome mancante o partecipanti mancanti" }); 
+        return;
+	}
+  
+	try {
+        const nuovaTask = new Task(ID_utenti, nome, dataScadenza);
+        nuovaTask.gruppoID = ID_gruppo;
+        
+	  	const task  = await nuovaTask.crea();
+		res.status(201).json({success: true, task:task}); 
+
+	} catch (error) {
+        console.error(`Errore durante la creazione della task di gruppo: ${error.message}`);
+        res.status(500).json({ success: false, message: `Si è verificato un errore durante la creazione della task di gruppo. Errore: ${error.message}` });
+	}
+});
 
 
 
