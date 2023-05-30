@@ -3,12 +3,12 @@ const nodemailer = require('nodemailer');
 // Configurazione del trasportatore email
 const transporter = nodemailer.createTransport({
   // Configurazione del trasportatore email (ad esempio, Gmail)
-  host: 'smtp.protonmail.com',
+  host: 'smtp.gmail.com',
   port: 465,
   secure: true,
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASSWORD,
+    user: process.env.GMAIL,
+    pass: process.env.PWD_GMAIL,
   },
 });
 
@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 async function gestoreEmail(recipient, subject, htmlBody ) {
   try {
     const mailOptions = {
-      from: process.env.EMAIL,
+      from: process.env.GMAIL,
       to: recipient,
       subject,
       html: htmlBody,
