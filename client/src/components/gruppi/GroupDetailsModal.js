@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { Card, Button, Modal, Table } from 'react-bootstrap';
 
 export default function GroupDetailsModal ({ groupName, leader, members, isLeader, onClose }){
-  return (
+  
+    getNomeFromID = (id) => {
+        return "NOME"
+    }
+  
+    return (
     <Modal show={true} onHide={onClose}>
       
       <Modal.Header closeButton>
@@ -24,7 +29,7 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
             </thead>
                         
             <tbody>
-                {members.length > 0 ? (
+                {members[0].length > 0 ? (
                     members.map((membro) => (
                         <tr key={membro}>
                             

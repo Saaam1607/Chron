@@ -3,7 +3,7 @@ import { Card, Button, Modal } from 'react-bootstrap';
 
 import GroupDetailsModal from'./GroupDetailsModal';
 
-export default function Gruppo({ groupName, groupID, leader, isLeader}){
+export default function Gruppo({ groupName, groupID, leader, members, isLeader}){
 
 
     const [showModal, setShowModal] = useState(false);
@@ -58,7 +58,7 @@ export default function Gruppo({ groupName, groupID, leader, isLeader}){
                 <GroupDetailsModal
                     groupName={groupName}
                     leader={leader}
-                    members={["membro", "membro2", "membro3"]}
+                    members={members}
                     isLeader={isLeader}
                     onClose={handleCloseModal}
                 />
