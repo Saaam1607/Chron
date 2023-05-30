@@ -1,24 +1,26 @@
 const mongoose = require('mongoose');
+
 const TaskSchema = new mongoose.Schema({
-  ID_utente: {
-      type: mongoose.ObjectId, ref: 'User',
-      required: true
-  },
+  ID_utente: [{
+    type: mongoose.ObjectId,
+    ref: 'User',
+    required: true
+  }],
   nome: {
-      type: String,
-      required: true
+    type: String,
+    required: true
   },
   dataScadenza: {
-      type: Date,
-      default: null
+    type: Date,
+    default: null
   },
   gruppoID: {
-      type: String,
-      default: null
+    type: String,
+    default: null
   },
   contrassegna: {
-      type: Boolean,
-      default: false
+    type: Boolean,
+    default: false
   }
 });
 
