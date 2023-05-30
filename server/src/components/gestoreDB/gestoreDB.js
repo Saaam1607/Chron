@@ -225,54 +225,82 @@ class GestoreDB {
         })
     }
 
+    static checkIfObjectId(id) {
+        if (typeof id !== 'string') {
+            return false;
+        }
+        return mongoose.Types.ObjectId.isValid(id);
+    }
+
     static uniscitiGruppo(codice, id_utente) {
+        try {
 
-        return new Promise((resolve, reject) => {
+            return new Promise((resolve, reject) => {
 
-            codice = new mongoose.Types.ObjectId(codice);
-            id_utente = new mongoose.Types.ObjectId(id_utente);
+                codice = new mongoose.Types.ObjectId(codice);
+                id_utente = new mongoose.Types.ObjectId(id_utente);
 
-            console.log(codice)
-            console.log(id_utente)
 
-            Gruppo.findOne({ $and: [{ leader_id: id_utente }, { _id: codice }] })
-                .then(() => {
-                    console.log("LEADER!")
-                    reject({ stato: 409 });
-                })
-                    .catch(() => {
-                        return reject({ stato: 409 });
-                    });
-
-            Gruppo.findOne({ $and: [{ members_id: { $in: [id_utente] } }, { _id: codice }] })
-                .then(() => {
-                    console.log("MEMBRO!")
-                    reject({ stato: 409 });
-                })
-                    .catch(() => {
-                        return reject({ stato: 409 });
-                    });
-
-            Gruppo.findById(codice)
+                Gruppo.findById(codice)
                 .then(gruppo => {
-                    console.log("EH MA SE CI PENSI...")
+                    
                     if (gruppo) {
-                        gruppo.members_id.push(id_utente);
-                        gruppo.save()
-                            .then(() => {
-                                resolve({ stato: 200 }); 
-                                return;
-                            });
+
+                        console.log("GRUPPO ESISTE")
+
+                        // Gruppo.findOne({ $and: [{ leader_id: id_utente }, { _id: codice }] })
+                        // .then(() => {
+                        //     console.log("LEADER!")
+                        //     throw new Error({status: 409});
+                        // })
+
+                        if (gruppo.leader_id.equals(id_utente)) {
+                            console.log("LEADER!")
+                            reject({ stato: 409 });
+                            //throw new Error({status: 409});
+                        } else if (gruppo.members_id.includes(id_utente)) {
+                            console.log("MEMBRO!")
+                            reject({ stato: 409 })
+                            //throw new Error({status: 409});
+                        } else {
+                            console.log("POSSO AGGIUNGERE!")
+                            gruppo.members_id.push(id_utente);
+                            gruppo.save()
+                                .then(() => {
+                                    resolve({ stato: 200 }); 
+                                    return;
+                                });
+                        }
+
                     } else {
-                        reject({ stato: 404 });
-                        return;
+                        console.log("GRUPPO NON ESISTE")
+                        reject({ stato: 404 })
+                        //throw new Error({status: 404});
+
                     }
                 })
                     .catch(error => {
-                        reject({ stato: 500, message: `Non è possibile effettuare il salvataggio della sessione. Messaggio errore: ${error}` });
+                        console.log("ERR")
+                        reject({ stato: 500, message: `${error}` });
                         return;
                     });
-        });
+
+
+
+                
+
+                // Gruppo.findOne({ $and: [{ members_id: { $in: [id_utente] } }, { _id: codice }] })
+                //     .then(() => {
+                //         console.log("MEMBRO!")
+                //         throw new Error({status: 409});
+                //     })
+
+
+            });
+
+        } catch (error) {
+            console.log(error)
+        }
 
 
     }
