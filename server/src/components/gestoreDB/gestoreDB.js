@@ -225,9 +225,9 @@ class GestoreDB {
         })
     }
 
-    static checkIfObjectId(id) {
+    static async checkIfObjectId(id) {
         try {
-            codice = new mongoose.Types.ObjectId(codice);
+            id = new mongoose.Types.ObjectId(id);
         } catch (error) {
             return false;
         }
@@ -235,24 +235,15 @@ class GestoreDB {
     }
 
     static async controllaEsistenzaGruppo(codice) {
-
-        console.log("E")
-
         try {
-            codice = new mongoose.Types.ObjectId(codice);
+            const gruppo = await Gruppo.findOne({ _id: new mongoose.Types.ObjectId(codice) });
+            if (gruppo) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (error) {
-            return false;
-        }
-
-
-        
-        console.log("F")
-
-        gruppo = await Gruppo.findById(codice);
-        if (gruppo) {
-            return true;
-        } else {
-            return false;
+            throw error;
         }
     }
 
@@ -300,61 +291,30 @@ class GestoreDB {
 
     }
 
-    static getLeaderIDfromGroupID(codice) {
+    static async getLeaderIDfromGroupID(codice) {
         try {
-                
-                return new Promise((resolve, reject) => {
-
-                    Gruppo.findById(new mongoose.Types.ObjectId(codice))
-                        .then(gruppo => {
-                            if (gruppo) {
-                                resolve(gruppo.leader_id);
-                            } else {
-                                reject({ stato: 404 })
-                            }
-                        })
-                            .catch(error => {
-                                reject({ stato: 500, message: `${error}` });
-                                return;
-                            });
-    
-                });
-    
+            const gruppo = await Gruppo.findById(new mongoose.Types.ObjectId(codice))
+            if (gruppo) {
+                return gruppo.leader_id;
+            } else {
+                throw new Error("Errore durante la lettura del leader del gruppo");
+            }
         } catch (error) {
-            console.log(error)
+            throw error;
         }
     }
 
-    static eliminaGruppo(codice) {
+    static async eliminaGruppo(codice) {
         try {
-
-            return new Promise((resolve, reject) => {
-
-                Gruppo.findById(codice)
-                .then(gruppo => {
-                    
-                    if (gruppo) {
-                        Gruppo.deleteOne({ _id: codice })
-                            .then(() => {
-                                resolve({ stato: 200 });
-                                return;
-                            });
-
-                    } else {
-                        reject({ stato: 404 })
-                    }
-                })
-                    .catch(error => {
-                        reject({ stato: 500, message: `${error}` });
-                        return;
-                    });
-
-            });
-
+            const gruppo = await Gruppo.findById(codice)
+            if (gruppo) {
+                await Gruppo.deleteOne({ _id: codice });
+            } else {
+                throw new Error("Il gruppo non esiste. Rimozione non effettuata.");
+            }
         } catch (error) {
             console.log(error)
         }
-
     }
 
 }
