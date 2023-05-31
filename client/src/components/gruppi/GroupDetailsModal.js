@@ -34,12 +34,12 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
             <tbody>
                 {members[0].length > 0 ? (
 
-                    members.map((membro) => (
+                    members[0].map((membro) => (
                         <tr key={membro}>
                             
-                            <td>{membro[0][1]}</td>
+                            <td>{membro[1]}</td>
 
-                            <td>{membro[0][2]}</td>
+                            <td>{membro[2]}</td>
                             
                             <td className="text-center"> 
                                 {isLeader &&
@@ -113,11 +113,11 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
 
       <Modal.Footer>
 
-            <Button variant="danger" style={{ width: "auto" }} onClick={() => {console.log("ELIMINA")}}>
+            <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false)}}>
                 CONFERMA
             </Button>
 
-            <Button variant="primary" style={{ width: "auto" }} onClick={onClose}>
+            <Button variant="primary" style={{ width: "auto" }} onClick={setConfermaEliminazioneModal(false)}>
                 ANNULLA
             </Button>
 
