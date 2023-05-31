@@ -117,3 +117,8 @@
     margin: 1.75rem auto;
 }
 
+.disabled {
+    pointer-events: none;
+    opacity: 0.5; /* Opzionale: per ridurre l'opacità del bottone disabilitato */
+  }
+

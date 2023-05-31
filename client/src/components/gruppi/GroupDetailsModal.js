@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, Button, Modal, Table, Form } from 'react-bootstrap';
 import TaskAssignment from './TaskAssignment';
 import { handleAlert } from '../alert/Alert';
+import CookieManager from '../tokenManager/cookieManager';
 
 
 
@@ -18,6 +19,10 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
         } else {
           setSelectedMembers([...selectedMembers, member]);
         }
+    };
+
+    const handleAssignTask = () => {
+        setShowTaskAssignmentModal(true);
     };
 
     const handleTaskAssignmentClose = () => {
@@ -58,7 +63,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
     }
 
     return (
-            <div>
+    <div>
     <Modal show={!confermaEliminazioneModal && esistenzaGruppo} onHide={onClose} dialogClassName="custom-modal-dialog" backdrop="static">
             <Modal.Header closeButton>
                 <Modal.Title>{groupName}</Modal.Title>
@@ -126,14 +131,50 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                 <Button variant="secondary" onClick={onClose}>
                 Close
                 </Button>
-                {isLeader && selectedMembers.length > 0 && (
-                <Button variant="primary" className="add-button" onClick={handleAssignTask}>
+                {isLeader && (
+                <Button variant="primary" className={`add-button ${selectedMembers.length < 1 ? 'disabled' : ''}`} onClick={handleAssignTask}>
                     Assegna Task
                 </Button>
                 )}
             </Modal.Footer>
 
-    </Modal>
-    </div>
-  );
-};
+            <Modal show={showTaskAssignmentModal} onHide={handleTaskAssignmentClose} backdrop="static">
+                <Modal.Header closeButton>
+                <Modal.Title>Assegna Task</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <TaskAssignment selectedMembers={selectedMembers} groupName={groupName} onClose={handleTaskAssignmentClose} />
+                </Modal.Body>
+            </Modal>
+        </Modal>
+
+        {confermaEliminazioneModal &&
+            <Modal show={confermaEliminazioneModal} onHide={() => setConfermaEliminazioneModal(false)}>
+            
+            <Modal.Header closeButton>
+                <Modal.Title>Conferma eliminazione gruppo</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+
+                <Card.Subtitle className="mb-2 text-muted">Attenzione, l'eliminazione del gruppo è definitiva. L'operazione non potrà essere ripristinata in alcun modo. Procedere ugualmente? </Card.Subtitle>
+
+            </Modal.Body>
+
+            <Modal.Footer>
+
+                    <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false); setEsistenzaGruppo(false); handleEliminazione()}}>
+                        CONFERMA
+                    </Button>
+
+                    <Button variant="primary" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false)}}>
+                        ANNULLA
+                    </Button>
+
+            </Modal.Footer>
+
+            </Modal>
+        }
+        </div>
+    );
+}
