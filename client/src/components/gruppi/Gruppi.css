@@ -111,3 +111,8 @@
 .gruppo-div:hover {
     box-shadow: 0 0 10px rgba(4, 40, 54, 0.5);
 }
+
+.custom-modal-dialog {
+    max-width: 60%; 
+    margin: 1.75rem auto;
+}

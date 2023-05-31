@@ -7,7 +7,7 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
 
   
     return (
-    <Modal show={true} onHide={onClose}>
+    <Modal show={true} onHide={onClose} dialogClassName="custom-modal-dialog">
       
       <Modal.Header closeButton>
         <Modal.Title>{groupName}</Modal.Title>
@@ -31,12 +31,12 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
             <tbody>
                 {members[0].length > 0 ? (
 
-                    members.map((membro) => (
+                    members[0].map((membro) => (
                         <tr key={membro}>
                             
-                            <td>{membro[0][1]}</td>
+                            <td>{membro[1]}</td>
 
-                            <td>{membro[0][2]}</td>
+                            <td>{membro[2]}</td>
                             
                             <td className="text-center"> 
                                 {isLeader &&
