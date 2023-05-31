@@ -204,7 +204,7 @@ export default function GruppiDashboard(){
 
                 {gruppiLeader.map(item => (
                     <div key={item._id}>
-                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username} isLeader={true} membersData={item.membersData}/>
+                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username} isLeader={true} membersData={item.membersData} setNuovoGruppo={setNuovoGruppo}/>
                     </div>
                 ))}
 
@@ -215,7 +215,7 @@ export default function GruppiDashboard(){
 
                 {gruppiMembro.map(item => (
                     <div key={item._id}>
-                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username} membersData={item.membersData}/>
+                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username} membersData={item.membersData} setNuovoGruppo={setNuovoGruppo}/>
                     </div>
                 ))}
 

@@ -220,13 +220,11 @@ router.delete("/eliminaGruppo/:idGruppo", (req, res) => {
 
     // controllo che io sia il leader del gruppo
     .then((leader) => {
+
         leader = leader.toString();
-        console.log(leader)
         const utente_id = req.id
-        console.log(utente_id)
 
         if (leader === utente_id){
-            console.log("Sono il leader")
 
             // elimino il gruppo
             GestoreDB.eliminaGruppo(req.params.idGruppo)
@@ -238,9 +236,7 @@ router.delete("/eliminaGruppo/:idGruppo", (req, res) => {
                     })
 
         } else {
-            console.log("Non sono il leader")
             res.status(401).json({success: "false", message: "Non sei il leader del gruppo"})
-
         }
     })
     

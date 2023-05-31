@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Button, Modal, Table } from 'react-bootstrap';
+import { handleAlert } from '../alert/Alert';
 
 import CookieManager from'../tokenManager/cookieManager';
 
-export default function GroupDetailsModal ({ _id, groupName, leader, members, isLeader, onClose }){
+export default function GroupDetailsModal ({ _id, groupName, leader, members, isLeader, onClose, setNuovoGruppo }){
 
     const [confermaEliminazioneModal, setConfermaEliminazioneModal] = useState(false);
+    const [esistenzaGruppo, setEsistenzaGruppo] = useState(true);
 
     function handleEliminazione(){
         fetch(`api/v1/gruppi/eliminaGruppo/${_id}`, {
@@ -27,7 +29,8 @@ export default function GroupDetailsModal ({ _id, groupName, leader, members, is
                 }
             })
                 .then(() => {
-
+                    setNuovoGruppo("GRUPPO ELIMINATO");
+                    handleAlert("ELIMINAZIONE COMPLETATA", false, "success");
                 })
                     .catch(error => {
 
@@ -39,7 +42,7 @@ export default function GroupDetailsModal ({ _id, groupName, leader, members, is
   
     return (
         <div>
-    <Modal show={!confermaEliminazioneModal} onHide={onClose}>
+    <Modal show={!confermaEliminazioneModal && esistenzaGruppo} onHide={onClose}>
       
       <Modal.Header closeButton>
         <Modal.Title>{groupName}</Modal.Title>
@@ -136,7 +139,7 @@ export default function GroupDetailsModal ({ _id, groupName, leader, members, is
 
       <Modal.Footer>
 
-            <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false); handleEliminazione()}}>
+            <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false); setEsistenzaGruppo(false); handleEliminazione()}}>
                 CONFERMA
             </Button>
 
