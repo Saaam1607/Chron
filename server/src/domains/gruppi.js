@@ -21,40 +21,37 @@ router.get("/membro", bodyParser.json(), (req, res) => {
                     let finalResult = []
 
                     const promises = results.map((element) => {
+
                         return GestoreDB.getDataFromID(element.leader_id)
                             .then((result) => {
                             
                                 leaderUsername = result.username;
+                                element.membersData = [];
 
-                                // const updatedMembers = element.members_id.map((membro_id, index) => {
-                                //     return GestoreDB.getDataFromID(membro_id)
-                                //       .then((result) => {
-                                //         return [membro_id, result.username]; // Restituisce la coppia di ID e username
-                                //       })
-                                //       .catch((error) => {
-                                //         throw error;
-                                //       });
-                                //   });
-                                  
-                                //   Promise.all(updatedMembers)
-                                //     .then((updatedResults) => {
+                                const nestedPromises = element.members_id.map((membro_id, index) => {
+
+                                    return GestoreDB.getDataFromID(membro_id)
+                                        .then((result) => {
+                                            element.membersData.push([membro_id, result.username, result.email]);
+                                        })
+                                            .catch((error) => {
+                                                throw error;
+                                            });    
+                                })
+
+                                return Promise.all(nestedPromises)
+                                    .then(() => {
 
                                         finalResult.push({
                                             _id: element._id,
                                             name: element.name,
                                             leader_id: element.leader_id,
                                             leader_username: leaderUsername,
-                                            members: element.members_id
+                                            members: element.members_id,
+                                            membersData: [element.membersData]
                                         })
 
-                                    // })
-                                        // .catch((error) => {
-                                        // console.error(error);
-                                        // });
-
-                                
-
-                                //console.log(Array.from(element.members_id))
+                                    })
 
                             })
                                 .catch((error) => {
@@ -88,47 +85,66 @@ router.get("/leader", bodyParser.json(), (req, res) => {
     try{
 
         GestoreDB.ottieniGruppiLeader(req.id)
-            .then((results) => {
-                if (results.length > 0) {
+        .then((results) => {
 
-                    
+            if (results.length > 0) {
 
-                    let finalResult = []
+                let finalResult = []
 
-                    const promises = results.map((element) => {
-                        return GestoreDB.getDataFromID(element.leader_id)
-                          .then((result) => {
-                            
+                const promises = results.map((element) => {
+
+                    return GestoreDB.getDataFromID(element.leader_id)
+                        .then((result) => {
+                        
                             leaderUsername = result.username;
+                            element.membersData = [];
 
-                            finalResult.push({
-                                _id: element._id,
-                                name: element.name,
-                                leader_id: element.leader_id,
-                                leader_username: leaderUsername,
-                                members: Array.from(element.members_id)
+                            const nestedPromises = element.members_id.map((membro_id, index) => {
+
+                                return GestoreDB.getDataFromID(membro_id)
+                                    .then((result) => {
+                                        element.membersData.push([membro_id, result.username, result.email]);
+                                    })
+                                        .catch((error) => {
+                                            throw error;
+                                        });    
                             })
 
-                          })
-                          .catch((error) => {
-                            throw error;
-                          });
-                    });
+                            return Promise.all(nestedPromises)
+                                .then(() => {
 
-                    Promise.all(promises)
-                        .then(() => {
-                            res.status(200).json({success: "true", result: finalResult})
+                                    finalResult.push({
+                                        _id: element._id,
+                                        name: element.name,
+                                        leader_id: element.leader_id,
+                                        leader_username: leaderUsername,
+                                        members: element.members_id,
+                                        membersData: [element.membersData]
+                                    })
+
+                                })
+
                         })
                             .catch((error) => {
-                                res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
+                                throw error;
                             });
-                } else {
-                    res.status(204).end();
-                }
-        })
-            .catch((error) => {
-                res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
-            });
+                });
+
+                Promise.all(promises)
+                    .then(() => {
+
+                        return res.status(200).json({success: "true", result: finalResult})
+                    })
+                        .catch((error) => {
+                            return res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
+                        });
+            } else {
+                return res.status(204).end();
+            }
+    })
+        .catch((error) => {
+            return res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
+        });
     } catch (error) {
         res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
     }

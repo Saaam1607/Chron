@@ -46,11 +46,8 @@ export default function GruppiDashboard(){
             })
                     .then(data => {
 
-                        console.log(data)
-
                         if (data){ // c'è qualche gruppo
                             if (Array.isArray(data.result) && data.result.length > 0){
-                                console.log(data.result )
                                 setGruppiMembro(data.result);
                             }
                         } else { // non ci sono gruppi
@@ -207,7 +204,7 @@ export default function GruppiDashboard(){
 
                 {gruppiLeader.map(item => (
                     <div key={item._id}>
-                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username} isLeader={true} members={[item.members]}/>
+                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username} isLeader={true} membersData={item.membersData}/>
                     </div>
                 ))}
 
@@ -218,7 +215,7 @@ export default function GruppiDashboard(){
 
                 {gruppiMembro.map(item => (
                     <div key={item._id}>
-                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username} members={[item.members[2]]}/>
+                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username} membersData={item.membersData}/>
                     </div>
                 ))}
 

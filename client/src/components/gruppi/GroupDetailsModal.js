@@ -5,28 +5,6 @@ import CookieManager from'../tokenManager/cookieManager';
 
 export default function GroupDetailsModal ({ groupName, leader, members, isLeader, onClose }){
 
-
-
-
-  
-    // function getNomeFromID(id){
-    //     fetch(`api/v1/gruppi/username?id=${id}`, {
-    //         method: "GET",
-    //         headers: CookieManager.generateHeader()
-    //     })
-    //         .then(response => {
-    //             if (response.ok) {
-    //                 response.json()
-    //                     .then(data => {
-    //                         console.log("PROVO")
-    //                         console.log(data)
-    //                         return data;
-    //                     })
-    //             } else {
-    //                 return "INSOMMA";
-    //             }
-    //         })
-    // }
   
     return (
     <Modal show={true} onHide={onClose}>
@@ -44,17 +22,21 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
             <thead>
                 <tr>
                     <th>Membro</th>
+                    <th>Email</th>
                     <th></th>
                     <th></th>
                 </tr>
             </thead>
-                        
+                
             <tbody>
-                {members.length > 0 ? (
+                {members[0].length > 0 ? (
+
                     members.map((membro) => (
                         <tr key={membro}>
                             
-                            <td>(membro)</td>
+                            <td>{membro[0][1]}</td>
+
+                            <td>{membro[0][2]}</td>
                             
                             <td className="text-center"> 
                                 {isLeader &&
