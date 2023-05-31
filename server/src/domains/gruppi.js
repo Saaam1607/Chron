@@ -176,27 +176,27 @@ router.post("/nuovoGruppo", (req, res) => {
 })
 
 router.post("/assegnaTask", async (req, res) => {
-    const { nome, dataScadenza, ID_utenti, ID_gruppo } = req.body;
+    const { nome, dataScadenza, members, nomeGruppo } = req.body;
   
-	if (!nome || !ID_utenti) {
-        res.status(400).json({ success: false, message: "Nome mancante o partecipanti mancanti" }); 
+	if (!nome || !members || !nomeGruppo) {
+        res.status(400).json({ success: false, message: "Nome task, nome gruppo o membri mancanti" }); 
         return;
 	}
   
 	try {
+        const ID_utenti = members.map((member) => member.id);
+
         const nuovaTask = new Task(ID_utenti, nome, dataScadenza);
-        nuovaTask.gruppoID = ID_gruppo;
+        nuovaTask.gruppoID = nomeGruppo;
         
 	  	const task  = await nuovaTask.crea();
 
-        const recipient = 'h.chaudhrymohammad@studenti.unitn.it'; 
+        const recipient = members.map((member) => member.email); 
         const subject = 'Nuova task assegnata';
 
         const templatePath = path.join(__dirname, '..', 'components', 'gestoreEmail', 'taskAssegnata.html');
         const htmlBody = fs.readFileSync(templatePath, 'utf8');
 
-
-        const nomeGruppo = 'Nome del gruppo'; 
         const formattedHtmlBody = htmlBody
           .replace('{{taskName}}', nome)
           .replace('{{deadline}}', dataScadenza)
