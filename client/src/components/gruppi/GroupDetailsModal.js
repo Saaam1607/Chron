@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { Card, Button, Modal, Table, Form } from 'react-bootstrap';
 import TaskAssignment from './TaskAssignment';
+import { handleAlert } from '../alert/Alert';
 
-export default function GroupDetailsModal({ groupName, leader, members, isLeader, onClose }) {
+
+
+
+export default function GroupDetailsModal ({_id, groupName, leader, members, isLeader, onClose, setNuovoGruppo }){
+
     const [selectedMembers, setSelectedMembers] = useState([]);
     const [showTaskAssignmentModal, setShowTaskAssignmentModal] = useState(false);
 
@@ -15,16 +20,46 @@ export default function GroupDetailsModal({ groupName, leader, members, isLeader
         }
     };
 
-    const handleAssignTask = () => {
-        setShowTaskAssignmentModal(true);
-    };
-
     const handleTaskAssignmentClose = () => {
         setShowTaskAssignmentModal(false);
     };
 
+    const [confermaEliminazioneModal, setConfermaEliminazioneModal] = useState(false);
+    const [esistenzaGruppo, setEsistenzaGruppo] = useState(true);
+
+    function handleEliminazione(){
+        fetch(`api/v1/gruppi/${_id}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${CookieManager.getAuthToken()}`
+            }
+        })
+            .then(response => {
+
+                if (response.ok) {
+                    return
+                } else if (response.status === 500){
+                    return response.json().then(errorData => {
+                        throw ({status: 500, errorData: errorData.message});
+                    });
+                }
+            })
+                .then(() => {
+                    setNuovoGruppo("GRUPPO ELIMINATO");
+                    handleAlert("ELIMINAZIONE COMPLETATA", false, "success");
+                })
+                    .catch(error => {
+
+                        //handleAlert(message, false, "error");
+                    })
+
+    }
+
     return (
-        <Modal show={true} onHide={onClose} dialogClassName="custom-modal-dialog" backdrop="static">
+            <div>
+    <Modal show={!confermaEliminazioneModal && esistenzaGruppo} onHide={onClose} dialogClassName="custom-modal-dialog" backdrop="static">
             <Modal.Header closeButton>
                 <Modal.Title>{groupName}</Modal.Title>
             </Modal.Header>
@@ -75,6 +110,16 @@ export default function GroupDetailsModal({ groupName, leader, members, isLeader
                     )}
                 </tbody>
                 </Table>
+
+        <div className="text-center">
+            {isLeader && 
+                <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(true)}}>
+                    ELIMINA GRUPPO
+                </Button>
+            }
+        </div>
+
+
             </Modal.Body>
 
             <Modal.Footer>
@@ -88,14 +133,7 @@ export default function GroupDetailsModal({ groupName, leader, members, isLeader
                 )}
             </Modal.Footer>
 
-            <Modal show={showTaskAssignmentModal} onHide={handleTaskAssignmentClose} backdrop="static">
-                <Modal.Header closeButton>
-                <Modal.Title>Assegna Task</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                <TaskAssignment selectedMembers={selectedMembers} groupName={groupName} onClose={handleTaskAssignmentClose} />
-                </Modal.Body>
-            </Modal>
-        </Modal>
-    );
-}
+    </Modal>
+    </div>
+  );
+};

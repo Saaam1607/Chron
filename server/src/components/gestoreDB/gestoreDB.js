@@ -225,11 +225,26 @@ class GestoreDB {
         })
     }
 
-    static checkIfObjectId(id) {
-        if (typeof id !== 'string') {
+    static async checkIfObjectId(id) {
+        try {
+            id = new mongoose.Types.ObjectId(id);
+        } catch (error) {
             return false;
         }
-        return mongoose.Types.ObjectId.isValid(id);
+        return true;
+    }
+
+    static async controllaEsistenzaGruppo(codice) {
+        try {
+            const gruppo = await Gruppo.findOne({ _id: new mongoose.Types.ObjectId(codice) });
+            if (gruppo) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
     static uniscitiGruppo(codice, id_utente) {
@@ -248,10 +263,8 @@ class GestoreDB {
 
                         if (gruppo.leader_id.equals(id_utente)) {
                             reject({ stato: 409 });
-                            //throw new Error({status: 409});
                         } else if (gruppo.members_id.includes(id_utente)) {
                             reject({ stato: 409 })
-                            //throw new Error({status: 409});
                         } else {
                             gruppo.members_id.push(id_utente);
                             gruppo.save()
@@ -263,7 +276,6 @@ class GestoreDB {
 
                     } else {
                         reject({ stato: 404 })
-                        //throw new Error({status: 404});
                     }
                 })
                     .catch(error => {
@@ -271,24 +283,38 @@ class GestoreDB {
                         return;
                     });
 
-
-
-                
-
-                // Gruppo.findOne({ $and: [{ members_id: { $in: [id_utente] } }, { _id: codice }] })
-                //     .then(() => {
-                //         console.log("MEMBRO!")
-                //         throw new Error({status: 409});
-                //     })
-
-
             });
 
         } catch (error) {
             console.log(error)
         }
 
+    }
 
+    static async getLeaderIDfromGroupID(codice) {
+        try {
+            const gruppo = await Gruppo.findById(new mongoose.Types.ObjectId(codice))
+            if (gruppo) {
+                return gruppo.leader_id;
+            } else {
+                throw new Error("Errore durante la lettura del leader del gruppo");
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async eliminaGruppo(codice) {
+        try {
+            const gruppo = await Gruppo.findById(codice)
+            if (gruppo) {
+                await Gruppo.deleteOne({ _id: codice });
+            } else {
+                throw new Error("Il gruppo non esiste. Rimozione non effettuata.");
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 }
