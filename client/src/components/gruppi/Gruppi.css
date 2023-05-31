@@ -68,7 +68,11 @@
     margin-bottom: 10pt;
 }
 
-.gruppi-bottoone-creazione {
+.gruppi-bottoni-div {
+    display: flex;
+}
+
+.gruppi-bottone {
     margin-right: 10px;
     width: 270pt;
     display: flex;
@@ -79,24 +83,28 @@
     padding-right: 10pt;
 }
 
-.gruppi-bottoone-creazione:hover {
+.gruppi-bottone:hover {
     background-color: rgb(27, 123, 161);
     transition: 0.5s;
 }
 
-.bottone-creazione {
+.bottone {
     background-color: initial;
     padding: 10px;
     font-size: 15pt;
-    min-width: 200pt;
-    min-height: 40pt;
+    width: auto;
+    height: auto;
 }
 
-.bottone-creazione:hover {
+.bottone:hover {
     background-color: initial;
 }
 
 .bi-plus-square-fill {
+    font-size: 40px;
+}
+
+.bi-person-fill-add {
     font-size: 40px;
 }
 

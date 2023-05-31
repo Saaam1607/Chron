@@ -10,7 +10,6 @@ app.use(bodyParser.json())
 
 const jwt = require("jsonwebtoken")
 
-// REVISIONATA [ XXX ]
 router.post("/login", bodyParser.json(), (req, res) => {
     GestoreDB.login(req.body.email, req.body.password)
         .then((esito) => {
@@ -31,7 +30,6 @@ router.post("/login", bodyParser.json(), (req, res) => {
         });
 })
 
-// REVISIONATA [ XXX ]
 router.post("/registrazione", bodyParser.json(), (req, res) => {
     if (GestoreDB.controllaEsistenzaEmail(req.body.email)) {
         return res.status(409).json({success: "false", message: "Errore, email già utilizzata"})
@@ -69,12 +67,12 @@ router.get("/data", (req, res) => {
         res.status(400).json({success: "false", message: "Errore, ID non trovato"})
     } else {
         GestoreDB.getDataFromID(req.id)
-        .then((esito) => {
-            res.status(200).json(esito)
-        })
-        .catch((error) => {
-            res.status(500).json({success: "false", message: "Errore durante la lettura dei dati"})
-        });
+            .then((esito) => {
+                res.status(200).json(esito)
+            })
+                .catch((error) => {
+                    res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
+                });
     }
 })
 

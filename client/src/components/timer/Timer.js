@@ -136,9 +136,9 @@ export default function Timer(){
                             salvaSessione(durata-time)
                         }
                         if (soundUP){
-                            handleAlert("OK", true) // lancia l'alert
+                            handleAlert("OK", true, "success") // lancia l'alert
                         } else {
-                            handleAlert("OK", false)
+                            handleAlert("OK", false, "success")
                         }   
                     })
             }
@@ -155,9 +155,9 @@ export default function Timer(){
                     .then(() => {
                         readTimerData()
                         if (soundUP){
-                            handleAlert("OK", true) // lancia l'alert
+                            handleAlert("OK", true, "success") // lancia l'alert
                         } else {
-                            handleAlert("OK", false)
+                            handleAlert("OK", false, "success")
                         } 
                     })
             }

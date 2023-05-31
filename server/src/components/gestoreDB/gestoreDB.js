@@ -225,6 +225,72 @@ class GestoreDB {
         })
     }
 
+    static checkIfObjectId(id) {
+        if (typeof id !== 'string') {
+            return false;
+        }
+        return mongoose.Types.ObjectId.isValid(id);
+    }
+
+    static uniscitiGruppo(codice, id_utente) {
+        try {
+
+            return new Promise((resolve, reject) => {
+
+                codice = new mongoose.Types.ObjectId(codice);
+                id_utente = new mongoose.Types.ObjectId(id_utente);
+
+
+                Gruppo.findById(codice)
+                .then(gruppo => {
+                    
+                    if (gruppo) {
+
+                        if (gruppo.leader_id.equals(id_utente)) {
+                            reject({ stato: 409 });
+                            //throw new Error({status: 409});
+                        } else if (gruppo.members_id.includes(id_utente)) {
+                            reject({ stato: 409 })
+                            //throw new Error({status: 409});
+                        } else {
+                            gruppo.members_id.push(id_utente);
+                            gruppo.save()
+                                .then(() => {
+                                    resolve({ stato: 200 }); 
+                                    return;
+                                });
+                        }
+
+                    } else {
+                        reject({ stato: 404 })
+                        //throw new Error({status: 404});
+                    }
+                })
+                    .catch(error => {
+                        reject({ stato: 500, message: `${error}` });
+                        return;
+                    });
+
+
+
+                
+
+                // Gruppo.findOne({ $and: [{ members_id: { $in: [id_utente] } }, { _id: codice }] })
+                //     .then(() => {
+                //         console.log("MEMBRO!")
+                //         throw new Error({status: 409});
+                //     })
+
+
+            });
+
+        } catch (error) {
+            console.log(error)
+        }
+
+
+    }
+
 }
     
     

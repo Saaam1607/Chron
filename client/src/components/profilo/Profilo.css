@@ -70,3 +70,34 @@
     position: absolute;
     font-weight: bold;
 }
+
+.data-div {
+    display: flex;
+    align-items: center;
+    width: auto;
+    padding-right: 20pt;
+    padding-left: 10pt;
+    height: 40pt;
+    margin: 10pt;
+    margin-left: 0pt;
+    vertical-align: middle;
+    background-color: rgb(175, 225, 245);
+    border-radius: 5pt;
+}
+
+.data-h {
+    margin: 0;
+    color: rgb(23, 117, 155);
+}
+
+.data-p {
+    margin: 0;
+    padding: 5pt;
+    padding-left: 10pt;
+    padding-right: 10pt;
+    margin-left: 20pt;
+    background-color: white;
+    border-radius: 5pt;
+    font-size: 13pt;
+    color: rgb(23, 117, 155);
+}
