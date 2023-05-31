@@ -8,7 +8,8 @@ var bodyParser = require('body-parser')
 var app = express()
 app.use(bodyParser.json())
 
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const { default: mongoose } = require('mongoose');
 
 router.get("/membro", bodyParser.json(), (req, res) => {
 
@@ -202,6 +203,49 @@ router.put("/nuovoGruppo", (req, res) => {
     } catch (error) {
         res.status(500).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
     }
+
+})
+
+router.delete("/eliminaGruppo/:idGruppo", (req, res) => {
+
+    // ricerca del leader del gruppo (ID)
+    GestoreDB.getLeaderIDfromGroupID(req.params.idGruppo)
+        .then((result) => {
+            //console.log(result)
+            return result;
+        })
+            .catch((error) => {
+                console.log(error)
+            })
+
+    // controllo che io sia il leader del gruppo
+    .then((leader) => {
+        leader = leader.toString();
+        console.log(leader)
+        const utente_id = req.id
+        console.log(utente_id)
+
+        if (leader === utente_id){
+            console.log("Sono il leader")
+
+            // elimino il gruppo
+            GestoreDB.eliminaGruppo(req.params.idGruppo)
+                .then(() => {
+                    res.status(200).json({success: "true", message: "Gruppo eliminato correttamente"})
+                })
+                    .catch((error) => {
+                        res.status(500).json({success: "false", message: `Errore durante l'eliminazione del gruppo: ${error}`})
+                    })
+
+        } else {
+            console.log("Non sono il leader")
+            res.status(401).json({success: "false", message: "Non sei il leader del gruppo"})
+
+        }
+    })
+    
+
+
 
 })
 

@@ -55,6 +55,7 @@ export default function Gruppo({ groupName, groupID, leader, membersData, isLead
 
             {showModal && (
                 <GroupDetailsModal
+                    _id={groupID}
                     groupName={groupName}
                     leader={leader}
                     members={membersData}

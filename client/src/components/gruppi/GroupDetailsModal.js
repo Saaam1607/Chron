@@ -3,9 +3,38 @@ import { Card, Button, Modal, Table } from 'react-bootstrap';
 
 import CookieManager from'../tokenManager/cookieManager';
 
-export default function GroupDetailsModal ({ groupName, leader, members, isLeader, onClose }){
+export default function GroupDetailsModal ({ _id, groupName, leader, members, isLeader, onClose }){
 
     const [confermaEliminazioneModal, setConfermaEliminazioneModal] = useState(false);
+
+    function handleEliminazione(){
+        fetch(`api/v1/gruppi/eliminaGruppo/${_id}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${CookieManager.getAuthToken()}`
+            }
+        })
+            .then(response => {
+
+                if (response.ok) {
+                    return
+                } else if (response.status === 500){
+                    return response.json().then(errorData => {
+                        throw ({status: 500, errorData: errorData.message});
+                    });
+                }
+            })
+                .then(() => {
+
+                })
+                    .catch(error => {
+
+                        //handleAlert(message, false, "error");
+                    })
+
+    }
 
   
     return (
@@ -107,7 +136,7 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
 
       <Modal.Footer>
 
-            <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false)}}>
+            <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false); handleEliminazione()}}>
                 CONFERMA
             </Button>
 

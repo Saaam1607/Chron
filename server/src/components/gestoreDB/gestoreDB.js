@@ -248,10 +248,8 @@ class GestoreDB {
 
                         if (gruppo.leader_id.equals(id_utente)) {
                             reject({ stato: 409 });
-                            //throw new Error({status: 409});
                         } else if (gruppo.members_id.includes(id_utente)) {
                             reject({ stato: 409 })
-                            //throw new Error({status: 409});
                         } else {
                             gruppo.members_id.push(id_utente);
                             gruppo.save()
@@ -263,7 +261,6 @@ class GestoreDB {
 
                     } else {
                         reject({ stato: 404 })
-                        //throw new Error({status: 404});
                     }
                 })
                     .catch(error => {
@@ -271,23 +268,68 @@ class GestoreDB {
                         return;
                     });
 
-
-
-                
-
-                // Gruppo.findOne({ $and: [{ members_id: { $in: [id_utente] } }, { _id: codice }] })
-                //     .then(() => {
-                //         console.log("MEMBRO!")
-                //         throw new Error({status: 409});
-                //     })
-
-
             });
 
         } catch (error) {
             console.log(error)
         }
 
+    }
+
+    static getLeaderIDfromGroupID(codice) {
+        try {
+                
+                return new Promise((resolve, reject) => {
+
+                    Gruppo.findById(new mongoose.Types.ObjectId(codice))
+                        .then(gruppo => {
+                            if (gruppo) {
+                                resolve(gruppo.leader_id);
+                            } else {
+                                reject({ stato: 404 })
+                            }
+                        })
+                            .catch(error => {
+                                reject({ stato: 500, message: `${error}` });
+                                return;
+                            });
+    
+                });
+    
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    static eliminaGruppo(codice) {
+        try {
+
+            return new Promise((resolve, reject) => {
+
+                Gruppo.findById(codice)
+                .then(gruppo => {
+                    
+                    if (gruppo) {
+                        Gruppo.deleteOne({ _id: codice })
+                            .then(() => {
+                                resolve({ stato: 200 });
+                                return;
+                            });
+
+                    } else {
+                        reject({ stato: 404 })
+                    }
+                })
+                    .catch(error => {
+                        reject({ stato: 500, message: `${error}` });
+                        return;
+                    });
+
+            });
+
+        } catch (error) {
+            console.log(error)
+        }
 
     }
 
