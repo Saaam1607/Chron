@@ -44,7 +44,7 @@ export default function Profilo({setAuthenticated}){
 
 
     return (
-      <div>
+      <div className='profilo-div'>
             <div className='data-div'>
                 <h4 className="data-h"> username: </h4>
                 <p className="data-p">{username}</p>
@@ -54,15 +54,49 @@ export default function Profilo({setAuthenticated}){
                 <h4 className="data-h">email: </h4>
                 <p className="data-p">{email}</p>
             </div>
+
+            <div className='profile-buttons-div'>
             
-            <button
-                onClick={() => {
-                    CookieManager.deleteAuthToken();
-                    setAuthenticated(false);
+                <button
+                    className='data-modification-button'
+                    onClick={() => {
+                        console.log("Username");
                     }}
-            >
-                Logout
-            </button>
+                >
+                    Modifica username
+                </button>
+
+                <button
+                    className='data-modification-button'
+                    onClick={() => {
+                        console.log("Email");
+                    }}
+                >
+                    Modifica email
+                </button>
+
+                <button
+                    className='data-modification-button'
+                    onClick={() => {
+                        console.log("Password");
+                    }}
+                >
+                    Modifica password
+                </button>
+            
+            </div>
+
+            <div className='profile-buttons-div'>
+                <button
+                    className='logout-button'
+                    onClick={() => {
+                        CookieManager.deleteAuthToken();
+                        setAuthenticated(false);
+                        }}
+                >
+                    Logout
+                </button>
+            </div>
             
       </div>
     );

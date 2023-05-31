@@ -15,7 +15,7 @@
     width: 150pt;
     height: 35pt;
     border: 0;
-    border-radius: 15pt;
+    border-radius: 5pt;
     margin: 0pt;;
 }
 
@@ -71,6 +71,13 @@
     font-weight: bold;
 }
 
+.profilo-div {
+    background-color: rgb(217, 240, 250);
+    padding: 15pt;
+    padding-bottom: 30pt;
+    border-radius: 5pt;
+}
+
 .data-div {
     display: flex;
     align-items: center;
@@ -101,3 +108,32 @@
     font-size: 13pt;
     color: rgb(23, 117, 155);
 }
+
+.profile-buttons-div {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30pt;
+}
+
+.data-modification-button{
+    background-color: rgb(35, 156, 204);
+    color: white;
+    font-size: 12pt;
+    width: fit-content;
+    height: auto;
+    padding: 7pt;
+    border-radius: 5pt;
+    margin-bottom: 5pt;
+    
+}
+
+.logout-button {
+    background-color: rgb(204, 35, 35);
+    color: white;
+    font-size: 12pt;
+    width: fit-content;
+    height: auto;
+    padding: 7pt;
+    border-radius: 5pt;
+}
+
