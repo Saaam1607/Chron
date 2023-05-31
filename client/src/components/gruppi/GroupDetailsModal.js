@@ -50,7 +50,7 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
             </thead>
                         
             <tbody>
-                {members[0].length > 0 ? (
+                {members.length > 0 ? (
                     members.map((membro) => (
                         <tr key={membro}>
                             

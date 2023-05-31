@@ -26,31 +26,31 @@ router.get("/membro", bodyParser.json(), (req, res) => {
                             
                                 leaderUsername = result.username;
 
-                                const updatedMembers = element.members_id.map((membro_id, index) => {
-                                    return GestoreDB.getDataFromID(membro_id)
-                                      .then((result) => {
-                                        return [membro_id, result.username]; // Restituisce la coppia di ID e username
-                                      })
-                                      .catch((error) => {
-                                        throw error;
-                                      });
-                                  });
+                                // const updatedMembers = element.members_id.map((membro_id, index) => {
+                                //     return GestoreDB.getDataFromID(membro_id)
+                                //       .then((result) => {
+                                //         return [membro_id, result.username]; // Restituisce la coppia di ID e username
+                                //       })
+                                //       .catch((error) => {
+                                //         throw error;
+                                //       });
+                                //   });
                                   
-                                  Promise.all(updatedMembers)
-                                    .then((updatedResults) => {
+                                //   Promise.all(updatedMembers)
+                                //     .then((updatedResults) => {
 
                                         finalResult.push({
                                             _id: element._id,
                                             name: element.name,
                                             leader_id: element.leader_id,
                                             leader_username: leaderUsername,
-                                            members: updatedResults
+                                            members: element.members_id
                                         })
 
-                                    })
-                                        .catch((error) => {
-                                        console.error(error);
-                                        });
+                                    // })
+                                        // .catch((error) => {
+                                        // console.error(error);
+                                        // });
 
                                 
 
