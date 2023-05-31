@@ -226,10 +226,34 @@ class GestoreDB {
     }
 
     static checkIfObjectId(id) {
-        if (typeof id !== 'string') {
+        try {
+            codice = new mongoose.Types.ObjectId(codice);
+        } catch (error) {
             return false;
         }
-        return mongoose.Types.ObjectId.isValid(id);
+        return true;
+    }
+
+    static async controllaEsistenzaGruppo(codice) {
+
+        console.log("E")
+
+        try {
+            codice = new mongoose.Types.ObjectId(codice);
+        } catch (error) {
+            return false;
+        }
+
+
+        
+        console.log("F")
+
+        gruppo = await Gruppo.findById(codice);
+        if (gruppo) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     static uniscitiGruppo(codice, id_utente) {

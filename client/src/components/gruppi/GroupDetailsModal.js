@@ -10,7 +10,7 @@ export default function GroupDetailsModal ({ _id, groupName, leader, members, is
     const [esistenzaGruppo, setEsistenzaGruppo] = useState(true);
 
     function handleEliminazione(){
-        fetch(`api/v1/gruppi/eliminaGruppo/${_id}`, {
+        fetch(`api/v1/gruppi/${_id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json, text/plain, */*',

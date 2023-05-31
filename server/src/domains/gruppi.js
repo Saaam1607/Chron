@@ -206,43 +206,85 @@ router.put("/nuovoGruppo", (req, res) => {
 
 })
 
-router.delete("/eliminaGruppo/:idGruppo", (req, res) => {
+router.delete("/:idGruppo", async (req, res) => {
+    try {
 
-    // ricerca del leader del gruppo (ID)
-    GestoreDB.getLeaderIDfromGroupID(req.params.idGruppo)
-        .then((result) => {
-            //console.log(result)
-            return result;
-        })
-            .catch((error) => {
-                console.log(error)
-            })
+            
 
-    // controllo che io sia il leader del gruppo
-    .then((leader) => {
-
-        leader = leader.toString();
-        const utente_id = req.id
-
-        if (leader === utente_id){
-
-            // elimino il gruppo
-            GestoreDB.eliminaGruppo(req.params.idGruppo)
-                .then(() => {
-                    res.status(200).json({success: "true", message: "Gruppo eliminato correttamente"})
-                })
-                    .catch((error) => {
-                        res.status(500).json({success: "false", message: `Errore durante l'eliminazione del gruppo: ${error}`})
-                    })
-
-        } else {
-            res.status(401).json({success: "false", message: "Non sei il leader del gruppo"})
+        // controllo che ci sia l'id del gruppo e l'id dell'utente
+        if (req.params.idGruppo == undefined || req.id == undefined) {
+            return res.status(400).json({success: "false", message: `Errore, parametri assenti o non validi`})
         }
-    })
-    
 
+        if (!GestoreDB.checkIfObjectId(req.params.idGruppo)) {
+            return res.status(400).json({success: "false", message: `Errore, formato del codice non valido`})
+        }
+        
+        const esistenzaGruppo = await GestoreDB.controllaEsistenzaGruppo(req.params.idGruppo)
+        console.log(esistenzaGruppo)
+        if (esistenzaGruppo) {
+            console.log("IL GRUPPO ESISTE")
+        }else {
+            console.log("IL GRUPPO NON ESISTE");
+            return res.status(404).json({ success: false, message: `Il gruppo specificato non esiste!` });
+        }
 
+       
 
+        // controllo che il gruppo esista
+        await GestoreDB.controllaEsistenzaGruppo(req.params.idGruppo)
+            .then((result) => {
+                if (result) {
+                    console.log("IL GRUPPO ESISTE")
+                    return;
+                } else {
+                    throw "Il gruppo specificato non esiste!"
+                }
+            })
+                .catch((error) => {
+                    console.log("CATTURO")
+                    return res.status(404).json({success: "false", message: `Il gruppo specificato non esiste!`})
+                })
+
+        console.log("HO LETTO L'ESISTENZA DEL GRUPPO")
+
+        console.log(req.params.idGruppo)
+
+        // ricerca del leader del gruppo (ID)
+        await GestoreDB.getLeaderIDfromGroupID(req.params.idGruppo)
+            .then((leader) => {
+
+                console.log("SONO DENTRO LEADER")
+
+                // controllo che il leader sia l'utente che sta facendo la richiesta
+                leader = leader.toString();
+                const utente_id = req.id
+
+                if (leader === utente_id){
+                    console.log("HO LETTO IL LEADER")
+                    return;
+                } else {
+                    throw "L'utente che ha richiesto l'eliminazione del gruppo non è il leader!"
+                }
+            })
+                .catch((error) => {
+                    return res.status(403).json({success: "false", message: `L'utente che ha richiesto l'eliminazione del gruppo non è il leader!`})
+                })
+
+        console.log("TUTTI I CONTROLLI SONO STATI PASSATI")
+
+        // elimino il gruppo
+        await GestoreDB.eliminaGruppo(req.params.idGruppo)
+            .then(() => {
+                return res.status(200).json({success: "true", message: "Gruppo eliminato correttamente"})
+            })
+                .catch((error) => {
+                    return res.status(500).json({success: "false", message: `Errore durante l'eliminazione del gruppo: ${error}`})
+                })
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: `Errore durante l'eliminazione del gruppo: ${error}` });
+    }
 })
 
 router.get("/username", (req, res) => {
