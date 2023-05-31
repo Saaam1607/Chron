@@ -32,12 +32,11 @@ export default function TaskAssignment({ selectedMembers, groupName, onClose }) 
             onClose(); 
         } else {
             const error = await response.json();
-            console.error('Errore nell\'assegnazione della task:', error.message);
-            // Gestisci l'errore come preferisci
+            throw new Error(error.message);
         }
         } catch (error) {
             console.error('Si è verificato un errore durante l\'assegnazione della task:', error);
-            alert("Si è verificato un errore durante l'assegnazione della task:", error.message)
+            alert(error);
         }
     };
 

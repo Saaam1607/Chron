@@ -208,7 +208,7 @@ router.post("/assegnaTask", async (req, res) => {
 		res.status(201).json({success: true, task:task}); 
 
 	} catch (error) {
-        console.error(`Errore durante la creazione della task di gruppo: ${error.message}`);
+        //console.error(`Errore durante la creazione della task di gruppo: ${error.message}`);
         res.status(500).json({ success: false, message: `Si è verificato un errore durante la creazione della task di gruppo. Errore: ${error.message}` });
 	}
 });
