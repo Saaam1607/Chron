@@ -5,8 +5,11 @@ import CookieManager from'../tokenManager/cookieManager';
 
 export default function GroupDetailsModal ({ groupName, leader, members, isLeader, onClose }){
 
+    const [confermaEliminazioneModal, setConfermaEliminazioneModal] = useState(false);
+
   
     return (
+        <div>
     <Modal show={true} onHide={onClose}>
       
       <Modal.Header closeButton>
@@ -67,6 +70,16 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
             </tbody>
 
         </Table>
+
+        <div className="text-center">
+            {isLeader && 
+                <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(true)}}>
+                    ELIMINA GRUPPO
+                </Button>
+            }
+        </div>
+
+
       
       </Modal.Body>
 
@@ -77,6 +90,51 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
       </Modal.Footer>
 
     </Modal>
+    
+    
+    {confermaEliminazioneModal &&
+    <Modal show={true} onHide={onClose}>
+      
+      <Modal.Header closeButton>
+        <Modal.Title>Conferma eliminazione gruppo</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+
+        <Card.Subtitle className="mb-2 text-muted">Attenzione, l'eliminazione del gruppo è definitiva. L'operazione non potrà essere ripristinata in alcun modo. Procedere ugualmente? </Card.Subtitle>
+        
+        
+
+
+
+
+      
+      </Modal.Body>
+
+      <Modal.Footer>
+
+            <Button variant="danger" style={{ width: "auto" }} onClick={() => {console.log("ELIMINA")}}>
+                CONFERMA
+            </Button>
+
+            <Button variant="primary" style={{ width: "auto" }} onClick={onClose}>
+                ANNULLA
+            </Button>
+
+      </Modal.Footer>
+
+    </Modal>
+}
+    
+    
+    </div>
+
+    
+
+
+
+
+
   );
 };
 
