@@ -10,7 +10,7 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
   
     return (
         <div>
-    <Modal show={true} onHide={onClose}>
+    <Modal show={!confermaEliminazioneModal} onHide={onClose}>
       
       <Modal.Header closeButton>
         <Modal.Title>{groupName}</Modal.Title>
@@ -93,7 +93,7 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
     
     
     {confermaEliminazioneModal &&
-    <Modal show={true} onHide={onClose}>
+    <Modal show={confermaEliminazioneModal} onHide={() => setConfermaEliminazioneModal(false)}>
       
       <Modal.Header closeButton>
         <Modal.Title>Conferma eliminazione gruppo</Modal.Title>
@@ -102,13 +102,7 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
       <Modal.Body>
 
         <Card.Subtitle className="mb-2 text-muted">Attenzione, l'eliminazione del gruppo è definitiva. L'operazione non potrà essere ripristinata in alcun modo. Procedere ugualmente? </Card.Subtitle>
-        
-        
 
-
-
-
-      
       </Modal.Body>
 
       <Modal.Footer>
@@ -117,7 +111,7 @@ export default function GroupDetailsModal ({ groupName, leader, members, isLeade
                 CONFERMA
             </Button>
 
-            <Button variant="primary" style={{ width: "auto" }} onClick={setConfermaEliminazioneModal(false)}>
+            <Button variant="primary" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false)}}>
                 ANNULLA
             </Button>
 
