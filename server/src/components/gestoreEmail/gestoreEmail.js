@@ -13,11 +13,11 @@ const transporter = nodemailer.createTransport({
 });
 
 // Funzione per l'invio dell'email
-async function gestoreEmail(recipient, subject, htmlBody ) {
+async function gestoreEmail(recipients, subject, htmlBody ) {
   try {
     const mailOptions = {
       from: process.env.GMAIL,
-      to: recipient,
+      to:  recipients.join(', '),
       subject,
       html: htmlBody,
     };
