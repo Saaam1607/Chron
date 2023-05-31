@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import CookieManager from'../tokenManager/cookieManager';
+
 
 export default function TaskAssignment({ selectedMembers, groupName, onClose }) {
     const [taskName, setTaskName] = useState('');
@@ -11,14 +13,15 @@ export default function TaskAssignment({ selectedMembers, groupName, onClose }) 
         const requestBody = {
             nome: taskName,
             dataScadenza: deadline,
-            ID_utenti: selectedMembers,
-            ID_gruppo: groupName
+            members: selectedMembers,
+            nomeGruppo: groupName
         };
 
-        const response = await fetch('/assegnaTask', {
+        const response = await fetch('api/v1/gruppi/assegnaTask', {
             method: 'POST',
             headers: {
-            'Content-Type': 'application/json'
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${CookieManager.getAuthToken()}`,
             },
             body: JSON.stringify(requestBody)
         });
@@ -26,16 +29,15 @@ export default function TaskAssignment({ selectedMembers, groupName, onClose }) 
         if (response.ok) {
             const data = await response.json();
             console.log('Task assegnata con successo:', data);
-            // Esegui altre azioni di successo o aggiorna lo stato della tua applicazione
-            onClose(); // Chiudi il modal dopo aver assegnato la task
+            onClose(); 
         } else {
             const error = await response.json();
             console.error('Errore nell\'assegnazione della task:', error.message);
             // Gestisci l'errore come preferisci
         }
         } catch (error) {
-        console.error('Si è verificato un errore durante l\'assegnazione della task:', error);
-        // Gestisci l'errore come preferisci
+            console.error('Si è verificato un errore durante l\'assegnazione della task:', error);
+            alert("Si è verificato un errore durante l'assegnazione della task:", error.message)
         }
     };
 
