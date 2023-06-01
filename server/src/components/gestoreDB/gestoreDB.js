@@ -124,7 +124,7 @@ class GestoreDB {
         });
     }
 
-    static aggiornaTask(_id, ID_utente, nome, dataScadenza, contrassegna, nomeGruppo, rimuovi) {
+    static aggiornaTask(_id, ID_utente, nome, dataScadenza, contrassegna, nomeGruppo, rimuovi, ID_leader) {
         return new Promise((resolve, reject) => {
           let task;
           TaskModel.findOne({ _id: _id })
@@ -143,7 +143,8 @@ class GestoreDB {
                         nome: nome,
                         dataScadenza: dataScadenza,
                         nomeGruppo: nomeGruppo,
-                        contrassegna: contrassegna
+                        contrassegna: contrassegna,
+                        ID_leader: ID_leader
                     });
         
                     if (task) {

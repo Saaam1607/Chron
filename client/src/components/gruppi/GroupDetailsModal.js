@@ -7,7 +7,7 @@ import CookieManager from '../tokenManager/cookieManager';
 
 
 
-export default function GroupDetailsModal ({_id, groupName, leader, members, isLeader, onClose, setNuovoGruppo }){
+export default function GroupDetailsModal ({_id, groupName, leader, leader_id, members, isLeader, onClose, setNuovoGruppo }){
 
     const [selectedMembers, setSelectedMembers] = useState([]);
     const [showTaskAssignmentModal, setShowTaskAssignmentModal] = useState(false);
@@ -145,7 +145,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                 <Modal.Title>Assegna Task</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <TaskAssignment selectedMembers={selectedMembers} groupName={groupName} onClose={handleTaskAssignmentClose} />
+                <TaskAssignment selectedMembers={selectedMembers} groupName={groupName} leader_id={leader_id} onClose={handleTaskAssignmentClose} />
                 </Modal.Body>
             </Modal>
 

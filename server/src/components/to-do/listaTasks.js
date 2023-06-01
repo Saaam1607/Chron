@@ -19,6 +19,7 @@ class ListaTasks {
         nuovaTask._id = task._id;
         nuovaTask.contrassegna = task.contrassegna;
         nuovaTask.nomeGruppo = task.nomeGruppo;
+        nuovaTask.ID_leader = task.ID_leader;
         this.tasks.push(nuovaTask);
       }); 
 

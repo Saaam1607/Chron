@@ -3,7 +3,7 @@ import { Form, Button } from 'react-bootstrap';
 import CookieManager from'../tokenManager/cookieManager';
 
 
-export default function TaskAssignment({ selectedMembers, groupName, onClose }) {
+export default function TaskAssignment({ selectedMembers, groupName, leader_id, onClose }) {
     const [taskName, setTaskName] = useState('');
     const [deadline, setDeadline] = useState('');
 
@@ -14,7 +14,8 @@ export default function TaskAssignment({ selectedMembers, groupName, onClose }) 
             nome: taskName,
             dataScadenza: deadline,
             members: selectedMembers,
-            nomeGruppo: groupName
+            nomeGruppo: groupName,
+            ID_leader: leader_id
         };
 
         const response = await fetch('api/v1/gruppi/assegnaTask', {

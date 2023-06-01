@@ -177,7 +177,7 @@ router.post("/nuovoGruppo", (req, res) => {
 })
 
 router.post("/assegnaTask", async (req, res) => {
-    const { nome, dataScadenza, members, nomeGruppo } = req.body;
+    const { nome, dataScadenza, members, nomeGruppo, ID_leader } = req.body;
 
     if (!nome || !members || !nomeGruppo) {
         return res.status(400).json({ success: false, message: "Nome task, nome gruppo o membri mancanti" });
@@ -198,6 +198,7 @@ router.post("/assegnaTask", async (req, res) => {
         const tasks = await Promise.all(members.map(async (member) => {
             const nuovaTask = new Task(member.id, nome, dataScadenza);
             nuovaTask.nomeGruppo = nomeGruppo;
+            nuovaTask.ID_leader = ID_leader;
 
             const task = await nuovaTask.crea();
 

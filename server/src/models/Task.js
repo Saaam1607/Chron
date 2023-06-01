@@ -6,6 +6,11 @@ const TaskSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  ID_leader: {
+    type: mongoose.ObjectId,
+    ref: 'User',
+    default: null
+  },
   nome: {
     type: String,
     required: true
