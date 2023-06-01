@@ -178,39 +178,36 @@ router.post("/nuovoGruppo", (req, res) => {
 
 router.post("/assegnaTask", async (req, res) => {
     const { nome, dataScadenza, members, nomeGruppo } = req.body;
-  
-	if (!nome || !members || !nomeGruppo) {
-        res.status(400).json({ success: false, message: "Nome task, nome gruppo o membri mancanti" }); 
-        return;
-	}
-  
+
+    if (!nome || !members || !nomeGruppo) {
+        return res.status(400).json({ success: false, message: "Nome task, nome gruppo o membri mancanti" });
+    }
+
     try {
-        await Promise.all(
-            members.map(async (member) => {
-                const nuovaTask = new Task(member.id, nome, dataScadenza);
-                nuovaTask.gruppoID = nomeGruppo;
-    
-                try {
-                    const task = await nuovaTask.crea();
-                    const recipient = members.map((member) => member.email);
-                    const subject = 'Nuova task assegnata';
-    
-                    const templatePath = path.join(__dirname, '..', 'components', 'gestoreEmail', 'taskAssegnata.html');
-                    const htmlBody = fs.readFileSync(templatePath, 'utf8');
-    
-                    const formattedHtmlBody = htmlBody
-                        .replace('{{taskName}}', nome)
-                        .replace('{{deadline}}', dataScadenza)
-                        .replace('{{groupName}}', nomeGruppo);
-    
-                    // Invia l'email di notifica
-                    await gestoreEmail(recipient, subject, formattedHtmlBody);
-                    res.status(201).json({ success: true, task });
-                } catch (error) {
-                    throw new Error(`Errore durante l'invio dell'email di notifica: ${error.message}`);
-                }
-            })
-        );
+        const tasks = await Promise.all(members.map(async (member) => {
+            const nuovaTask = new Task(member.id, nome, dataScadenza);
+            nuovaTask.gruppoID = nomeGruppo;
+
+            const task = await nuovaTask.crea();
+
+            const recipient = member.email;
+            const subject = 'Nuova task assegnata';
+
+            const templatePath = path.join(__dirname, '..', 'components', 'gestoreEmail', 'taskAssegnata.html');
+            const htmlBody = fs.readFileSync(templatePath, 'utf8');
+
+            const formattedHtmlBody = htmlBody
+                .replace('{{taskName}}', nome)
+                .replace('{{deadline}}', dataScadenza)
+                .replace('{{groupName}}', nomeGruppo);
+
+            // Invia l'email di notifica
+            await gestoreEmail(recipient, subject, formattedHtmlBody);
+
+            return task;
+        }));
+
+        res.status(201).json({ success: true, tasks });
     } catch (error) {
         res.status(500).json({ success: false, message: `Si è verificato un errore durante la creazione della task di gruppo. Errore: ${error.message}` });
     }
