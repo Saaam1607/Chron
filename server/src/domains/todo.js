@@ -5,7 +5,7 @@ const Task = require('../components/to-do/task');
 
 router.get('/', async (req, res) => {
     console.log("GET /todo");
-    const listaTask = new ListaTasks([req.id]);
+    const listaTask = new ListaTasks(req.id);
 
 	try {
         const todos = await listaTask.leggiTasks();
@@ -31,7 +31,7 @@ router.post('/new', async (req, res) => {
         return;
 	}
   
-	const nuovaTask = new Task([req.id], nome, dataScadenza);
+	const nuovaTask = new Task(req.id, nome, dataScadenza);
   
 	try {
 	  	const task  = await nuovaTask.crea();
@@ -50,7 +50,7 @@ router.post('/new', async (req, res) => {
 router.put('/complete', async (req, res) => {
     console.log("PUT /complete");
     const idTask = req.body.id;
-    let listaTask = new ListaTasks([req.id]);
+    let listaTask = new ListaTasks(req.id);
 
     if (!idTask) {
         res.status(400).json({ success: false, message: "id Task mancante" }); 
@@ -77,7 +77,7 @@ router.put('/complete', async (req, res) => {
 router.delete('/delete', async (req, res) => {
     console.log("DELETE /delete");
     const idTask = req.body.id;
-    let listaTask = new ListaTasks([req.id]);
+    let listaTask = new ListaTasks(req.id);
 
     if (!idTask) {
         res.status(400).json({ success: false, message: "id Task mancante" }); 
@@ -103,7 +103,7 @@ router.delete('/delete', async (req, res) => {
 
 router.get('/sort', async (req, res) => {
     console.log("GET /sort");
-    const listaTask = new ListaTasks([req.id]);
+    const listaTask = new ListaTasks(req.id);
 
     try {
         await listaTask.leggiTasks();

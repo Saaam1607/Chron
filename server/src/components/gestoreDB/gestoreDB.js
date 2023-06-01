@@ -113,7 +113,7 @@ class GestoreDB {
 
     static ottieniTasks(ID_utente) {
         return new Promise((resolve, reject) => {
-            TaskModel.find({ ID_utente: { $in: ID_utente } })
+            TaskModel.find({ ID_utente: ID_utente })
                 .then(tasks => {
                     resolve(tasks);
                 })

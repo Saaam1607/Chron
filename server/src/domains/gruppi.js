@@ -184,34 +184,36 @@ router.post("/assegnaTask", async (req, res) => {
         return;
 	}
   
-	try {
-        const ID_utenti = members.map((member) => member.id);
-
-        const nuovaTask = new Task(ID_utenti, nome, dataScadenza);
-        nuovaTask.gruppoID = nomeGruppo;
-        
-	  	const task  = await nuovaTask.crea();
-
-        const recipient = members.map((member) => member.email); 
-        const subject = 'Nuova task assegnata';
-
-        const templatePath = path.join(__dirname, '..', 'components', 'gestoreEmail', 'taskAssegnata.html');
-        const htmlBody = fs.readFileSync(templatePath, 'utf8');
-
-        const formattedHtmlBody = htmlBody
-          .replace('{{taskName}}', nome)
-          .replace('{{deadline}}', dataScadenza)
-          .replace('{{groupName}}', nomeGruppo);
+    try {
+        await Promise.all(
+            members.map(async (member) => {
+                const nuovaTask = new Task(member.id, nome, dataScadenza);
+                nuovaTask.gruppoID = nomeGruppo;
     
-        // Invia l'email di notifica
-        await gestoreEmail(recipient, subject, formattedHtmlBody);
-
-		res.status(201).json({success: true, task:task}); 
-
-	} catch (error) {
-        //console.error(`Errore durante la creazione della task di gruppo: ${error.message}`);
+                try {
+                    const task = await nuovaTask.crea();
+                    const recipient = members.map((member) => member.email);
+                    const subject = 'Nuova task assegnata';
+    
+                    const templatePath = path.join(__dirname, '..', 'components', 'gestoreEmail', 'taskAssegnata.html');
+                    const htmlBody = fs.readFileSync(templatePath, 'utf8');
+    
+                    const formattedHtmlBody = htmlBody
+                        .replace('{{taskName}}', nome)
+                        .replace('{{deadline}}', dataScadenza)
+                        .replace('{{groupName}}', nomeGruppo);
+    
+                    // Invia l'email di notifica
+                    await gestoreEmail(recipient, subject, formattedHtmlBody);
+                    res.status(201).json({ success: true, task });
+                } catch (error) {
+                    throw new Error(`Errore durante l'invio dell'email di notifica: ${error.message}`);
+                }
+            })
+        );
+    } catch (error) {
         res.status(500).json({ success: false, message: `Si è verificato un errore durante la creazione della task di gruppo. Errore: ${error.message}` });
-	}
+    }
 });
 
 
