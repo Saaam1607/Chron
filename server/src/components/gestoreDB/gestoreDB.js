@@ -234,6 +234,19 @@ class GestoreDB {
         return true;
     }
 
+    static async controllaEsistenzaUtente(id) {
+        try {
+            const utente = await Credenziali.findOne({ _id: new mongoose.Types.ObjectId(id) });
+            if (utente) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
     static async controllaEsistenzaGruppo(codice) {
         try {
             const gruppo = await Gruppo.findOne({ _id: new mongoose.Types.ObjectId(codice) });
@@ -254,7 +267,6 @@ class GestoreDB {
 
                 codice = new mongoose.Types.ObjectId(codice);
                 id_utente = new mongoose.Types.ObjectId(id_utente);
-
 
                 Gruppo.findById(codice)
                 .then(gruppo => {

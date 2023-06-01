@@ -34,7 +34,14 @@ export default function UsernameModal ({mostraUsernameModal, setMostraUsernameMo
 
     return (
         <div>
-            <Modal show={mostraUsernameModal} onHide={() => setMostraUsernameModal(false)} dialogClassName="custom-modal-dialog" backdrop="static">
+            <Modal
+                className="username-modal"
+                show={mostraUsernameModal}
+                onHide={() => setMostraUsernameModal(false)}
+                dialogClassName="custom-modal-dialog"
+                backdrop="static"
+                style={{ minWidth: 'fit-content' }}
+            >
                 
                 <Modal.Header closeButton>
                     <Modal.Title>Modifica username</Modal.Title>
@@ -50,19 +57,19 @@ export default function UsernameModal ({mostraUsernameModal, setMostraUsernameMo
                     >
                         <div className='field-div'>
                             <div className='input-div'>
-                                <label className="auth-label" htmlFor="email">Email</label>
+                                <label className="auth-label" htmlFor="username">Nuovo username</label>
                                 <input
                                     className='auth-input'
-                                    value={values.email}
-                                    type='email'
-                                    id="email" 
-                                    placeholder="email"
+                                    value={values.username}
+                                    type='username'
+                                    id="username" 
+                                    placeholder="username"
                                     onChange={handleChange}
                                     onBlur={handleBlur}
-                                    style={addErrorStyle(errors.email, touched.email)}
+                                    style={addErrorStyle(errors.username, touched.username)}
                                 />
                             </div>
-                            {errors.email && touched.email && <p className="error">{errors.email}</p>}
+                            {errors.username && touched.username && <p className="error">{errors.username}</p>}
                         </div>
                         <div className='field-div'>
                             <div className='input-div'>

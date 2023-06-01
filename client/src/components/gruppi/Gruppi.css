@@ -22,7 +22,7 @@
 .gruppo-div {
     background-color: rgb(175, 225, 245);
     /* border: 1px solid black; */
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 10px;
     margin: 7pt;
 }
@@ -78,7 +78,7 @@
     display: flex;
     align-items: center;
     background-color: rgb(35, 156, 204);
-    border-radius: 15pt;
+    border-radius: 5pt;
     padding-left: 10pt;
     padding-right: 10pt;
 }

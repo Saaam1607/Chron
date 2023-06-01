@@ -14,7 +14,7 @@ export default function SessionForm(){
         let[hours, mins] = time.split(":");
         const minutes = parseInt(mins) + parseInt(hours * 60);
 
-        fetch('api/v1/timer/salva-sessione', {
+        fetch('api/v1/timerSessione', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
