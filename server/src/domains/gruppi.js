@@ -184,28 +184,27 @@ router.post("/assegnaTask", async (req, res) => {
     }
 
     try {
+
+        const subject = 'Nuova task assegnata';
+
+        const templatePath = path.join(__dirname, '..', 'components', 'gestoreEmail', 'taskAssegnata.html');
+        const htmlBody = fs.readFileSync(templatePath, 'utf8');
+
+        const formattedHtmlBody = htmlBody
+            .replace('{{taskName}}', nome)
+            .replace('{{deadline}}', dataScadenza)
+            .replace('{{groupName}}', nomeGruppo);
+        
         const tasks = await Promise.all(members.map(async (member) => {
             const nuovaTask = new Task(member.id, nome, dataScadenza);
             nuovaTask.nomeGruppo = nomeGruppo;
 
             const task = await nuovaTask.crea();
 
-            const recipient = member.email;
-            const subject = 'Nuova task assegnata';
-
-            const templatePath = path.join(__dirname, '..', 'components', 'gestoreEmail', 'taskAssegnata.html');
-            const htmlBody = fs.readFileSync(templatePath, 'utf8');
-
-            const formattedHtmlBody = htmlBody
-                .replace('{{taskName}}', nome)
-                .replace('{{deadline}}', dataScadenza)
-                .replace('{{groupName}}', nomeGruppo);
-
-            // Invia l'email di notifica
-            await gestoreEmail(recipient, subject, formattedHtmlBody);
-
             return task;
         }));
+        const recipients = members.map((member) => member.email);
+        await gestoreEmail(recipients, subject, formattedHtmlBody);
 
         res.status(201).json({ success: true, tasks });
     } catch (error) {

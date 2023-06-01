@@ -52,10 +52,11 @@ export default function TaskAssignment({ selectedMembers, groupName, onClose }) 
                 <Form.Control type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
             </Form.Group>
 
-            <Button variant="primary" className="add-button" onClick={handleTaskAssignment}>
-                Assegna Task
-            </Button>
-            
+            <div className="text-right">
+                <Button variant="primary" className="add-button mt-2" onClick={handleTaskAssignment}>
+                    Assegna Task
+                </Button>
+            </div>
         </div>
     );
 }

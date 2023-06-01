@@ -63,82 +63,84 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
     }
 
     return (
-    <div>
-    <Modal show={!confermaEliminazioneModal && esistenzaGruppo} onHide={onClose} dialogClassName="custom-modal-dialog" backdrop="static">
-            <Modal.Header closeButton>
-                <Modal.Title>{groupName}</Modal.Title>
-            </Modal.Header>
+        <div>
 
-            <Modal.Body>
-                <Card.Subtitle className="mb-2 text-muted">Leader: {leader}</Card.Subtitle>
+            <Modal show={!showTaskAssignmentModal && !confermaEliminazioneModal && esistenzaGruppo} onHide={onClose} dialogClassName="custom-modal-dialog" backdrop="static">
+                <Modal.Header closeButton>
+                    <Modal.Title>{groupName}</Modal.Title>
+                </Modal.Header>
 
-                <Table bordered hover>
-                <thead>
-                    <tr>
-                    <th>Membro</th>
-                    <th>Email</th>
-                    <th>Seleziona</th>
-                    <th></th>
-                    </tr>
-                </thead>
+                <Modal.Body>
+                    <Card.Subtitle className="mb-2 text-muted">Leader: {leader}</Card.Subtitle>
 
-                <tbody>
-                    {members[0].length > 0 ? (
-                    members[0].map((membro) => (
-                        <tr key={membro[0]}>
-                        <td>{membro[1]}</td>
-                        <td>{membro[2]}</td>
-                        <td className="text-center">
-                            {isLeader && (
-                                <Form.Check
-                                    type="checkbox"
-                                    checked={selectedMembers.some((selectedMember) => selectedMember.id === membro[0])}
-                                    onChange={() => handleMemberSelection({ id: membro[0], name: membro[1], email: membro[2] })}
-                                />
-                            )}
-                        </td>
-                        <td className="text-center">
-                            {isLeader && (
-                            <Button variant="danger" onClick={() => console.log('RIMUOVI')}>
-                                Rimuovi
-                            </Button>
-                            )}
-                        </td>
+                    <Table bordered hover>
+                    <thead>
+                        <tr>
+                        <th>Membro</th>
+                        <th>Email</th>
+                        <th>Seleziona</th>
+                        <th></th>
                         </tr>
-                    ))
-                    ) : (
-                    <tr>
-                        <td colSpan="5" className="text-center">
-                        Non ci sono membri da mostrare.
-                        </td>
-                    </tr>
+                    </thead>
+
+                    <tbody>
+                        {members[0].length > 0 ? (
+                        members[0].map((membro) => (
+                            <tr key={membro[0]}>
+                            <td>{membro[1]}</td>
+                            <td>{membro[2]}</td>
+                            <td className="text-center">
+                                {isLeader && (
+                                    <Form.Check
+                                        type="checkbox"
+                                        checked={selectedMembers.some((selectedMember) => selectedMember.id === membro[0])}
+                                        onChange={() => handleMemberSelection({ id: membro[0], name: membro[1], email: membro[2] })}
+                                    />
+                                )}
+                            </td>
+                            <td className="text-center">
+                                {isLeader && (
+                                <Button variant="danger" onClick={() => console.log('RIMUOVI')}>
+                                    Rimuovi
+                                </Button>
+                                )}
+                            </td>
+                            </tr>
+                        ))
+                        ) : (
+                        <tr>
+                            <td colSpan="5" className="text-center">
+                            Non ci sono membri da mostrare.
+                            </td>
+                        </tr>
+                        )}
+                    </tbody>
+                    </Table>
+
+            <div className="text-center">
+                {isLeader && 
+                    <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(true)}}>
+                        ELIMINA GRUPPO
+                    </Button>
+                }
+            </div>
+
+
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={onClose}>
+                    Close
+                    </Button>
+                    {isLeader && (
+                    <Button variant="primary" className={`add-button ${selectedMembers.length < 1 ? 'disabled' : ''}`} onClick={handleAssignTask}>
+                        Assegna Task
+                    </Button>
                     )}
-                </tbody>
-                </Table>
+                </Modal.Footer>
+            </Modal>
 
-        <div className="text-center">
-            {isLeader && 
-                <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(true)}}>
-                    ELIMINA GRUPPO
-                </Button>
-            }
-        </div>
-
-
-            </Modal.Body>
-
-            <Modal.Footer>
-                <Button variant="secondary" onClick={onClose}>
-                Close
-                </Button>
-                {isLeader && (
-                <Button variant="primary" className={`add-button ${selectedMembers.length < 1 ? 'disabled' : ''}`} onClick={handleAssignTask}>
-                    Assegna Task
-                </Button>
-                )}
-            </Modal.Footer>
-
-            <Modal show={showTaskAssignmentModal} onHide={handleTaskAssignmentClose} backdrop="static">
+            <Modal show={showTaskAssignmentModal} onHide={handleTaskAssignmentClose} backdrop="static"  >
                 <Modal.Header closeButton>
                 <Modal.Title>Assegna Task</Modal.Title>
                 </Modal.Header>
@@ -146,35 +148,34 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                 <TaskAssignment selectedMembers={selectedMembers} groupName={groupName} onClose={handleTaskAssignmentClose} />
                 </Modal.Body>
             </Modal>
-        </Modal>
 
-        {confermaEliminazioneModal &&
-            <Modal show={confermaEliminazioneModal} onHide={() => setConfermaEliminazioneModal(false)}>
-            
-            <Modal.Header closeButton>
-                <Modal.Title>Conferma eliminazione gruppo</Modal.Title>
-            </Modal.Header>
+            {confermaEliminazioneModal &&
+                <Modal show={confermaEliminazioneModal} onHide={() => setConfermaEliminazioneModal(false)}>
+                
+                    <Modal.Header closeButton>
+                        <Modal.Title>Conferma eliminazione gruppo</Modal.Title>
+                    </Modal.Header>
 
-            <Modal.Body>
+                    <Modal.Body>
 
-                <Card.Subtitle className="mb-2 text-muted">Attenzione, l'eliminazione del gruppo è definitiva. L'operazione non potrà essere ripristinata in alcun modo. Procedere ugualmente? </Card.Subtitle>
+                        <Card.Subtitle className="mb-2 text-muted">Attenzione, l'eliminazione del gruppo è definitiva. L'operazione non potrà essere ripristinata in alcun modo. Procedere ugualmente? </Card.Subtitle>
 
-            </Modal.Body>
+                    </Modal.Body>
 
-            <Modal.Footer>
+                    <Modal.Footer>
 
-                    <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false); setEsistenzaGruppo(false); handleEliminazione()}}>
-                        CONFERMA
-                    </Button>
+                        <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false); setEsistenzaGruppo(false); handleEliminazione()}}>
+                            CONFERMA
+                        </Button>
 
-                    <Button variant="primary" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false)}}>
-                        ANNULLA
-                    </Button>
+                        <Button variant="primary" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false)}}>
+                            ANNULLA
+                        </Button>
 
-            </Modal.Footer>
+                    </Modal.Footer>
 
-            </Modal>
-        }
+                </Modal>
+            }
         </div>
     );
 }
