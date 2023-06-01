@@ -186,7 +186,7 @@ router.post("/assegnaTask", async (req, res) => {
     try {
         const tasks = await Promise.all(members.map(async (member) => {
             const nuovaTask = new Task(member.id, nome, dataScadenza);
-            nuovaTask.gruppoID = nomeGruppo;
+            nuovaTask.nomeGruppo = nomeGruppo;
 
             const task = await nuovaTask.crea();
 

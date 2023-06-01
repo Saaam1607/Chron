@@ -14,7 +14,7 @@ const TaskSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
-  gruppoID: {
+  nomeGruppo: {
     type: String,
     default: null
   },

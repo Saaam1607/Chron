@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: '1.0'
+  version: "1.0"
   title: "Chron"
   description: Descrizione API per l'interazione con il sistema Chron
   license:
@@ -33,7 +33,7 @@ paths:
                   type: string
                   description: "Password ricevuta dall'utente"
       responses:
-        '200':
+        "200":
           description: Autenticazione completata con successo
           content:
             text/plain:
@@ -46,7 +46,7 @@ paths:
                   token:
                     type: string
                     example: xxxx
-        '401':
+        "401":
           description: Autenticazione non riuscita, credenziali non corrispondenti o valide
           content:
             text/plain:
@@ -59,7 +59,7 @@ paths:
                   message:
                     type: string
                     example: Autenticazione non riuscita, credenziali non corrispondenti o valide
-        '500':
+        "500":
           description: Errore durante l'autenticazione
           content:
             text/plain:
@@ -99,7 +99,7 @@ paths:
                   type: string
                   description: "Password ricevuta dall'utente"
       responses:
-        '200':
+        "200":
           description: Registrazione e autenticazione completate con successo
           content:
             text/plain:
@@ -112,7 +112,7 @@ paths:
                   token:
                     type: string
                     example: xxxx
-        '401':
+        "401":
           description: Errore, credenziali non valide
           content:
             text/plain:
@@ -125,7 +125,7 @@ paths:
                   message:
                     type: string
                     example: Errore, credenziali non valide
-        '409':
+        "409":
           description: Errore, email già utilizzata
           content:
             text/plain:
@@ -138,7 +138,7 @@ paths:
                   message:
                     type: string
                     example: Errore, email già utilizzata
-        '500':
+        "500":
           description: Errore durante la registrazione
           content:
             text/plain:
@@ -169,7 +169,7 @@ paths:
                   type: integer
                   description: "ID dell'utente"
       responses:
-        '200':
+        "200":
           description: Registrazione e autenticazione completate con successo
           content:
             text/plain:
@@ -185,7 +185,7 @@ paths:
                   email:
                     type: string
                     example: email
-        '400':
+        "400":
           description: Errore, ID non trovato
           content:
             text/plain:
@@ -198,7 +198,7 @@ paths:
                   message:
                     type: string
                     example: Errore, ID non trovato
-        '500':
+        "500":
           description: Errore durante la lettura dei dati
           content:
             text/plain:
@@ -218,7 +218,7 @@ paths:
       description: >-
         Legge e restituisce la fase e durata del timer
       responses:
-        '200':
+        "200":
           description: Modifica delle impostazioni avvenuta con successo
           content:
             text/plain:
@@ -234,7 +234,7 @@ paths:
                   durata:
                     type: integer
                     example: 5
-        '500':
+        "500":
           description: Errore durante la lettura dello stato del timer
           content:
             text/plain:
@@ -266,12 +266,12 @@ paths:
                 fase:
                   type: integer
                   enum: [0, 1, 2]
-                  description: 'Fase del timer (pomodoro, pausaCorta, pausaLunga)'
+                  description: "Fase del timer (pomodoro, pausaCorta, pausaLunga)"
                 time:
                   type: integer
-                  description: 'Durata della fase'
+                  description: "Durata della fase"
       responses:
-        '200':
+        "200":
           description: Modifica delle impostazioni avvenuta con successo
           content:
             text/plain:
@@ -287,7 +287,7 @@ paths:
                   durata:
                     type: integer
                     example: 5
-        '400':
+        "400":
           description: Errore, input non validi
           content:
             text/plain:
@@ -308,7 +308,7 @@ paths:
         Legge e ritorna i valori delle impostazioni attuali del timer.
         I valori sono salvati in locale, quindi sono relativi unicamente alla sessione corrente
       responses:
-        '200':
+        "200":
           description: Lettura delle impostazioni avvenuta con successo
           content:
             text/plain:
@@ -330,7 +330,7 @@ paths:
                   pomodoriPerSessione:
                     type: integer
                     example: 4
-        '500':
+        "500":
           description: Errore nella lettura delle impostazioni
           content:
             text/plain:
@@ -364,18 +364,18 @@ paths:
               properties:
                 pomdoro:
                   type: integer
-                  description: 'Durata del pomodoro, ovvero il tempo della singola sessione'
+                  description: "Durata del pomodoro, ovvero il tempo della singola sessione"
                 pausaCorta:
                   type: integer
-                  description: 'Durata della pausaCorta'
+                  description: "Durata della pausaCorta"
                 pausaLunga:
                   type: integer
-                  description: 'Durata della pausaLunga'
+                  description: "Durata della pausaLunga"
                 sessioni:
                   type: integer
-                  description: 'Numero di sessioni prima della pausaLunga'
+                  description: "Numero di sessioni prima della pausaLunga"
       responses:
-        '200':
+        "200":
           description: Modifica delle impostazioni avvenuta con successo
           content:
             text/plain:
@@ -388,7 +388,7 @@ paths:
                   message:
                     type: string
                     example: Modifica delle impostazioni avvenuta con successo
-        '400':
+        "400":
           description: Errore, input non validi
           content:
             text/plain:
@@ -401,7 +401,7 @@ paths:
                   message:
                     type: string
                     example: Errore, input non validi
-        '500':
+        "500":
           description: Errore durante la modifica delle impostazioni
           content:
             text/plain:
@@ -433,12 +433,12 @@ paths:
               properties:
                 minuti:
                   type: integer
-                  description: 'tempo in minuti'
+                  description: "tempo in minuti"
                 date:
                   type: string
-                  description: 'data nella quale si è effettualta la sessione'
+                  description: "data nella quale si è effettualta la sessione"
       responses:
-        '201':
+        "201":
           description: Sessione salvata con successo.
           content:
             text/plain:
@@ -454,7 +454,7 @@ paths:
                   data:
                     type: string
                     example: "2023-05-23T00:00:00"
-        '400':
+        "400":
           description: Errore, input non validi
           content:
             text/plain:
@@ -467,7 +467,7 @@ paths:
                   message:
                     type: string
                     example: Parametro minuti mancante o non valido.
-        '500':
+        "500":
           description: Errore del server.
           content:
             text/plain:
@@ -489,7 +489,7 @@ paths:
         Questo endpoint consente agli utenti di ottenere l'elenco delle task salvati nel sistema.
         Neccessita che l'utente sia autenticato quindi nel header ci deve essere il token.
       responses:
-        '200':
+        "200":
           description: Elenco delle tasks recuperato con successo
           content:
             text/plain:
@@ -519,12 +519,12 @@ paths:
                         contrassegna:
                           type: boolean
                           example: false
-                        gruppoID:
+                        nomeGruppo:
                           type: string
                           example: "vxvc"
-        '204':
+        "204":
           description: Nessuna task da mostrare. NO CONTENT
-        '500':
+        "500":
           description: Errore del server.
           content:
             text/plain:
@@ -554,7 +554,7 @@ paths:
                   type: string
                   description: "Data di scadenza della task"
       responses:
-        '201':
+        "201":
           description: "Creazione del task completata con successo"
           content:
             text/plain:
@@ -576,10 +576,10 @@ paths:
                       contrassegna:
                         type: boolean
                         description: "stato di completamento della task"
-                      gruppoID:
+                      nomeGruppo:
                         type: string
                         description: "ID del gruppo a cui appartiene la task"
-        '400':
+        "400":
           description: "Richiesta non valida"
           content:
             text/plain:
@@ -592,7 +592,7 @@ paths:
                   message:
                     type: string
                     example: "Nome mancante"
-        '500':
+        "500":
           description: "Errore durante la creazione del task"
           content:
             text/plain:
@@ -619,7 +619,7 @@ paths:
                   type: string
                   description: "ID della task da contrassegnare come completata"
       responses:
-        '200':
+        "200":
           description: "Task contrassegnata come completata con successo"
           content:
             text/plain:
@@ -641,10 +641,10 @@ paths:
                       contrassegna:
                         type: boolean
                         description: "Stato di completamento della task"
-                      gruppoID:
+                      nomeGruppo:
                         type: string
                         description: "ID del gruppo a cui appartiene la task"
-        '404':
+        "404":
           description: "Task non trovata"
           content:
             text/plain:
@@ -657,7 +657,7 @@ paths:
                   message:
                     type: string
                     example: "Task con ID [ID della task] non trovata"
-        '500':
+        "500":
           description: "Errore durante la contrassegnazione della task"
           content:
             text/plain:
@@ -684,7 +684,7 @@ paths:
                   type: string
                   description: "ID della task da eliminare"
       responses:
-        '200':
+        "200":
           description: "Task eliminata con successo"
           content:
             text/plain:
@@ -706,10 +706,10 @@ paths:
                       contrassegna:
                         type: boolean
                         description: "Stato di completamento della task"
-                      gruppoID:
+                      nomeGruppo:
                         type: string
                         description: "ID del gruppo a cui apparteneva la task"
-        '404':
+        "404":
           description: "Task non trovata"
           content:
             text/plain:

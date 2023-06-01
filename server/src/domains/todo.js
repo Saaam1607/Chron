@@ -37,7 +37,7 @@ router.post('/new', async (req, res) => {
 	  	const task  = await nuovaTask.crea();
 		nuovaTask._id = task._id;
 		nuovaTask.contrassegna = task.contrassegna;
-		nuovaTask.gruppoID = task.gruppoID;
+		nuovaTask.nomeGruppo = task.nomeGruppo;
 
 		res.status(201).json({success: true, task:task}); 
 

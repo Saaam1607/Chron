@@ -7,21 +7,21 @@ class Task {
         this.nome = nome;
         this.dataScadenza = dataScadenza;
         this.contrassegna = false;
-        this.gruppoID = null;
+        this.nomeGruppo = null;
     }
 
     async crea() {        
-        return await GestoreDB.aggiornaTask(null, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna, this.gruppoID, false);
+        return await GestoreDB.aggiornaTask(null, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna, this.nomeGruppo, false);
     }
 
     async contrassegnaTask() {
         this.contrassegna = !this.contrassegna;
-        return await GestoreDB.aggiornaTask(this._id, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna,this.gruppoID, false);
+        return await GestoreDB.aggiornaTask(this._id, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna,this.nomeGruppo, false);
     }
 
     async elimina() {
         if (this.contrassegna) {
-            return await GestoreDB.aggiornaTask(this._id, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna,this.gruppoID, true);
+            return await GestoreDB.aggiornaTask(this._id, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna,this.nomeGruppo, true);
         } else {
             throw new Error("Impossibile eliminare una task non contrassegnata");
         }

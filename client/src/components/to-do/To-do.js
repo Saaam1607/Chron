@@ -194,7 +194,7 @@ export default function Todo(){
                                                 ? new Date(todo.dataScadenza).toLocaleDateString()
                                                 : "-"}
                                         </td>
-                                        <td>{todo.gruppoID ? todo.gruppoID : "-"}</td>
+                                        <td>{todo.nomeGruppo ? todo.nomeGruppo : "-"}</td>
                                         <td className="text-center">
                                             <Button variant="danger" onClick={() => deleteTodo(todo._id)} disabled={deleteButtonDisabled}>
                                                 Delete

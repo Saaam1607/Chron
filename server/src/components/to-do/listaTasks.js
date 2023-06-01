@@ -18,7 +18,7 @@ class ListaTasks {
         const nuovaTask = new Task(task.ID_utente, task.nome, task.dataScadenza);
         nuovaTask._id = task._id;
         nuovaTask.contrassegna = task.contrassegna;
-        nuovaTask.gruppoID = task.gruppoID;
+        nuovaTask.nomeGruppo = task.nomeGruppo;
         this.tasks.push(nuovaTask);
       }); 
 
@@ -36,16 +36,16 @@ class ListaTasks {
   
   ordinaPerGruppo() {
     this.tasks.sort((a, b) => {
-      if (a.gruppoID === null && b.gruppoID === null) {
+      if (a.nomeGruppo === null && b.nomeGruppo === null) {
         return 0;
       }
-      if (a.gruppoID === null) {
+      if (a.nomeGruppo === null) {
         return 1;
       }
-      if (b.gruppoID === null) {
+      if (b.nomeGruppo === null) {
         return -1;
       }
-      return a.gruppoID.localeCompare(b.gruppoID);
+      return a.nomeGruppo.localeCompare(b.nomeGruppo);
     });
   }
 
