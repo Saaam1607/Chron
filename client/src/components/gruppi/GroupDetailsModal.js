@@ -6,7 +6,6 @@ import CookieManager from '../tokenManager/cookieManager';
 
 
 
-
 export default function GroupDetailsModal ({_id, groupName, leader, members, isLeader, onClose, setNuovoGruppo }){
 
     const [selectedMembers, setSelectedMembers] = useState([]);

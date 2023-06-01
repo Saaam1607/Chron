@@ -13,6 +13,8 @@ export default function Profilo(){
     const [loginClicked, setLoginClicked] = useState(false);
     const [registrazioneClicked, setRegistrazoneClicked] = useState(false);
 
+    const [mostraUsernameModal, setMostraUsernameModal] = useState(false);
+
     useEffect(() => {
         // Cerco l'id. Se è presente leggo dal db, altrimenti bottoni di auth
         fetch("api/v1/profilo/data", {
@@ -37,7 +39,11 @@ export default function Profilo(){
         <h1>Profilo</h1>
 
         {authenticated==true ? <div>
-            <DatiProfilo setAuthenticated={setAuthenticated}/>
+            <DatiProfilo
+                setAuthenticated={setAuthenticated}
+                
+                mostraUsernameModal={mostraUsernameModal}
+                setMostraUsernameModal={setMostraUsernameModal}/>
         </div> : <></>}
 
             {authenticated==false ? <div>

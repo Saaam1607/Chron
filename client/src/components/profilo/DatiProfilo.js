@@ -2,12 +2,16 @@ import { useState, useEffect } from 'react';
 
 import CookieManager from'../tokenManager/cookieManager';
 
+import UsernameModal from './profileModificationsModals/UsernameModal';
 
 
-export default function Profilo({setAuthenticated}){
+
+export default function Profilo({setAuthenticated, mostraUsernameModal, setMostraUsernameModal}){
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
+
+
 
 
 
@@ -61,6 +65,7 @@ export default function Profilo({setAuthenticated}){
                     className='data-modification-button'
                     onClick={() => {
                         console.log("Username");
+                        setMostraUsernameModal(true);
                     }}
                 >
                     Modifica username
@@ -97,6 +102,10 @@ export default function Profilo({setAuthenticated}){
                     Logout
                 </button>
             </div>
+
+            <UsernameModal mostraUsernameModal={mostraUsernameModal} setMostraUsernameModal={setMostraUsernameModal}/>
+
+
             
       </div>
     );
