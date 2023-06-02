@@ -27,4 +27,28 @@ router.get("/", (req, res) => {
 })
 
 
+
+router.put("/username", bodyParser.json(), async (req, res) => {
+
+    try {
+
+        // controllo corrispondenza id password
+        const esitoControlloPassword = await GestoreDB.controllaCredenziali(req.id, req.body.password)
+        if (!esitoControlloPassword) {
+            return res.status(401).json({success: false, message: `Errore, password errata` })
+        }
+
+        // aggiornamento username
+        await GestoreDB.aggiornaUsername(req.id, req.body.username)
+
+        // ritorno esito positivo
+        return res.status(200).json({success: true, message: `Username aggiornato` })
+
+    } catch (error) {
+        return res.status(500).json({success: false, message: `Errore durante l'aggiornamento dello username: ${error}` })
+    }
+
+})
+
+
 module.exports = router

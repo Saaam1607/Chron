@@ -4,6 +4,7 @@ import Registrazione from './Registrazione';
 import DatiProfilo from "./DatiProfilo"
 import './Profilo.css';
 import CookieManager from'../tokenManager/cookieManager';
+import UsernameModal from './profileModificationsModals/UsernameModal';
 
 
 export default function Profilo(){
@@ -29,6 +30,8 @@ export default function Profilo(){
                 setMostraUsernameModal={setMostraUsernameModal}/>
         </div> : <></>}
 
+        
+
             {!isAuthenticated ? <div>
                 <div className='auth-button-div'>
                     <button
@@ -52,6 +55,7 @@ export default function Profilo(){
                         LOGIN
                     </button>
                 </div>
+
             </div> : <></> }
         
         {!isAuthenticated ? <div>  
@@ -59,6 +63,9 @@ export default function Profilo(){
             {(registrazioneClicked) ? <Registrazione setIsAuthenticated={setIsAuthenticated}/> : <></> }
             
         </div> : <></>}
+
+
+
 
       </div>
     );

@@ -329,6 +329,24 @@ class GestoreDB {
         }
     }
 
+
+
+    // MODIFICA DEI DATI DEL PROFILO
+    static async controllaCredenziali(utente_id, password) {
+        const esito = await Credenziali.countDocuments({ _id: utente_id, password: password })
+        if (esito){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    static async modificaPassword(utente_id, username) {
+        Credenziali.updateOne({ _id: utente_id }, { $set: { password: password } }, { upsert: false })
+    }
+
+
 }
     
     
