@@ -1,5 +1,6 @@
 import { useFormik } from 'formik';
 import { Card, Button, Modal, Table, Form } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
 
 import { basicSchema  } from '../schemas';
 import CookieManager from'../../tokenManager/cookieManager';
@@ -43,6 +44,7 @@ export default function UsernameModal({mostraUsernameModal, setMostraUsernameMod
             })
                 .then(() => {
                     handleAlert("Username aggiornato", false, "success");
+                    setMostraUsernameModal(false);
                 })
                     .catch(error => {
 
@@ -52,6 +54,7 @@ export default function UsernameModal({mostraUsernameModal, setMostraUsernameMod
                         }
 
                         handleAlert(message, false, "error");
+                        setMostraUsernameModal(false);
                     })
     }
 

@@ -47,7 +47,7 @@ export default function Profilo({setIsAuthenticated, mostraUsernameModal, setMos
                         console.log(error.message);
                     })
             
-    }, []);
+    }, [mostraUsernameModal]);
 
 
 
@@ -106,8 +106,9 @@ export default function Profilo({setIsAuthenticated, mostraUsernameModal, setMos
                 </button>
             </div>
 
-            <UsernameModal mostraUsernameModal={mostraUsernameModal} setMostraUsernameModal={setMostraUsernameModal}/>
-
+            {mostraUsernameModal &&
+                <UsernameModal mostraUsernameModal={mostraUsernameModal} setMostraUsernameModal={setMostraUsernameModal}/>
+            }
 
             
       </div>

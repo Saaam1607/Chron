@@ -344,11 +344,15 @@ class GestoreDB {
     }
 
     static async modificaUsername(utente_id, username) {
-        Credenziali.updateOne({ _id: utente_id }, { $set: { username: username } }, { upsert: false })
+        await Credenziali.updateOne({ _id: new mongoose.Types.ObjectId(utente_id) }, {
+            username: username
+        });
     }
 
     static async modificaPassword(utente_id, password) {
-        Credenziali.updateOne({ _id: utente_id }, { $set: { password: password } }, { upsert: false })
+        Credenziali.updateOne({ _id: new mongoose.Types.ObjectId(utente_id) }, {
+            password: password
+        });
     }
 
 
