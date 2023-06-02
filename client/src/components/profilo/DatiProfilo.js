@@ -15,7 +15,7 @@ export default function Profilo({setIsAuthenticated, mostraUsernameModal, setMos
 
     useEffect(() => {
 
-        fetch("/api/v1/dataProfilo", {
+        fetch("/api/v1/profiloData", {
             method: "GET",
             headers: CookieManager.generateHeader(),
         })
@@ -68,7 +68,6 @@ export default function Profilo({setIsAuthenticated, mostraUsernameModal, setMos
                 <button
                     className='data-modification-button'
                     onClick={() => {
-                        console.log("Username");
                         setMostraUsernameModal(true);
                     }}
                 >

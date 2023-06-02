@@ -25,7 +25,7 @@ export default function UsernameModal({mostraUsernameModal, setMostraUsernameMod
                 'Content-Type': 'application/json',
                 "Authorization": `Bearer ${CookieManager.getAuthToken()}`
             },
-            body: JSON.stringify({username: username})
+            body: JSON.stringify({username: username, password: values.password})
         })
             .then(response => {
 

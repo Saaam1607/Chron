@@ -333,6 +333,8 @@ class GestoreDB {
 
     // MODIFICA DEI DATI DEL PROFILO
     static async controllaCredenziali(utente_id, password) {
+        utente_id = new mongoose.Types.ObjectId(utente_id)
+
         const esito = await Credenziali.countDocuments({ _id: utente_id, password: password })
         if (esito){
             return true;
@@ -341,8 +343,11 @@ class GestoreDB {
         }
     }
 
+    static async modificaUsername(utente_id, username) {
+        Credenziali.updateOne({ _id: utente_id }, { $set: { username: username } }, { upsert: false })
+    }
 
-    static async modificaPassword(utente_id, username) {
+    static async modificaPassword(utente_id, password) {
         Credenziali.updateOne({ _id: utente_id }, { $set: { password: password } }, { upsert: false })
     }
 

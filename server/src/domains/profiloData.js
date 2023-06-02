@@ -39,7 +39,7 @@ router.put("/username", bodyParser.json(), async (req, res) => {
         }
 
         // aggiornamento username
-        await GestoreDB.aggiornaUsername(req.id, req.body.username)
+        await GestoreDB.modificaUsername(req.id, req.body.username)
 
         // ritorno esito positivo
         return res.status(200).json({success: true, message: `Username aggiornato` })
