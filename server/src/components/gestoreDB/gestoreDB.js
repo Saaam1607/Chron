@@ -124,7 +124,7 @@ class GestoreDB {
         });
     }
 
-    static aggiornaTask(_id, ID_utente, nome, dataScadenza, contrassegna, nomeGruppo, rimuovi, ID_leader) {
+    static aggiornaTask(_id, ID_utente, nome, dataScadenza, contrassegna, ID_gruppo, rimuovi) {
         return new Promise((resolve, reject) => {
           let task;
           TaskModel.findOne({ _id: _id })
@@ -142,9 +142,8 @@ class GestoreDB {
                         ID_utente: ID_utente,
                         nome: nome,
                         dataScadenza: dataScadenza,
-                        nomeGruppo: nomeGruppo,
+                        ID_gruppo: ID_gruppo,
                         contrassegna: contrassegna,
-                        ID_leader: ID_leader
                     });
         
                     if (task) {
@@ -316,6 +315,18 @@ class GestoreDB {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    static ottieniGruppoByID(ID_gruppo) {
+        return new Promise((resolve, reject) => {
+            Gruppo.find({ _id: ID_gruppo })
+                .then(gruppo => {
+                    resolve(gruppo);
+                })
+                    .catch(error => {
+                        reject({ message: `Errore durante la lettura del gruppo: ${error}` });
+                    });
+        });
     }
 
 }

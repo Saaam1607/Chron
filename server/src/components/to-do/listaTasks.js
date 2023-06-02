@@ -9,26 +9,40 @@ class ListaTasks {
 
   async leggiTasks() {
     try {
-      // svuota l'array delle tasks
+      // Svuota l'array delle tasks
       this.tasks.splice(0, this.tasks.length);
-      // leggi le tasks dal database
+  
+      // Leggi le tasks dal database
       const tasks = await GestoreDB.ottieniTasks(this.ID_utente);
-      // crea oggetti Task a partire dalle tasks lette dal database
-       tasks.forEach((task) => {
+  
+      // Crea oggetti Task a partire dalle tasks lette dal database
+      for (const task of tasks) {
         const nuovaTask = new Task(task.ID_utente, task.nome, task.dataScadenza);
         nuovaTask._id = task._id;
         nuovaTask.contrassegna = task.contrassegna;
-        nuovaTask.nomeGruppo = task.nomeGruppo;
-        nuovaTask.ID_leader = task.ID_leader;
+        nuovaTask.ID_gruppo = task.ID_gruppo;
+  
+        if (task.ID_gruppo !== null) {
+          const gruppo = await GestoreDB.ottieniGruppoByID(task.ID_gruppo);
+          nuovaTask.nomeGruppo = gruppo[0].name;
+        }
+  
         this.tasks.push(nuovaTask);
-      }); 
-
-      return this.tasks;
+      }
+  
     } catch (error) {
-      // Gestisci eventuali errori
       console.error(`Errore durante la lettura delle tasks per l'utente ${this.ID_utente}: ${error}`);
       throw error;
     }
+  
+    // Restituisci un nuovo array di oggetti filtrati
+    return this.tasks.map(task => ({
+      _id: task._id,
+      nome: task.nome,
+      dataScadenza: task.dataScadenza,
+      contrassegna: task.contrassegna,
+      nomeGruppo: task.nomeGruppo
+    }));
   }
 
   ordinaPerNome() {

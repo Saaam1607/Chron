@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const TaskSchema = new mongoose.Schema({
   ID_utente: {
     type: mongoose.ObjectId,
-    ref: 'User',
+    ref: 'user',
     required: true
   },
-  ID_leader: {
+  ID_gruppo: {
     type: mongoose.ObjectId,
-    ref: 'User',
+    ref: 'group',
     default: null
   },
   nome: {
@@ -17,10 +17,6 @@ const TaskSchema = new mongoose.Schema({
   },
   dataScadenza: {
     type: Date,
-    default: null
-  },
-  nomeGruppo: {
-    type: String,
     default: null
   },
   contrassegna: {
