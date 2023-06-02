@@ -25,6 +25,7 @@ class ListaTasks {
         if (task.ID_gruppo !== null) {
           const gruppo = await GestoreDB.ottieniGruppoByID(task.ID_gruppo);
           nuovaTask.nomeGruppo = gruppo[0].name;
+          nuovaTask.ID_leader = gruppo[0].leader_id;
         }
   
         this.tasks.push(nuovaTask);
@@ -34,15 +35,7 @@ class ListaTasks {
       console.error(`Errore durante la lettura delle tasks per l'utente ${this.ID_utente}: ${error}`);
       throw error;
     }
-  
-    // Restituisci un nuovo array di oggetti filtrati
-    return this.tasks.map(task => ({
-      _id: task._id,
-      nome: task.nome,
-      dataScadenza: task.dataScadenza,
-      contrassegna: task.contrassegna,
-      nomeGruppo: task.nomeGruppo
-    }));
+    return this.tasks;
   }
 
   ordinaPerNome() {

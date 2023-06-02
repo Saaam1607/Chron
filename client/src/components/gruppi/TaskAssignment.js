@@ -9,7 +9,6 @@ export default function TaskAssignment({ selectedMembers, groupName, ID_gruppo, 
 
     const handleTaskAssignment = async () => {
         try {
-        console.log("Selected members: ", selectedMembers);
         const requestBody = {
             nome: taskName,
             dataScadenza: deadline,

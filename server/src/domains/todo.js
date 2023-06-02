@@ -7,19 +7,27 @@ router.get('/', async (req, res) => {
     console.log("GET /todo");
     const listaTask = new ListaTasks(req.id);
 
-	try {
+    try {
         const todos = await listaTask.leggiTasks();
 
-        if(todos.length == 0){
+        if (todos.length == 0) {
             res.status(204).end();
-        }else{
+        } else {
+            // Restituisci un nuovo array di oggetti filtrati
+            todos.map(task => ({
+                _id: task._id,
+                nome: task.nome,
+                dataScadenza: task.dataScadenza,
+                contrassegna: task.contrassegna,
+                nomeGruppo: task.nomeGruppo,
+            }));
+
             res.status(200).json({ success: true, tasks: todos });
         }
-	} catch (error) {
+    } catch (error) {
         console.error(`Errore durante la lettura delle tasks: ${error.message}`);
         res.status(500).json({ success: false, message: `L'operazione di lettura delle task non è andata a buon fine. ${error.message}` });
-	}
-
+    }
 });
 
 router.post('/new', async (req, res) => {
