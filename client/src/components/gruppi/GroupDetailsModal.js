@@ -63,57 +63,90 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
     return (
     <div>
-    <Modal show={!confermaEliminazioneModal && esistenzaGruppo} onHide={onClose} dialogClassName="custom-modal-dialog" backdrop="static">
+
+    <Modal
+        className='gruppo-modal'
+        show={!confermaEliminazioneModal && esistenzaGruppo}
+        onHide={onClose}
+        dialogClassName="custom-modal-dialog"
+        backdrop="static"
+        style={{ minWidth: '800pt' }}
+    
+    >
             <Modal.Header closeButton>
                 <Modal.Title>{groupName}</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
-                <Card.Subtitle className="mb-2 text-muted">Leader: {leader}</Card.Subtitle>
+                
+                <div className='members-div'>
+                    <Card.Subtitle className="mb-2 text-muted" style={{ fontSize: '2em' }}>Leader: {leader}</Card.Subtitle>
+                </div>
 
-                <Table bordered hover>
-                <thead>
-                    <tr>
-                    <th>Membro</th>
-                    <th>Email</th>
-                    <th>Seleziona</th>
-                    <th></th>
-                    </tr>
-                </thead>
+                <div className='members-div'>
+                    
+                    <div className='codice-div'>
+                            <Card.Subtitle className="mb-2 text-muted" style={{ fontSize: '2em' }}>Codice: {_id}</Card.Subtitle>
 
-                <tbody>
-                    {members[0].length > 0 ? (
-                    members[0].map((membro) => (
-                        <tr key={membro[0]}>
-                        <td>{membro[1]}</td>
-                        <td>{membro[2]}</td>
-                        <td className="text-center">
-                            {isLeader && (
-                                <Form.Check
-                                    type="checkbox"
-                                    checked={selectedMembers.some((selectedMember) => selectedMember.id === membro[0])}
-                                    onChange={() => handleMemberSelection({ id: membro[0], name: membro[1], email: membro[2] })}
-                                />
+                            <span className="icona-copy">
+                            <i
+                                className="bi bi-clipboard-plus"
+                                title="CLICCA PER COPIARE IL CODICE DEL GRUPPO"
+                                onClick={() => {
+                                    navigator.clipboard.writeText(_id);
+                                }}
+                            ></i>
+
+                        </span>
+                    </div>
+
+                </div>
+
+                <div className='members-div'>
+                    <Table className='members-table' bordered hover>
+                        <thead>
+                            <tr>
+                            <th>Membro</th>
+                            <th>Email</th>
+                            <th>Seleziona</th>
+                            <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {members[0].length > 0 ? (
+                            members[0].map((membro) => (
+                                <tr key={membro[0]}>
+                                <td>{membro[1]}</td>
+                                <td>{membro[2]}</td>
+                                <td className="text-center">
+                                    {isLeader && (
+                                        <Form.Check
+                                            type="checkbox"
+                                            checked={selectedMembers.some((selectedMember) => selectedMember.id === membro[0])}
+                                            onChange={() => handleMemberSelection({ id: membro[0], name: membro[1], email: membro[2] })}
+                                        />
+                                    )}
+                                </td>
+                                <td className="text-center">
+                                    {isLeader && (
+                                    <Button variant="danger" onClick={() => console.log('RIMUOVI')}>
+                                        Rimuovi
+                                    </Button>
+                                    )}
+                                </td>
+                                </tr>
+                            ))
+                            ) : (
+                            <tr>
+                                <td colSpan="5" className="text-center">
+                                Non ci sono membri da mostrare.
+                                </td>
+                            </tr>
                             )}
-                        </td>
-                        <td className="text-center">
-                            {isLeader && (
-                            <Button variant="danger" onClick={() => console.log('RIMUOVI')}>
-                                Rimuovi
-                            </Button>
-                            )}
-                        </td>
-                        </tr>
-                    ))
-                    ) : (
-                    <tr>
-                        <td colSpan="5" className="text-center">
-                        Non ci sono membri da mostrare.
-                        </td>
-                    </tr>
-                    )}
-                </tbody>
-                </Table>
+                        </tbody>
+                    </Table>
+                </div>
 
         <div className="text-center">
             {isLeader && 

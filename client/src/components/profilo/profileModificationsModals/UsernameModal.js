@@ -35,7 +35,6 @@ export default function UsernameModal ({mostraUsernameModal, setMostraUsernameMo
     return (
         <div>
             <Modal
-                className="username-modal"
                 show={mostraUsernameModal}
                 onHide={() => setMostraUsernameModal(false)}
                 dialogClassName="custom-modal-dialog"

@@ -25,11 +25,6 @@ export default function GruppiDashboard(){
     const [addGroupPopupActive, setAddGroupPopupActive] = useState(false);
     const [codice, setCodice] = useState("");
 
-    // useEffect(() => {
-    //     const authToken = CookieManager.getAuthToken();
-    //     isAuthenticated = (authToken !== null && authToken !== undefined);
-    //     console.log("isAuthenticated: " + isAuthenticated);
-    // }, []);
 
 
     function getGruppiMembro(){
@@ -236,12 +231,12 @@ export default function GruppiDashboard(){
 
                 <div className='gruppi-bottone'>
 
-                        <span className="icona-gruppo">
-                            <i
-                                className="bi bi-plus-square-fill"
-                                title="LEADER"
-                            ></i>
-                        </span>
+                    <span className="icona-gruppo">
+                        <i
+                            className="bi bi-plus-square-fill"
+                            title="LEADER"
+                        ></i>
+                    </span>
 
                     <button
                         className='bottone'

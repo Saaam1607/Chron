@@ -119,5 +119,47 @@
 .disabled {
     pointer-events: none;
     opacity: 0.5; /* Opzionale: per ridurre l'opacità del bottone disabilitato */
-  }
+}
+.codice-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bi-clipboard-plus {
+    color: white;
+    font-size: 40px;
+    background-color: rgb(35, 156, 204);
+    padding: 2pt;
+    padding-bottom: 4pt;
+    padding-top: 2pt;
+    padding-left: 6pt;
+    padding-right: 6pt;
+    border-radius: 4px;
+    margin-left: 30pt;
+    margin-right: 5pt;
+}
+
+.bi-clipboard-plus:hover {
+    background-color: rgb(27, 123, 161);
+}
+
+.bi-clipboard-plus:active {
+    background-color: rgb(73, 177, 218);
+}
+
+.members-div{
+    min-width: 100%;
+    background-color: rgb(231, 244, 249);
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20pt;
+    margin-top: 20pt;
+}
+
+.members-table {
+    background-color: white;
+    min-width: 100%;
+}
 
