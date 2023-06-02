@@ -13,6 +13,8 @@ import { Button, Form, Modal } from "react-bootstrap";
 
 export default function GruppiDashboard(){
 
+    const [isAuthenticated, setIsAuthenticated] = useState(CookieManager.generateHeader() !== undefined);
+
     const [gruppiMembro, setGruppiMembro] = useState([]);
     const [gruppiLeader, setGruppiLeader] = useState([]);
 
@@ -23,13 +25,11 @@ export default function GruppiDashboard(){
     const [addGroupPopupActive, setAddGroupPopupActive] = useState(false);
     const [codice, setCodice] = useState("");
 
-    let isAuthenticated = false;
-
-    useEffect(() => {
-        const authToken = CookieManager.getAuthToken();
-        isAuthenticated = (authToken !== null && authToken !== undefined);
-        console.log("isAuthenticated: " + isAuthenticated);
-    }, []);
+    // useEffect(() => {
+    //     const authToken = CookieManager.getAuthToken();
+    //     isAuthenticated = (authToken !== null && authToken !== undefined);
+    //     console.log("isAuthenticated: " + isAuthenticated);
+    // }, []);
 
 
     function getGruppiMembro(){

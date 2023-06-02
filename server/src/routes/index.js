@@ -28,11 +28,17 @@ router.use((req, res, next) => {
 });
 
 router.use(bodyParser.json());
+
+
+
 router.use("/api/v1/timer", timer)
 router.use("/api/v1/timerSessione", leggiToken, timerSessione)
+
 router.use("/api/v1/profilo", profilo)
 router.use("/api/v1/dataProfilo", leggiToken, profiloData)
+
 router.use("/api/v1/gruppi", leggiToken, gruppi)
+
 router.use("/api/v1/todos", leggiToken, todos)
 
 
