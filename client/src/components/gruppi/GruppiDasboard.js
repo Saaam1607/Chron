@@ -23,6 +23,13 @@ export default function GruppiDashboard(){
     const [addGroupPopupActive, setAddGroupPopupActive] = useState(false);
     const [codice, setCodice] = useState("");
 
+    let isAuthenticated = false;
+
+    useEffect(() => {
+        const authToken = CookieManager.getAuthToken();
+        isAuthenticated = (authToken !== null && authToken !== undefined);
+        console.log("isAuthenticated: " + isAuthenticated);
+    }, []);
 
 
     function getGruppiMembro(){
@@ -198,8 +205,12 @@ export default function GruppiDashboard(){
 
 
     return (
+
+        
         <div className='Gruppi'>
-            
+
+        {isAuthenticated ? <div>
+
             <div className='gruppi-leader'>
 
                 {gruppiLeader.map(item => (
@@ -348,7 +359,12 @@ export default function GruppiDashboard(){
     
             </Modal>
 
+        </div> : <h5>Per accedere a questa funzionalità è prima richiesta l'autenticazione. Accedi quindi alla <a href="/profilo">Pagina di autenticazione</a></h5>}
+
+
         </div> 
+
+    
 
     );
 }

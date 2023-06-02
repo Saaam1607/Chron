@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Login from "./Login"
 import Registrazione from './Registrazione';
 import DatiProfilo from "./DatiProfilo"
@@ -8,45 +8,28 @@ import CookieManager from'../tokenManager/cookieManager';
 
 export default function Profilo(){
 
-    const [authenticated, setAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(CookieManager.generateHeader() !== undefined);
 
     const [loginClicked, setLoginClicked] = useState(false);
     const [registrazioneClicked, setRegistrazoneClicked] = useState(false);
 
     const [mostraUsernameModal, setMostraUsernameModal] = useState(false);
 
-    useEffect(() => {
-        // Cerco l'id. Se è presente leggo dal db, altrimenti bottoni di auth
-        fetch("api/v1/profilo/data", {
-            method: "GET",
-            headers: CookieManager.generateHeader()
-        })
-            .then(response => {
-                if (response.ok) {
-                    response.json()
-                        .then(data => {
-                            setAuthenticated(data.success)
-                        })
-                } else {
-                    console.log("token non trovato");
-                }
-            })
 
-    }, [])
 
     return (
       <div className="Profilo">
         <h1>Profilo</h1>
 
-        {authenticated==true ? <div>
+        {isAuthenticated ? <div>
             <DatiProfilo
-                setAuthenticated={setAuthenticated}
-                
+                setIsAuthenticated={setIsAuthenticated}
+
                 mostraUsernameModal={mostraUsernameModal}
                 setMostraUsernameModal={setMostraUsernameModal}/>
         </div> : <></>}
 
-            {authenticated==false ? <div>
+            {!isAuthenticated ? <div>
                 <div className='auth-button-div'>
                     <button
                         className="auth-button"
@@ -70,9 +53,10 @@ export default function Profilo(){
                     </button>
                 </div>
             </div> : <></> }
-        {authenticated==false ? <div>  
-            {(loginClicked) ? <Login setAuthenticated={setAuthenticated}/> : <></> }
-            {(registrazioneClicked) ? <Registrazione setAuthenticated={setAuthenticated}/> : <></> }
+        
+        {!isAuthenticated ? <div>  
+            {(loginClicked) ? <Login setIsAuthenticated={setIsAuthenticated}/> : <></> }
+            {(registrazioneClicked) ? <Registrazione setIsAuthenticated={setIsAuthenticated}/> : <></> }
             
         </div> : <></>}
 

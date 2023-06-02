@@ -5,7 +5,7 @@ const DefaultSettings = require("./../components/timer/timerSettings")
 const { Data, Tempo, Sessione } = require('../components/utils/utils');
 const GestoreDB = require("../components/gestoreDB/gestoreDB")
 const router = express.Router()
-const verificaAutenticazione = require("./../routes/verificaAutenticazione") // middleware per verificare l'autenticazione
+
 
 const Fase = Object.freeze({ 
     Pomodoro: 0,

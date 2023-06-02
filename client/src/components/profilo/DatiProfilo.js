@@ -6,45 +6,49 @@ import UsernameModal from './profileModificationsModals/UsernameModal';
 
 
 
-export default function Profilo({setAuthenticated, mostraUsernameModal, setMostraUsernameModal}){
+export default function Profilo({setIsAuthenticated, mostraUsernameModal, setMostraUsernameModal}){
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
 
 
 
-
-
     useEffect(() => {
-        // ricerca dei dati utente
-        fetch("/api/v1/profilo/data", {
+
+        fetch("/api/v1/dataProfilo", {
             method: "GET",
             headers: CookieManager.generateHeader(),
         })
-        .then(response => {
+            .then(response => {
 
-            if (response.status === 200) {
-                return response.json();
-            } else if (response.status === 400){
-                return response.json().then(errorData => {
-                    throw new Error(errorData.message);
-                });
-            } else if (response.status === 500){
-                return response.json().then(errorData => {
-                    throw new Error(errorData.message);
-                });
-            }
-        })
+                if (response.status === 200) {
+                    return response.json();
+                } else if (response.status === 400){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                } else if (response.status === 401){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                } else if (response.status === 500){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                }
+            })
                 .then(data => {
-                    // setta i dati utente
+
+                    setIsAuthenticated(true);
                     setUsername(data.username);
                     setEmail(data.email);
                 })
                     .catch(error => {
-                        alert(error.message);
+                        console.log(error.message);
                     })
             
-    }, [])
+    }, []);
+
 
 
     return (
@@ -96,7 +100,7 @@ export default function Profilo({setAuthenticated, mostraUsernameModal, setMostr
                     className='logout-button'
                     onClick={() => {
                         CookieManager.deleteAuthToken();
-                        setAuthenticated(false);
+                        setIsAuthenticated(false);
                         }}
                 >
                     Logout

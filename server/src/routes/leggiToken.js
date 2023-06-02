@@ -15,7 +15,7 @@ async function leggiToken(req, res, next) {
 
     // lettura del token
     const token = authHeader && authHeader.split(" ")[1];
-    if (token !== undefined){
+    if (token === undefined){
         return res.status(401).json({ success:false, message: 'Utente non autenticato: token non presente' });
     }
 
@@ -23,7 +23,6 @@ async function leggiToken(req, res, next) {
     let decoded;
     try {
         decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        req.id = decoded.id;
     } catch (err) {
         return res.status(401).json({ success:false, message: `Utente non autenticato: ${error}` });
     }
@@ -39,8 +38,8 @@ async function leggiToken(req, res, next) {
     if (!esitoControlloEsistenza) {
         return res.status(401).json({ success:false, message: 'Utente non autenticato: utente non esistente' });
     }
-
-    req.id = id;
+    
+    req.id = decoded.id;
     next();
 
 }
