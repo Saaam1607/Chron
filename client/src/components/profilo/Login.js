@@ -8,7 +8,7 @@ function addErrorStyle(error, touched) {
     }
 }
 
-export default function Login({setAuthenticated}){
+export default function Login({setIsAuthenticated}){
 
     const onSubmit = (values, actions) => {
         actions.resetForm();
@@ -30,11 +30,11 @@ export default function Login({setAuthenticated}){
                 }
             })
                 .then(data => {
-                    setAuthenticated(true);
+                    setIsAuthenticated(true);
                     CookieManager.setAuthToken(data.token);
                 })
                     .catch(error => {
-                        setAuthenticated(false);
+                        setIsAuthenticated(false);
                         alert(error.message);
                     })
     };

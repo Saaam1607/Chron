@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import { basicSchema  } from './schemas';
 
-export default function Registrazione({setAuthenticated}){
+export default function Registrazione({setIsAuthenticated}){
 
     const onSubmit = (values, actions) => {
         actions.resetForm();

@@ -13,6 +13,8 @@ import { Button, Form, Modal } from "react-bootstrap";
 
 export default function GruppiDashboard(){
 
+    const [isAuthenticated, setIsAuthenticated] = useState(CookieManager.generateHeader() !== undefined);
+
     const [gruppiMembro, setGruppiMembro] = useState([]);
     const [gruppiLeader, setGruppiLeader] = useState([]);
 
@@ -198,8 +200,12 @@ export default function GruppiDashboard(){
 
 
     return (
+
+        
         <div className='Gruppi'>
-            
+
+        {isAuthenticated ? <div>
+
             <div className='gruppi-leader'>
 
                 {gruppiLeader.map(item => (
@@ -225,12 +231,12 @@ export default function GruppiDashboard(){
 
                 <div className='gruppi-bottone'>
 
-                        <span className="icona-gruppo">
-                            <i
-                                className="bi bi-plus-square-fill"
-                                title="LEADER"
-                            ></i>
-                        </span>
+                    <span className="icona-gruppo">
+                        <i
+                            className="bi bi-plus-square-fill"
+                            title="LEADER"
+                        ></i>
+                    </span>
 
                     <button
                         className='bottone'
@@ -348,7 +354,12 @@ export default function GruppiDashboard(){
     
             </Modal>
 
+        </div> : <h5>Per accedere a questa funzionalità è prima richiesta l'autenticazione. Accedi quindi alla <a href="/profilo">Pagina di autenticazione</a></h5>}
+
+
         </div> 
+
+    
 
     );
 }

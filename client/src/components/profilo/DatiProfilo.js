@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 
 import CookieManager from'../tokenManager/cookieManager';
 
+import UsernameModal from './profileModificationsModals/UsernameModal';
 
 
-export default function Profilo({setAuthenticated}){
+
+export default function Profilo({setIsAuthenticated, mostraUsernameModal, setMostraUsernameModal}){
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -12,39 +14,45 @@ export default function Profilo({setAuthenticated}){
 
 
     useEffect(() => {
-        // ricerca dei dati utente
-        fetch("/api/v1/profilo/data", {
+
+        fetch("/api/v1/profiloData", {
             method: "GET",
             headers: CookieManager.generateHeader(),
         })
-        .then(response => {
+            .then(response => {
 
-            if (response.status === 200) {
-                return response.json();
-            } else if (response.status === 400){
-                return response.json().then(errorData => {
-                    throw new Error(errorData.message);
-                });
-            } else if (response.status === 500){
-                return response.json().then(errorData => {
-                    throw new Error(errorData.message);
-                });
-            }
-        })
+                if (response.status === 200) {
+                    return response.json();
+                } else if (response.status === 400){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                } else if (response.status === 401){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                } else if (response.status === 500){
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                }
+            })
                 .then(data => {
-                    // setta i dati utente
+
+                    setIsAuthenticated(true);
                     setUsername(data.username);
                     setEmail(data.email);
                 })
                     .catch(error => {
-                        alert(error.message);
+                        console.log(error.message);
                     })
             
-    }, [])
+    }, [mostraUsernameModal]);
+
 
 
     return (
-      <div>
+      <div className='profilo-div'>
             <div className='data-div'>
                 <h4 className="data-h"> username: </h4>
                 <p className="data-p">{username}</p>
@@ -54,15 +62,54 @@ export default function Profilo({setAuthenticated}){
                 <h4 className="data-h">email: </h4>
                 <p className="data-p">{email}</p>
             </div>
+
+            <div className='profile-buttons-div'>
             
-            <button
-                onClick={() => {
-                    CookieManager.deleteAuthToken();
-                    setAuthenticated(false);
+                <button
+                    className='data-modification-button'
+                    onClick={() => {
+                        setMostraUsernameModal(true);
                     }}
-            >
-                Logout
-            </button>
+                >
+                    Modifica username
+                </button>
+
+                <button
+                    className='data-modification-button'
+                    onClick={() => {
+                        console.log("Email");
+                    }}
+                >
+                    Modifica email
+                </button>
+
+                <button
+                    className='data-modification-button'
+                    onClick={() => {
+                        console.log("Password");
+                    }}
+                >
+                    Modifica password
+                </button>
+            
+            </div>
+
+            <div className='profile-buttons-div'>
+                <button
+                    className='logout-button'
+                    onClick={() => {
+                        CookieManager.deleteAuthToken();
+                        setIsAuthenticated(false);
+                        }}
+                >
+                    Logout
+                </button>
+            </div>
+
+            {mostraUsernameModal &&
+                <UsernameModal mostraUsernameModal={mostraUsernameModal} setMostraUsernameModal={setMostraUsernameModal}/>
+            }
+
             
       </div>
     );

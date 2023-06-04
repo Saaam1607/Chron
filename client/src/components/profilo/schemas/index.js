@@ -5,8 +5,7 @@ const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
 export const basicSchema = yup.object().shape({
     email: yup
         .string("Formato non valido")
-        .email("Email non valida").
-        required(),
+        .email("Email non valida"),
     password: yup
         .string("Formato non valido")
         .min(8, "Utilizza almeno 8 caratteri")
