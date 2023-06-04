@@ -329,6 +329,23 @@ class GestoreDB {
         });
     }
 
+    static getDatafromEmail(email) {
+        return new Promise((resolve, reject) => {
+            Credenziali.findOne({ email: email })
+                .then((result) => {
+                    if (result) {
+                        resolve(result._id); // Resolve with true if the entry exists
+                        resolve({success: true, _id: result._id, username: result.username, email: result.email}); // Resolve with true if the entry exists
+                    } else {
+                        resolve(null); // no result
+                    }
+                })
+                .catch((error) => {
+                    reject({message: "Errore nella ricerca dell'email", errore: error});
+                });
+        });
+    }
+
 }
     
     
