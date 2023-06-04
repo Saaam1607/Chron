@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import CookieManager from'../tokenManager/cookieManager';
 
 import UsernameModal from './profileModificationsModals/UsernameModal';
+import EmailModal from './profileModificationsModals/EmailModal';
 
 
 
@@ -12,7 +13,7 @@ export default function Profilo({setIsAuthenticated}){
     const [email, setEmail] = useState("");
 
     const [mostraUsernameModal, setMostraUsernameModal] = useState(false);
-    // const [mostraEmailModal, setMostraEmailModal] = useState(false);
+    const [mostraEmailModal, setMostraEmailModal] = useState(false);
 
 
 
@@ -50,7 +51,7 @@ export default function Profilo({setIsAuthenticated}){
                         console.log(error.message);
                     })
             
-    }, [mostraUsernameModal]);
+    }, [mostraUsernameModal, mostraEmailModal]);
 
 
 
@@ -80,7 +81,7 @@ export default function Profilo({setIsAuthenticated}){
                 <button
                     className='data-modification-button'
                     onClick={() => {
-                        console.log("Email");
+                        setMostraEmailModal(true);
                     }}
                 >
                     Modifica email
@@ -111,6 +112,11 @@ export default function Profilo({setIsAuthenticated}){
 
             {mostraUsernameModal &&
                 <UsernameModal mostraUsernameModal={mostraUsernameModal} setMostraUsernameModal={setMostraUsernameModal}/>
+            }
+
+            
+            {mostraEmailModal &&
+                <EmailModal mostraEmailModal={mostraEmailModal} setMostraEmailModal={setMostraEmailModal}/>
             }
 
             
