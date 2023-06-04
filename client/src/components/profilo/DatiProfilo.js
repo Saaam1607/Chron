@@ -4,6 +4,7 @@ import CookieManager from'../tokenManager/cookieManager';
 
 import UsernameModal from './profileModificationsModals/UsernameModal';
 import EmailModal from './profileModificationsModals/EmailModal';
+import PasswordModal from './profileModificationsModals/PasswordModal';
 
 
 
@@ -14,6 +15,7 @@ export default function Profilo({setIsAuthenticated}){
 
     const [mostraUsernameModal, setMostraUsernameModal] = useState(false);
     const [mostraEmailModal, setMostraEmailModal] = useState(false);
+    const [mostraPasswordModal, setMostraPasswordModal] = useState(false);
 
 
 
@@ -51,7 +53,7 @@ export default function Profilo({setIsAuthenticated}){
                         console.log(error.message);
                     })
             
-    }, [mostraUsernameModal, mostraEmailModal]);
+    }, [mostraUsernameModal, mostraEmailModal, mostraPasswordModal]);
 
 
 
@@ -90,7 +92,7 @@ export default function Profilo({setIsAuthenticated}){
                 <button
                     className='data-modification-button'
                     onClick={() => {
-                        console.log("Password");
+                        setMostraPasswordModal(true);
                     }}
                 >
                     Modifica password
@@ -117,6 +119,10 @@ export default function Profilo({setIsAuthenticated}){
             
             {mostraEmailModal &&
                 <EmailModal mostraEmailModal={mostraEmailModal} setMostraEmailModal={setMostraEmailModal}/>
+            }
+
+            {mostraPasswordModal &&
+                <PasswordModal mostraPasswordModal={mostraPasswordModal} setMostraPasswordModal={setMostraPasswordModal}/>
             }
 
             
