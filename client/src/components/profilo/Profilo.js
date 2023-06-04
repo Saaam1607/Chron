@@ -58,7 +58,6 @@ export default function Profilo(){
                     <button
                         className="auth-button"
                         onClick={() => {
-                            console.log("recupera password");
                             setLoginClicked(false);
                             setRegistrazoneClicked(false);
                             setRecuperoPasswordClicked(true);
@@ -72,7 +71,7 @@ export default function Profilo(){
         {!isAuthenticated ? <div>  
             {(loginClicked) ? <Login setIsAuthenticated={setIsAuthenticated}/> : <></> }
             {(registrazioneClicked) ? <Registrazione setIsAuthenticated={setIsAuthenticated}/> : <></> }
-            {(recuperoPasswordClicked) ? <RecuperoPassword setAuthenticated={setAuthenticated} /> : <></> }
+            {(recuperoPasswordClicked) ? <RecuperoPassword setAuthenticated={setIsAuthenticated} /> : <></> }
             
         </div> : <></>}
 
