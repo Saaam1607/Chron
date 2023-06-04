@@ -16,7 +16,7 @@ function addErrorStyle(error, touched) {
 
 
 
-export default function UsernameModal({mostraEmailModal, setMostraEmailModal}){
+export default function EmailModal({mostraEmailModal, setMostraEmailModal}){
 
     function modificaEmail(email){
         fetch('api/v1/profiloData/email', {
