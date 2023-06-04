@@ -2,8 +2,6 @@ const  GestoreDB  = require('../gestoreDB/gestoreDB');
 const gestoreEmail = require("../gestoreEmail/gestoreEmail");
 
 const htmlBody = require('fs').readFileSync(require('path').join(__dirname, '..', 'gestoreEmail', 'taskCompletata.html'), 'utf8');
-const subject = 'Notifica completamento task';
-
 
 class Task {
     constructor(ID_utente, nome, dataScadenza) {
@@ -33,7 +31,7 @@ class Task {
                 .replace('{{deadline}}', this.dataScadenza)
                 .replace('{{groupName}}', this.nomeGruppo)
                 .replace('{{memberName}}', dataUtente.username);
-            gestoreEmail([dataLeader.email], subject, formattedHtmlBody);
+            gestoreEmail([dataLeader.email], 'Notifica completamento task', formattedHtmlBody);
         }
         return result;
     }

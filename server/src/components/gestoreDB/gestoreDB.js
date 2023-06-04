@@ -341,6 +341,39 @@ class GestoreDB {
         });
     }
 
+    static getDataFromEmail(email) {
+        return new Promise((resolve, reject) => {
+            Credenziali.findOne({ email: email })
+                .then((result) => {
+                    if (result) {
+                        resolve({success: true, _id: result._id, username: result.username, email: result.email}); // Resolve with true if the entry exists
+                    } else {
+                        resolve(null); // no result
+                    }
+                })
+                .catch((error) => {
+                    reject({message: "Errore nella ricerca dell'email", errore: error});
+                });
+        });
+    }
+
+    static aggiornaPassword(ID_utente, nuova_password) {
+        return new Promise((resolve, reject) => {
+          Credenziali.updateOne({ _id: new mongoose.Types.ObjectId(ID_utente) }, { password: nuova_password })
+            .then((result) => {
+              if (result) {
+                resolve({ success: true, _id: result._id });
+              } else {
+                reject({ message: "Utente non trovato" });
+              }
+            })
+            .catch((error) => {
+              reject({ message: "Errore nella ricerca dell'utente", error });
+            });
+        });
+    }
+
+
 
 
     // MODIFICA DEI DATI DEL PROFILO

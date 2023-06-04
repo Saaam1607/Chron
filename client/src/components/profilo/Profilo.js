@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Login from "./Login"
 import Registrazione from './Registrazione';
 import DatiProfilo from "./DatiProfilo"
+import RecuperoPassword from '../recupera-password/RecuperoPassword';
 import './Profilo.css';
 import CookieManager from'../tokenManager/cookieManager';
 
@@ -12,6 +13,7 @@ export default function Profilo(){
 
     const [loginClicked, setLoginClicked] = useState(false);
     const [registrazioneClicked, setRegistrazoneClicked] = useState(false);
+    const [recuperoPasswordClicked, setRecuperoPasswordClicked] = useState(false);
 
 
     
@@ -34,6 +36,7 @@ export default function Profilo(){
                         onClick={() => {
                             setLoginClicked(false);
                             setRegistrazoneClicked(true);
+                            setRecuperoPasswordClicked(false);
                         }}
                     >
                         REGISTRATI
@@ -45,17 +48,31 @@ export default function Profilo(){
                         onClick={() => {
                             setLoginClicked(true);
                             setRegistrazoneClicked(false);
+                            setRecuperoPasswordClicked(false);
                         }}
                     >
                         LOGIN
                     </button>
                 </div>
-
+                <div className='auth-button-div'>
+                    <button
+                        className="auth-button"
+                        onClick={() => {
+                            console.log("recupera password");
+                            setLoginClicked(false);
+                            setRegistrazoneClicked(false);
+                            setRecuperoPasswordClicked(true);
+                        }}
+                    >
+                        <h6>RECUPERA PASSWORD</h6>
+                    </button>
+                </div>
             </div> : <></> }
         
         {!isAuthenticated ? <div>  
             {(loginClicked) ? <Login setIsAuthenticated={setIsAuthenticated}/> : <></> }
             {(registrazioneClicked) ? <Registrazione setIsAuthenticated={setIsAuthenticated}/> : <></> }
+            {(recuperoPasswordClicked) ? <RecuperoPassword setAuthenticated={setAuthenticated} /> : <></> }
             
         </div> : <></>}
 
