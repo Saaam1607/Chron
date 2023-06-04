@@ -4,6 +4,8 @@ const express = require("express")
 const router = express.Router()
 const GestoreDB = require("../components/gestoreDB/gestoreDB")
 const gestoreEmail = require("../components/gestoreEmail/gestoreEmail")
+const htmlBody = require('fs').readFileSync(require('path').join(__dirname, '..', 'components', 'gestoreEmail', 'recuperoPassword.html'), 'utf8');
+
 
 var bodyParser = require('body-parser')
 var app = express()
@@ -91,7 +93,10 @@ router.post("/forgot-password", (req, res) => {
 
             const recoveryLink = `http://localhost:3000/reset-password/${token}`;
 
-            gestoreEmail([email], "Recupero password", recoveryLink);
+            const formattedHtmlBody = htmlBody
+                .replace('{{passwordResetLink}}', recoveryLink)
+
+            gestoreEmail([email], "Recupero password", formattedHtmlBody);
 
             res.status(200).json({success: "true", message: "Email inviata con successo!"})
         })
@@ -100,5 +105,6 @@ router.post("/forgot-password", (req, res) => {
         });
     }
 })
+
 
 module.exports = router
