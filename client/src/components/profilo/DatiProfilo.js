@@ -6,10 +6,13 @@ import UsernameModal from './profileModificationsModals/UsernameModal';
 
 
 
-export default function Profilo({setIsAuthenticated, mostraUsernameModal, setMostraUsernameModal}){
+export default function Profilo({setIsAuthenticated}){
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
+
+    const [mostraUsernameModal, setMostraUsernameModal] = useState(false);
+    // const [mostraEmailModal, setMostraEmailModal] = useState(false);
 
 
 

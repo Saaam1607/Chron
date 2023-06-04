@@ -4,7 +4,6 @@ import Registrazione from './Registrazione';
 import DatiProfilo from "./DatiProfilo"
 import './Profilo.css';
 import CookieManager from'../tokenManager/cookieManager';
-import UsernameModal from './profileModificationsModals/UsernameModal';
 
 
 export default function Profilo(){
@@ -14,10 +13,8 @@ export default function Profilo(){
     const [loginClicked, setLoginClicked] = useState(false);
     const [registrazioneClicked, setRegistrazoneClicked] = useState(false);
 
-    const [mostraUsernameModal, setMostraUsernameModal] = useState(false);
 
-
-
+    
     return (
       <div className="Profilo">
         <h1>Profilo</h1>
@@ -25,9 +22,7 @@ export default function Profilo(){
         {isAuthenticated ? <div>
             <DatiProfilo
                 setIsAuthenticated={setIsAuthenticated}
-
-                mostraUsernameModal={mostraUsernameModal}
-                setMostraUsernameModal={setMostraUsernameModal}/>
+                />
         </div> : <></>}
 
         
