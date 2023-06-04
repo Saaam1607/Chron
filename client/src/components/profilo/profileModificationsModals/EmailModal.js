@@ -19,43 +19,43 @@ function addErrorStyle(error, touched) {
 export default function UsernameModal({mostraEmailModal, setMostraEmailModal}){
 
     function modificaEmail(email){
-        // fetch('api/v1/profiloData/username', {
-        //     method: 'PUT',
-        //     headers: {
-        //         'Accept': 'application/json, text/plain, */*',
-        //         'Content-Type': 'application/json',
-        //         "Authorization": `Bearer ${CookieManager.getAuthToken()}`
-        //     },
-        //     body: JSON.stringify({username: username, password: values.password})
-        // })
-        //     .then(response => {
+        fetch('api/v1/profiloData/email', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${CookieManager.getAuthToken()}`
+            },
+            body: JSON.stringify({email: email, password: values.password})
+        })
+            .then(response => {
 
-        //         if (response.ok) {
-        //             return
-        //         } else if (response.status === 401){
-        //             return response.json().then(errorData => {
-        //                 throw ({status: 401, errorData: errorData.message});
-        //             });
-        //         } else if (response.status === 500){
-        //             return response.json().then(errorData => {
-        //                 throw ({status: 500, errorData: errorData.message});
-        //             });
-        //         }
-        //     })
-        //         .then(() => {
-        //             handleAlert("Username aggiornato", false, "success");
-        //             setMostraUsernameModal(false);
-        //         })
-        //             .catch(error => {
+                if (response.ok) {
+                    return
+                } else if (response.status === 401){
+                    return response.json().then(errorData => {
+                        throw ({status: 401, errorData: errorData.message});
+                    });
+                } else if (response.status === 500){
+                    return response.json().then(errorData => {
+                        throw ({status: 500, errorData: errorData.message});
+                    });
+                }
+            })
+                .then(() => {
+                    handleAlert("Email aggiornata", false, "success");
+                    setMostraEmailModal(false);
+                })
+                    .catch(error => {
 
-        //                 let message = "Modifica non riuscita";
-        //                 if (error.status === 401){
-        //                     message ="Password inserita non corretta";
-        //                 }
+                        let message = "Modifica non riuscita";
+                        if (error.status === 401){
+                            message ="Password inserita non corretta";
+                        }
 
-        //                 handleAlert(message, false, "error");
-        //                 setMostraUsernameModal(false);
-        //             })
+                        handleAlert(message, false, "error");
+                        setMostraEmailModal(false);
+                    })
     }
 
     const onSubmit = async (values, actions) => {
