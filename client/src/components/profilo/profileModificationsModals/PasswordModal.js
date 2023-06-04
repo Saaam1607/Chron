@@ -16,7 +16,7 @@ function addErrorStyle(error, touched) {
 
 
 
-export default function PasswordModal({mostraPasswordModale, setMostraPasswordModale}){
+export default function PasswordModal({mostraPasswordModal, setMostraPasswordModal}){
 
     function modificaPassword(nuovaPassword){
         fetch('api/v1/profiloData/password', {
@@ -44,7 +44,7 @@ export default function PasswordModal({mostraPasswordModale, setMostraPasswordMo
             })
                 .then(() => {
                     handleAlert("Password aggiornata", false, "success");
-                    setMostraPasswordModale(false);
+                    setMostraPasswordModal(false);
                 })
                     .catch(error => {
 
@@ -54,7 +54,7 @@ export default function PasswordModal({mostraPasswordModale, setMostraPasswordMo
                         }
 
                         handleAlert(message, false, "error");
-                        setMostraPasswordModale(false);
+                        setMostraPasswordModal(false);
                     })
     }
 
@@ -76,20 +76,20 @@ export default function PasswordModal({mostraPasswordModale, setMostraPasswordMo
 
     return (
         <Modal
-            show={mostraPasswordModale}
-            onHide={() => setMostraPasswordModale(false)}
+            show={mostraPasswordModal}
+            onHide={() => setMostraPasswordModal(false)}
             dialogClassName="custom-modal-dialog"
             backdrop="static"
             style={{ minWidth: 'fit-content' }}
         >
                 
             <Modal.Header closeButton>
-                <Modal.Title>Modifica email</Modal.Title>
+                <Modal.Title>Modifica password</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
 
-                <Card.Subtitle className="mb-2 text-muted">Inserisci la nuova email, quindi inserisci la password attuale per completare la modifica</Card.Subtitle>
+                <Card.Subtitle className="mb-2 text-muted">Inserisci la nuova password, quindi inserisci la password attuale per completare la modifica</Card.Subtitle>
 
                 <form
                     className='auth-form'
@@ -136,7 +136,7 @@ export default function PasswordModal({mostraPasswordModale, setMostraPasswordMo
                             Submit
                         </button>
 
-                        <Button variant="secondary" onClick={() => setMostraPasswordModale(false)}>
+                        <Button variant="secondary" onClick={() => setMostraPasswordModal(false)}>
                             ANNULLA
                         </Button>
                     
