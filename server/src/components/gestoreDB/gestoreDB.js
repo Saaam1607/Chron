@@ -368,7 +368,10 @@ class GestoreDB {
     }
 
     static async modificaPassword(utente_id, password) {
-        Credenziali.updateOne({ _id: new mongoose.Types.ObjectId(utente_id) }, {
+
+        console.log(password)
+
+        await Credenziali.updateOne({ _id: new mongoose.Types.ObjectId(utente_id) }, {
             password: password
         });
     }

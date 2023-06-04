@@ -26,7 +26,7 @@ export default function PasswordModal({mostraPasswordModal, setMostraPasswordMod
                 'Content-Type': 'application/json',
                 "Authorization": `Bearer ${CookieManager.getAuthToken()}`
             },
-            body: JSON.stringify({nuovaPassword: values.nuovaPassword, password: values.password})
+            body: JSON.stringify({nuovaPassword: nuovaPassword, password: values.password})
         })
             .then(response => {
 
@@ -102,7 +102,7 @@ export default function PasswordModal({mostraPasswordModal, setMostraPasswordMod
                             <input
                                 className='auth-input'
                                 value={values.nuovaPassword}
-                                type='nuovaPassword'
+                                type='password'
                                 id="nuovaPassword" 
                                 placeholder="nuovaPassword"
                                 onChange={handleChange}
