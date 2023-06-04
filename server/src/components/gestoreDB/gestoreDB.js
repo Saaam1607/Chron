@@ -361,6 +361,12 @@ class GestoreDB {
         });
     }
 
+    static async modificaEmail(utente_id, username) {
+        await Credenziali.updateOne({ _id: new mongoose.Types.ObjectId(utente_id) }, {
+            email: email
+        });
+    }
+
     static async modificaPassword(utente_id, password) {
         Credenziali.updateOne({ _id: new mongoose.Types.ObjectId(utente_id) }, {
             password: password
