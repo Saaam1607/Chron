@@ -9,8 +9,12 @@ export const basicSchema = yup.object().shape({
     password: yup
         .string("Formato non valido")
         .min(8, "Utilizza almeno 8 caratteri")
-        .matches(passwordRules, { message: "Inserisci almeno una lattera maisucola, minuscola e un numero" })
+        .matches(passwordRules, { message: "Inserisci almeno una lettera maisucola, minuscola e un numero" })
         .required(),
+    nuovaPassword: yup
+        .string("Formato non valido")
+        .min(8, "Utilizza almeno 8 caratteri")
+        .matches(passwordRules, { message: "Inserisci almeno una lettera maisucola, minuscola e un numero" }),
     username: yup
         .string("Formato non valido")
         .min(4, "Utilizza almeno 4 caratteri")
