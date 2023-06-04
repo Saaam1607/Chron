@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require("express")
 const router = express.Router()
 const GestoreDB = require("../components/gestoreDB/gestoreDB")
+const gestoreEmail = require("../components/gestoreEmail/gestoreEmail")
 
 var bodyParser = require('body-parser')
 var app = express()
@@ -73,6 +74,30 @@ router.get("/data", (req, res) => {
                 .catch((error) => {
                     res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
                 });
+    }
+})
+
+router.post("/forgot-password", (req, res) => {
+    const { email } = req.body;
+
+    if(email == undefined){
+        return res.status(400).json({success: "false", message: "Errore, email mancante!"})
+    } else {
+        GestoreDB.getDataFromEmail(email).then((result) => {
+            if(result == null){
+                return res.status(404).json({success: "false", message: "Utente non trovato!"})
+            }
+            const token = jwt.sign({ id: result._id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "1h"})
+
+            const recoveryLink = `http://localhost:3000/reset-password/${token}`;
+
+            gestoreEmail([email], "Recupero password", recoveryLink);
+
+            res.status(200).json({success: "true", message: "Email inviata con successo!"})
+        })
+        .catch((error) => {
+            res.status(500).json({success: "false", message: `Errore durante il forgot-password: ${error}`})
+        });
     }
 })
 
