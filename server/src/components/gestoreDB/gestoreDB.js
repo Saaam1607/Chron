@@ -138,7 +138,7 @@ class GestoreDB {
                     }
                 } else {
                     const nuovaTask = new TaskModel({
-                        _id: new mongoose.Types.ObjectId(),
+                        _id: _id ? _id : new mongoose.Types.ObjectId(),
                         ID_utente: ID_utente,
                         nome: nome,
                         dataScadenza: dataScadenza,

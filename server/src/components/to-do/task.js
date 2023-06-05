@@ -16,7 +16,7 @@ class Task {
     }
 
     async crea() {        
-        return await GestoreDB.aggiornaTask(null, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna, this.ID_gruppo, false);
+        return await GestoreDB.aggiornaTask(this._id, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna, this.ID_gruppo, false);
     }
 
     async contrassegnaTask() {
