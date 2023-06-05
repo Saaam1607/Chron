@@ -14,6 +14,7 @@ import Profilo from "./components/profilo/Profilo"
 import Todos from "./components/to-do/To-do"
 import Gruppi from "./components/gruppi/GruppiDasboard"
 import ResetPasswordForm from './components/recupera-password/RecuperoPasswordForm';
+import TaskForm from './components/to-do/AccettazioneTaskForm';
 
 // routing elements
 import {
@@ -76,6 +77,7 @@ function App() {
         <Route path="/timer" element={<Timer />} />
         <Route path="/sale-studio" element={<h3>Questa funzionalità non è ancora disponibile</h3>} />
         <Route path="/reset-password/:token" element={<ResetPasswordForm />} />
+        <Route path='/accept-reject-task/:token' element={<TaskForm />} />
 
         
       </Routes>
