@@ -37,7 +37,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
     };
 
 
-    
+
     function handleRimozioneMembro(membro_id){
         fetch(`api/v1/gruppi/${_id}/${membro_id}`, {
             method: 'DELETE',
@@ -88,21 +88,23 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
                 if (response.ok) {
                     return
-                } else if (response.status === 500){
-                    return response.json().then(errorData => {
-                        throw ({status: 500, errorData: errorData.message});
-                    });
+                } else if (response.status === 400) {
+                    throw new Error("Parametri non presenti o non validi");
+                } else if (response.status === 401) {
+                    throw new Error("Eliminazione non autorizzata");
+                } else if (response.status === 500) {
+                    throw new Error("Gruppo non trovato");
+                } else if (response.status === 500) {
+                    throw new Error("Errore interno durante l'eliminazione");
                 }
             })
                 .then(() => {
-                    setNuovoGruppo("GRUPPO ELIMINATO");
+                    setNuovoGruppo();
                     handleAlert("ELIMINAZIONE COMPLETATA", false, "success");
                 })
                     .catch(error => {
-
-                        //handleAlert(message, false, "error");
+                        handleAlert(error.message, false, "error");;
                     })
-
     }
 
     return (
