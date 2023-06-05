@@ -103,8 +103,8 @@ class ListaSessioni {
   async calcolaTassoSettimana(inizioSettCorr, tempoTot) {
       let prevDomenica = new Date(inizioSettCorr.setDate(inizioSettCorr.getDate() - 1));
       prevDomenica.setHours(23,59,59,0);
-      let prevLunedi = new Date(inizioSettCorr.setDate(inizioSettCorr.getDate() - 5));
-      prevLunedi.setHours(0,0,0,0);
+      let prevLunedi = new Date(inizioSettCorr.setDate(inizioSettCorr.getDate() - 6));
+      prevLunedi.setHours(2,0,0,0);
       const sessions = await GestoreDB.leggiStorico(this.ID_utente, prevLunedi, prevDomenica);
       let minutiPrevTot = 0;
       sessions.forEach((sessione) =>{
