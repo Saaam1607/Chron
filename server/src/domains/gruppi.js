@@ -290,7 +290,6 @@ router.delete("/:idGruppo", async (req, res) => {
 })
 
 router.delete("/:idGruppo/:idMembro", async (req, res) => {
-
     try {
 
         // 400 Bad Request: La richiesta non è valida o mancano parametri necessari. Ad esempio, potrebbe mancare l'ID del gruppo da eliminare.
@@ -302,7 +301,6 @@ router.delete("/:idGruppo/:idMembro", async (req, res) => {
         if (!GestoreDB.checkIfObjectId(req.params.idGruppo) || !GestoreDB.checkIfObjectId(req.params.idMembro)) {
             return res.status(400).json({success: "false", message: `Errore, formato del codice o del membro non valido`})
         }
-
 
         // 404 Not Found: Il gruppo specificato non è stato trovato. Potrebbe non esistere o essere già stato eliminato in precedenza.
         // controllo sull'esistenza del gruppo

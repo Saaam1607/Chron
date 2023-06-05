@@ -8,8 +8,16 @@ import CookieManager from '../tokenManager/cookieManager';
 
 export default function GroupDetailsModal ({_id, groupName, leader, members, isLeader, onClose, setNuovoGruppo, setRimozioneMembro}){
 
+    const [confermaEliminazioneModal, setConfermaEliminazioneModal] = useState(false);
+    const [esistenzaGruppo, setEsistenzaGruppo] = useState(true);
+
+    const [confermaRimozioneMembroModal, setConfermaRimozioneMembroModal] = useState(false);
+    const [membroDaRimuovere, setMembroDaRimuovere] = useState(null);
+    
     const [selectedMembers, setSelectedMembers] = useState([]);
     const [showTaskAssignmentModal, setShowTaskAssignmentModal] = useState(false);
+
+
 
     const handleMemberSelection = (member) => {
         const isSelected = selectedMembers.some((selectedMember) => selectedMember.id === member.id);
@@ -28,17 +36,9 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
         setShowTaskAssignmentModal(false);
     };
 
-    const [confermaEliminazioneModal, setConfermaEliminazioneModal] = useState(false);
-    const [esistenzaGruppo, setEsistenzaGruppo] = useState(true);
 
-    const [confermaRimozioneMembroModal, setConfermaRimozioneMembroModal] = useState(false);
-    const [membroDaRimuovere, setMembroDaRimuovere] = useState(null);
-
-
-
+    
     function handleRimozioneMembro(membro_id){
-        console.log("PRUOVO A RIMUOVERE: " + membro_id);
-
         fetch(`api/v1/gruppi/${_id}/${membro_id}`, {
             method: 'DELETE',
             headers: {
@@ -47,9 +47,25 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                 "Authorization": `Bearer ${CookieManager.getAuthToken()}`
             }
         })
-        .then(() => {
-            
-        })
+            .then(response => {
+                if (response.ok) {
+                    return
+                } else if (response.status === 400) {
+                    throw new Error("Parametri non presenti o non validi");
+                } else if (response.status === 401) {
+                    throw new Error("Rimozione non autorizzata");
+                } else if (response.status === 500) {
+                    throw new Error("Gruppo o membro non trovati");
+                } else if (response.status === 500) {
+                    throw new Error("Errore interno durante la rimozione");
+                }
+            })
+                .then(() => {
+                    handleAlert("RIMOZIONE COMPLETATA", false, "success");
+                })
+                    .catch(error => {
+                        handleAlert(error.message, false, "error");
+                    });
 
         setShowTaskAssignmentModal(false);
         setRimozioneMembro(true);
@@ -91,23 +107,6 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
     return (
         <div>
-
-            {
-                console.log("CIAO")
-                
-            }
-            {
-                console.log("showTaskAssignmentModal: " + showTaskAssignmentModal)
-            }
-            {
-                console.log("confermaEliminazioneModal: " + confermaEliminazioneModal)
-            }
-            {
-                console.log("confermaRimozioneMembroModal: " + confermaRimozioneMembroModal)
-            }
-            {
-                console.log("esistenzaGruppo: " + esistenzaGruppo)
-            }
 
             <Modal
                 className='gruppo-modal'
