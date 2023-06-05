@@ -41,7 +41,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
 
     function handleRimozioneMembro(membro_id){
-        fetch(`api/v1/gruppi/gruppo/${_id}/membro/${membro_id}`, {
+        fetch(`api/v1/gruppi/${_id}/membro/${membro_id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -80,8 +80,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
 
     function handleEliminazione(){
-
-        fetch(`api/v1/gruppi/gruppo/${_id}`, {
+        fetch(`api/v1/gruppi/${_id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -90,7 +89,6 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
             }
         })
             .then(response => {
-
                 if (response.ok) {
                     return
                 } else if (response.status === 400) {
@@ -114,8 +112,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
 
     function handleAbbandono() {
-
-        fetch(`api/v1/gruppi/abbandono`, {
+        fetch(`api/v1/gruppi/${_id}/abbandono`, {
             method: 'DELETE',
             headers: {
               'Accept': 'application/json, text/plain, */*',
@@ -152,9 +149,6 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
     return (
         <div>
 
-            {/* {
-                console.log("esistanza: " + esistenzaGruppo)
-            } */}
             <Modal
                 className='gruppo-modal'
                 show={!showTaskAssignmentModal && !confermaEliminazioneModal && !confermaRimozioneMembroModal && !confermaAbbandonoModal && esistenzaGruppo}

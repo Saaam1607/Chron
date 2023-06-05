@@ -247,7 +247,9 @@ router.put("/nuovoGruppo", (req, res) => {
 
 })
 
-router.delete("/gruppo/:idGruppo", async (req, res) => {
+router.delete("/:idGruppo", async (req, res) => {
+
+    console.log("SONO DENTRO DELETE GRUPPO")
 
     try {
 
@@ -290,7 +292,10 @@ router.delete("/gruppo/:idGruppo", async (req, res) => {
     }
 })
 
-router.delete("/gruppo/:idGruppo/membro/:idMembro", async (req, res) => {
+router.delete("/:idGruppo/membro/:idMembro", async (req, res) => {
+
+    console.log("SONO DENTRO RIMOZIONE MEMBRO DA GRUPPO")
+
     try {
 
         // 400 Bad Request: La richiesta non è valida o mancano parametri necessari. Ad esempio, potrebbe mancare l'ID del gruppo da eliminare.
@@ -326,7 +331,7 @@ router.delete("/gruppo/:idGruppo/membro/:idMembro", async (req, res) => {
             }
         }
 
-        // elimino il gruppo
+        // rimuovo il membro dal gruppo
         await GestoreDB.rimuoviMembroDaGruppo(req.params.idMembro, req.params.idGruppo)
         return res.status(204).end()
 
@@ -335,53 +340,49 @@ router.delete("/gruppo/:idGruppo/membro/:idMembro", async (req, res) => {
     }
 })
 
-router.delete("/abbandono", async (req, res) => {
+router.delete("/:idGruppo/abbandono", async (req, res) => {
+    try {
 
-    console.log(req.params.idGruppo)
-    console.log(req.id)
+        // 400 Bad Request: La richiesta non è valida o mancano parametri necessari. Ad esempio, potrebbe mancare l'ID del gruppo da eliminare.
+        // controllo che ci sia l'id del gruppo e l'id dell'utente
+        if (req.params.idGruppo == undefined || req.id == undefined) {
+            return res.status(400).json({success: "false", message: `Errore, parametri assenti o non validi`})
+        }
+        // controllo che l'id del gruppo sia un ObjectId
+        if (!GestoreDB.checkIfObjectId(req.params.idGruppo)) {
+            return res.status(400).json({success: "false", message: `Errore, formato del codice non valido`})
+        }
 
-    // try {
+        // 404 Not Found: Il gruppo specificato non è stato trovato. Potrebbe non esistere o essere già stato eliminato in precedenza.
+        // controllo sull'esistenza del gruppo
+        const esistenzaGruppo = await GestoreDB.controllaEsistenzaGruppo(req.params.idGruppo);
+        if (!esistenzaGruppo) {
+            return res.status(404).json({ success: false, message: `Il gruppo specificato non esiste!` });
+        }
+        // controllo che il membro faccia parte del gruppo
+        const esistenzaMembro = await GestoreDB.controllaMembroInGruppo(req.id, req.params.idGruppo);
+        if (!esistenzaMembro) {
+            return res.status(404).json({ success: false, message: `Il membro specificato non esiste o non è membro del gruppo indicato!` });
+        }
 
-    //     // 400 Bad Request: La richiesta non è valida o mancano parametri necessari. Ad esempio, potrebbe mancare l'ID del gruppo da eliminare.
-    //     // controllo che ci sia l'id del gruppo e l'id dell'utente
-    //     if (req.params.idGruppo == undefined || req.id == undefined) {
-    //         return res.status(400).json({success: "false", message: `Errore, parametri assenti o non validi`})
-    //     }
-    //     // controllo che l'id del gruppo sia un ObjectId
-    //     if (!GestoreDB.checkIfObjectId(req.params.idGruppo)) {
-    //         return res.status(400).json({success: "false", message: `Errore, formato del codice non valido`})
-    //     }
+        // 403 Forbidden: L'utente è autenticato, ma non ha i privilegi necessari per eliminare il gruppo.
+        // ricerca del leader del gruppo (ID) e verifica che sia l'utente che ha richiesto l'eliminazione
+        let leader = await GestoreDB.getLeaderIDfromGroupID(req.params.idGruppo)
+        if (leader){
+            leader = leader.toString();
+            const utente_id = req.id
+            if (leader === utente_id){
+                return res.status(403).json({success: "false", message: `L'utente che ha richiesto l'abbandono è leader!`})
+            }
+        }
 
-    //     // 404 Not Found: Il gruppo specificato non è stato trovato. Potrebbe non esistere o essere già stato eliminato in precedenza.
-    //     // controllo sull'esistenza del gruppo
-    //     const esistenzaGruppo = await GestoreDB.controllaEsistenzaGruppo(req.params.idGruppo);
-    //     if (!esistenzaGruppo) {
-    //         return res.status(404).json({ success: false, message: `Il gruppo specificato non esiste!` });
-    //     }
-    //     // controllo che il membro faccia parte del gruppo
-    //     const esistenzaMembro = await GestoreDB.controllaMembroInGruppo(req.id, req.params.idGruppo);
-    //     if (!esistenzaMembro) {
-    //         return res.status(404).json({ success: false, message: `Il membro specificato non esiste o non è membro del gruppo indicato!` });
-    //     }
+        // rimuovo il membro dal gruppo
+        await GestoreDB.rimuoviMembroDaGruppo(req.id, req.params.idGruppo)
+        return res.status(204).end()
 
-    //     // 403 Forbidden: L'utente è autenticato, ma non ha i privilegi necessari per eliminare il gruppo.
-    //     // ricerca del leader del gruppo (ID) e verifica che sia l'utente che ha richiesto l'eliminazione
-    //     let leader = await GestoreDB.getLeaderIDfromGroupID(req.params.idGruppo)
-    //     if (leader){
-    //         leader = leader.toString();
-    //         const utente_id = req.id
-    //         if (leader === utente_id){
-    //             return res.status(403).json({success: "false", message: `L'utente che ha richiesto la rimozione del membro non è leader!`})
-    //         }
-    //     }
-
-    //     // elimino il gruppo
-    //     await GestoreDB.rimuoviMembroDaGruppo(req.id, req.params.idGruppo)
-    //     return res.status(204).end()
-
-    // } catch (error) {
-    //     res.status(500).json({ success: false, message: `Errore durante la rimozione dell'utente: ${error}` });
-    // }
+    } catch (error) {
+        res.status(500).json({ success: false, message: `Errore durante l'abbandono: ${error}` });
+    }
 })
 
 router.put("/:idGruppo/:idMembro", async (req, res) => {
