@@ -1,28 +1,45 @@
 .listaSaleStudio{
     margin: 20pt;
+    background-color: rgb(175, 225, 245);
+    width: 100%;
+    padding: 20pt;
+    overflow-y: scroll;
 }
-
 
 .salaStudio-div{
     color: rgb(27, 123, 161);
     background-color: white;
-    border: 2px solid rgb(27, 123, 161);
     border-radius: 5px;
     margin-bottom: 15px;
     padding: 10pt;
+    width: fit-content;
+}
+
+.salaStudio-title {
+    display: flex;
+    align-items: center;
 }
 
 .salaStudio-nome {
     margin: 0;
 }
 
+.bi-buildings{
+    color: rgb(27, 123, 161);
+    font-size: 25pt;
+    margin-right: 10pt;
+}
+
 .salaStudio-indirizzo {
     margin: 0;
+    font-size: 13pt;
 }
 
 .salaStudio-restrizioni {
     margin: 0;
+    font-size: 9pt;
     color: rgb(198, 55, 55);
+    
 }
 
 .salaStudio-rating {
