@@ -113,3 +113,10 @@
 .title-header {
     margin-bottom: 20pt;
 }
+
+.bottone-mappa {
+    margin-top: 10pt;
+    width: fit-content;
+    padding: 5pt;
+    border-radius: 5pt;
+}

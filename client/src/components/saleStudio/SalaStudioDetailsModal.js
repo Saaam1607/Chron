@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Button, Modal, Table, Form } from 'react-bootstrap';
 import Rating from './Rating';
-
+import BottonePerMappa from './BottonePerMappa';
 
 
 export default function SalaStudioDetailsModal ({data, onClose}){
@@ -57,6 +57,10 @@ export default function SalaStudioDetailsModal ({data, onClose}){
                             <div className='container-elementi-posizione'>
                                 <p className='salaStudio-indirizzo'>{data.address}</p>
                                 <p className='salaStudio-restrizioni'>ACCESSO LIMITATO DA RESTRIZIONI: <br/>{data.restrictions}</p>
+                            </div>
+
+                            <div>
+                                <BottonePerMappa/>
                             </div>
 
                         </div>
