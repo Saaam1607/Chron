@@ -333,6 +333,25 @@ class GestoreDB {
         }
     }
 
+    static async rimuoviMembroDaGruppo(membro_id, codice) {
+        try {
+            const gruppo = await Gruppo.findById(new mongoose.Types.ObjectId(codice))
+            if (gruppo) {
+                const index = gruppo.members_id.indexOf(new mongoose.Types.ObjectId(membro_id));
+                if (index > -1) {
+                    gruppo.members_id.splice(index, 1);
+                    await gruppo.save();
+                } else {
+                    throw new Error("L'utente non è membro del gruppo");
+                }
+            } else {
+                throw new Error("Il gruppo non esiste");
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
     static async eliminaGruppo(codice) {
         try {
             const gruppo = await Gruppo.findById(codice)

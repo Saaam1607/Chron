@@ -46,6 +46,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
         })
         .then(response => {
             console.log("RICEVUTO: " + response.status);
+            console.log("RICEVUTO: " + response.message);
         })
     }
 

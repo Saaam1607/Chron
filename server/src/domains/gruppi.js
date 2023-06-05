@@ -320,6 +320,7 @@ router.delete("/:idGruppo/:idMembro", async (req, res) => {
             return res.status(400).json({success: "false", message: `Errore, formato del codice o del membro non valido`})
         }
 
+
         // 404 Not Found: Il gruppo specificato non è stato trovato. Potrebbe non esistere o essere già stato eliminato in precedenza.
         // controllo sull'esistenza del gruppo
         const esistenzaGruppo = await GestoreDB.controllaEsistenzaGruppo(req.params.idGruppo);
@@ -331,8 +332,6 @@ router.delete("/:idGruppo/:idMembro", async (req, res) => {
         if (!esistenzaMembro) {
             return res.status(404).json({ success: false, message: `Il membro specificato non esiste o non è membro del gruppo indicato!` });
         }
-
-
 
         // 403 Forbidden: L'utente è autenticato, ma non ha i privilegi necessari per eliminare il gruppo.
         // ricerca del leader del gruppo (ID) e verifica che sia l'utente che ha richiesto l'eliminazione
@@ -346,8 +345,9 @@ router.delete("/:idGruppo/:idMembro", async (req, res) => {
         }
 
         // elimino il gruppo
-        // await GestoreDB.eliminaGruppo(req.params.idGruppo)
-        return res.status(204).json({success: "true", message: "Gruppo eliminato correttamente"})
+        await GestoreDB.rimuoviMembroDaGruppo(req.params.idMembro, req.params.idGruppo)
+
+        return res.status(204)
 
     } catch (error) {
         res.status(500).json({ success: false, message: `Errore durante l'eliminazione del gruppo: ${error}` });
