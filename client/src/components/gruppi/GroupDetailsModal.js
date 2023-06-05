@@ -55,8 +55,9 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
         })
 
         setShowTaskAssignmentModal(false);
-        setRimozioneMembro();
+        setRimozioneMembro(true);
         setMembroDaRimuovere(null);
+        setEsistenzaGruppo(true)
         //setMembroRimosso(false);
     }
 
@@ -95,6 +96,22 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
     return (
         <div>
 
+            {
+                console.log("CIAO")
+                
+            }
+            {
+                console.log("showTaskAssignmentModal: " + showTaskAssignmentModal)
+            }
+            {
+                console.log("confermaEliminazioneModal: " + confermaEliminazioneModal)
+            }
+            {
+                console.log("confermaRimozioneMembroModal: " + confermaRimozioneMembroModal)
+            }
+            {
+                console.log("esistenzaGruppo: " + esistenzaGruppo)
+            }
 
             <Modal
                 className='gruppo-modal'
