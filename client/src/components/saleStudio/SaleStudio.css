@@ -53,3 +53,32 @@
     width: auto;
     background-color: rgb(27, 123, 161);
 }
+
+.form-switch{
+    display: flex;
+    align-items: center;
+}
+
+.form-check-label {
+    margin-left: 15pt;
+    font-size: 15pt;
+
+}
+
+.form-check-input {
+    background-color: rgb(218, 78, 78);
+    color: white;
+    border: none;
+    fill: white;
+}
+
+.form-check-input:checked {
+    background-color: rgb(78, 218, 94);
+    border: none;
+}
+
+.form-check-input:focus {
+    box-shadow: none;
+    border: none;
+}
+

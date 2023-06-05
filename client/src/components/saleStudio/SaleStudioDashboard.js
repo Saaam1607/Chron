@@ -8,15 +8,37 @@ import './SaleStudio.css';
 
 export default function GruppiDashboard(){
 
+    const [toggleState, setToggleState] = useState(false);
+
+    const handleToggleChange = () => {
+        setToggleState(!toggleState);
+    };
+
+
     const [listaSaleStudio, setListaSaleStudio] = useState([]);
+    const [nomePerRiceca, setNomePerRicerca] = useState("");
+    const [indirizzoPerRicerca, setIndirizzoPerRicerca] = useState("");
 
     useEffect(() => {
-        getSaleStudio();
+        getSaleStudio(null, null);
     }, []);
+    
 
 
+    function getSaleStudio(nome, posizione){
 
-    function getSaleStudio(){
+        let stringaRicerca = ""
+
+        if (nome){
+            stringaRicerca = stringaRicerca + "?nome=" + nome;
+        } else if (posizione){
+            stringaRicerca = stringaRicerca + "?posizione=" + posizione;
+        }
+
+        if (!nome && !posizione){
+            console.log("SI PROCEDE TUTTO REGOLARE")
+        }
+
         fetch('api/v1/saleStudio', {
             method: "GET",
         })
@@ -45,20 +67,72 @@ export default function GruppiDashboard(){
 
 
 
+    function cercaPerNome(nome){
+
+    }
+
+
+
     return (
 
         
         <div className='listaSaleStudio'>
-            
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Cerca per nome..." aria-label="Cerca" aria-describedby="button-cerca"/>
-                <button class="btn btn-primary" type="button" id="button-cerca">Cerca per nome</button>
-            </div>
 
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Cerca per indirizzo..." aria-label="Cerca" aria-describedby="button-cerca"/>
-                <button class="btn btn-primary" type="button" id="button-cerca">Cerca per indirizzo</button>
+            <div className="form-check form-switch">
+                <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="toggleSwitch"
+                    checked={toggleState}
+                    onChange={handleToggleChange}
+                />
+                <label className="form-check-label" htmlFor="toggleSwitch">
+                    {toggleState ? 'Ricerca per indirizzo' : 'Ricerca per nome'}
+                </label>
             </div>
+            
+            {!toggleState && 
+            <div className="input-group mb-3">
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Cerca per nome..."
+                    aria-label="Cerca"
+                    aria-describedby="button-cerca"
+                    value={nomePerRiceca}
+                    onChange={(e) => setNomePerRicerca(e.target.value)}
+                />
+                <button
+                    className="btn btn-primary"
+                    type="button"
+                    id="button-cerca"
+                    onClick={() => {cercaPerNome(nomePerRiceca)}}
+                >
+                    Cerca per nome
+                </button>
+            </div>
+            }
+
+            {toggleState &&
+            <div className="input-group mb-3">
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Cerca per indirizzo..."
+                    aria-label="Cerca"
+                    aria-describedby="button-cerca"
+                    value={indirizzoPerRicerca}
+                    onChange={(e) => setIndirizzoPerRicerca(e.target.value)}
+                />
+                <button
+                    className="btn btn-primary"
+                    type="button"
+                    id="button-cerca"
+                >
+                    Cerca per indirizzo
+                </button>
+            </div>
+            }
 
             <div className='salaStudio'>
 
