@@ -9,20 +9,16 @@ import './SaleStudio.css';
 export default function GruppiDashboard(){
 
     const [toggleState, setToggleState] = useState(false);
+    const [firstRender, setFirstRender] = useState(true);
 
     const handleToggleChange = () => {
         setToggleState(!toggleState);
     };
 
-
     const [listaSaleStudio, setListaSaleStudio] = useState([]);
     const [nomePerRiceca, setNomePerRicerca] = useState("");
     const [indirizzoPerRicerca, setIndirizzoPerRicerca] = useState("");
 
-    useEffect(() => {
-        getSaleStudio(null, null);
-    }, []);
-    
 
 
     function getSaleStudio(nome, posizione){
@@ -51,6 +47,7 @@ export default function GruppiDashboard(){
                 .then(data => {
 
                     if (data){ // c'è qualche sala studio
+                        setFirstRender(false);
                         if (Array.isArray(data) && data.length > 0){
                             setListaSaleStudio(data);
                         } else{
@@ -78,6 +75,7 @@ export default function GruppiDashboard(){
                     id="toggleSwitch"
                     checked={toggleState}
                     onChange={handleToggleChange}
+                    onClick={() => setFirstRender(true)}
                 />
                 <label className="form-check-label" htmlFor="toggleSwitch">
                     {toggleState ? 'Ricerca per indirizzo' : 'Ricerca per nome'}
@@ -99,7 +97,9 @@ export default function GruppiDashboard(){
                     className="btn btn-primary"
                     type="button"
                     id="button-cerca"
-                    onClick={() => {getSaleStudio(nomePerRiceca, null)}}
+                    onClick={() => {
+                        getSaleStudio(nomePerRiceca, null)
+                    }}
                 >
                     Cerca per nome
                 </button>
@@ -121,14 +121,16 @@ export default function GruppiDashboard(){
                     className="btn btn-primary"
                     type="button"
                     id="button-cerca"
-                    onClick={() => {getSaleStudio(null, indirizzoPerRicerca)}}
+                    onClick={() => {
+                        getSaleStudio(null, indirizzoPerRicerca)
+                    }}
                 >
                     Cerca per indirizzo
                 </button>
             </div>
             }
 
-            { listaSaleStudio.length > 0 ?
+            { listaSaleStudio.length > 0 &&
                 <div className='salaStudio'>
 
                     {listaSaleStudio.map(item => (
@@ -138,11 +140,9 @@ export default function GruppiDashboard(){
                     ))}
 
                 </div>
-            :
-            <h6>Nessuna sala studio corrisponde ai termini di ricerca</h6>
             }
 
-
+            {!firstRender && listaSaleStudio.length <= 0 && <h6>Nessuna sala studio corrisponde ai termini di ricerca</h6>}
 
         </div> 
 
