@@ -189,26 +189,24 @@ router.post("/assegnaTask", async (req, res) => {
 
         const templatePath = path.join(__dirname, '..', 'components', 'gestoreEmail', 'taskAssegnata.html');
         const htmlBody = fs.readFileSync(templatePath, 'utf8');
-
-        const formattedHtmlBody = htmlBody
+        let formattedHtmlBody = htmlBody
             .replace('{{taskName}}', nome)
             .replace('{{deadline}}', dataScadenza)
-            .replace('{{groupName}}', nomeGruppo);
+            .replace('{{groupName}}', nomeGruppo)
+
+        await Promise.all(members.map(async (member) => {
+            const token = jwt.sign( { taskId: new mongoose.Types.ObjectId(), taskName: nome, deadline: dataScadenza, memberID: member._id, groupID: ID_gruppo }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
         
-        const tasks = await Promise.all(members.map(async (member) => {
-            const nuovaTask = new Task(member.id, nome, dataScadenza);
-            nuovaTask.ID_gruppo = ID_gruppo;
+            const acceptRejectLink = process.env.BASE_URL + `/accept-reject-task/${token}`;
+    
+            formattedHtmlBody = formattedHtmlBody.replace('{{acceptRejectLink}}', acceptRejectLink);
 
-            const task = await nuovaTask.crea();
+            await gestoreEmail([member.email], subject, formattedHtmlBody);
+        }))
 
-            return task;
-        }));
-        const recipients = members.map((member) => member.email);
-        await gestoreEmail(recipients, subject, formattedHtmlBody);
-
-        res.status(201).json({ success: true, tasks });
+        res.status(200).json({ success: true, message: "Email inviate con successo!" });
     } catch (error) {
-        res.status(500).json({ success: false, message: `Si è verificato un errore durante la creazione della task di gruppo. Errore: ${error.message}` });
+        res.status(500).json({ success: false, message: `Si è verificato un errore durante l'invio delle email per l'assegnazione task. Errore: ${error.message}` });
     }
 });
 
