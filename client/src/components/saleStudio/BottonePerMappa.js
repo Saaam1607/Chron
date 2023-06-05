@@ -1,14 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-const BottonePerMappa = (latitude, longitude) => {
+const BottonePerMappa = (address) => {
+
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
+
+    useEffect(() => {
+        handleConvertClick();
+    }, [address]);
+
+
+
+    const handleConvertClick = () => {
+
+        if (address) {
+            const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+            address.address
+        )}&format=json&limit=1&addressdetails=1`;
+    
+        fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.length > 0) {
+                    const { lat, lon } = data[0];
+                    setLatitude(lat);
+                    setLongitude(lon);
+                }
+            })
+            .catch((error) => {
+                console.log('Error:', error);
+            });
+        }
+    };
+
+
+
     const handleMapRedirect = () => {
-        const mapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`; // URL di Google Maps con le coordinate
-        
-        window.open(mapsUrl, '_blank'); // Apre il link in una nuova finestra o scheda del browser
+        if (!latitude || !longitude) {
+            const mapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+            window.open(mapsUrl, '_blank'); 
+        } else {
+            alert('Indirizzo non trovato');
+        }
     };
     
     return (
-        <button className="bottone-mappa" onClick={handleMapRedirect}>
+        <button
+            className="bottone-mappa"
+            onClick={() => {
+                handleMapRedirect()          
+        }}>
             Visualizza sulla mappa
         </button>
     );

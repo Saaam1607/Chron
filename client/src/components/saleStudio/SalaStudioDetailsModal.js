@@ -43,7 +43,7 @@ export default function SalaStudioDetailsModal ({data, onClose}){
 
                             <div className='orari-div'>
                                 {data.openingHours.map((giorno, index) => (
-                                    <div className='orario-div'>
+                                    <div className='orario-div' key={giorno.day}>
                                         <p className="dettagli-orario">{giorno.day}</p>
                                         { giorno.isOpen ?
                                             <p className="dettagli-orario-apertura">{giorno.openingTime} - {giorno.closingTime}</p>
@@ -60,7 +60,7 @@ export default function SalaStudioDetailsModal ({data, onClose}){
                             </div>
 
                             <div>
-                                <BottonePerMappa/>
+                                <BottonePerMappa address={data.address}/>
                             </div>
 
                         </div>
