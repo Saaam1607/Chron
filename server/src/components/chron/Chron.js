@@ -38,7 +38,9 @@ class ListaSessioni {
             numeroGiorni = fine.getDate();
           }else{//date settimanali
             let lunedi = new Date(oggi.setDate(oggi.getDate() - oggi.getDay() + 1 + intervalloDesiderato * 7));
+            lunedi.setHours(2, 0, 0, 0); //fuso orario di 2 ore
             let domenica = new Date(oggi.setDate(oggi.getDate() - oggi.getDay() + 7));
+            domenica.setHours(23, 59, 59, 0);;
             //setto le date da passare alla query
             inizio = lunedi;
             fine = domenica;
