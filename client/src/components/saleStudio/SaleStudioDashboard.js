@@ -49,6 +49,16 @@ export default function GruppiDashboard(){
 
         
         <div className='listaSaleStudio'>
+            
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Cerca per nome..." aria-label="Cerca" aria-describedby="button-cerca"/>
+                <button class="btn btn-primary" type="button" id="button-cerca">Cerca per nome</button>
+            </div>
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Cerca per indirizzo..." aria-label="Cerca" aria-describedby="button-cerca"/>
+                <button class="btn btn-primary" type="button" id="button-cerca">Cerca per indirizzo</button>
+            </div>
 
             <div className='salaStudio'>
 

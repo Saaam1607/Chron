@@ -39,9 +39,17 @@
     margin: 0;
     font-size: 9pt;
     color: rgb(198, 55, 55);
-    
 }
 
 .salaStudio-rating {
     margin: 0;
+}
+
+.mb-3 {
+    width: 500pt;
+}
+
+.btn-primary {
+    width: auto;
+    background-color: rgb(27, 123, 161);
 }
