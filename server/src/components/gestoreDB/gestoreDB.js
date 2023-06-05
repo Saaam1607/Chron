@@ -181,10 +181,10 @@ class GestoreDB {
         });
       }
 
-      static leggiStorico(ID_utente) {
-        return new Promise((resolve, reject) => {
-            //ordered by date
-        SessioneModel.find({ ID_utente: ID_utente }).sort({ data: 1 })
+      static leggiStorico(ID_utente, startDate, endDate) {
+        return new Promise((resolve, reject) =>{
+        SessioneModel.find({ ID_utente: ID_utente, data : { $gte: startDate, $lte: endDate }}) 
+            .sort({ data: 1 }) //ordered by date
             .then(dati => {
                 resolve(dati);
             })
