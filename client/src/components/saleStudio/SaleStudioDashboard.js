@@ -29,17 +29,14 @@ export default function GruppiDashboard(){
 
         let stringaRicerca = ""
 
-        if (nome){
+        if (!toggleState && nome){
             stringaRicerca = stringaRicerca + "?nome=" + nome;
-        } else if (posizione){
+        }
+        if (toggleState && posizione){
             stringaRicerca = stringaRicerca + "?posizione=" + posizione;
         }
 
-        if (!nome && !posizione){
-            console.log("SI PROCEDE TUTTO REGOLARE")
-        }
-
-        fetch('api/v1/saleStudio', {
+        fetch(('api/v1/saleStudio' + stringaRicerca), {
             method: "GET",
         })
             .then(response => {
