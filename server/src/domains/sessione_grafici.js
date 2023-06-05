@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
             
         } catch (error) {
         console.error(`Errore durante la lettura delle sessioni: ${error.message}`);
-        res.status(500).json({ success: false, message: `L'operazione di lettura delle task non è andata a buon fine. ${error.message}` });
+        res.status(500).json({ success: false, message: `L'operazione di lettura delle sessioni non è andata a buon fine. ${error.message}` });
 	    }
 });
 

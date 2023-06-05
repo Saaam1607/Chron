@@ -32,16 +32,14 @@ import {
     },
   };
   
-  const optionsPie = { //just show no interact no details
+  const optionsPie = { //no mouseover label
     responsive: true,
     plugins: {
       legend: {
         position: 'top',
-      }
+      },
+      tooltip: false,
     },
-    hover: {
-      mode: null
-    }
   };
   const CookieManager = require("../tokenManager/cookieManager.js")  
 
@@ -64,25 +62,29 @@ function Chron() {
 
     //function per ottenere i dati dal db
   function fetchData(){
-        try {
         fetch( `/api/v1/grafici?arrowClick=${arrowclick}&isMonth=${isMonth}`, {method: "GET", headers: CookieManager.generateHeader() })
         .then(response => {
           console.log(response);
             if (response.ok) {
               return response.json();
             } else if (response.status === 400){
-              throw new Error("Errore durante l'aggiornamento dei dati");
-            }
+            throw new Error(response.statusText);
+            } else if (response.status === 500){
+            throw new Error(response.statusText);
+            } else if (response.status === 401){
+            throw new Error(response.statusText);
+            } else if (response.status === 404){
+            throw new Error(response.statusText);
+             }
           })
         .then(data => {
-          if (data != undefined) {        
+          if (data !== undefined) {        
           let date = [];
           let min = [];
           data.sessions.sessioni.forEach(element => {
             date.push(element.data);
             min.push(element.minuti);
           });
-
           setMinuti(min);
           setDataSessione(date);
           setTempoTotale(data.sessions.tempoTot);
@@ -90,11 +92,10 @@ function Chron() {
           setTasso(data.sessions.tasso);
         }
         })
-        }catch (error) {
-          // Gestisci l'errore qui
+        .catch((error) => {
           console.log('Errore durante la richiesta:', error.message);
           alert(error.message)
-        }
+        });
       }
       
       useEffect(() => {
@@ -115,15 +116,16 @@ function Chron() {
       };
 
       const dataPie = {
-        labels: ["fatta","da fare"],
+        //grafico diverso se tasso è positivo o negativo
+        labels: tasso < 0 ?['Percentuale di produttività in meno']:['Percentuale di produttività in più'],
         datasets: [
           {
-            label: "percentuale",
-            //se tasso è maggiore di 100 metto 100, altrimenti metto il tasso
-            data: [Math.abs(tasso)>100 ? 100 : Math.abs(tasso), Math.abs(tasso)>100 ? 0 : 100-Math.abs(tasso)],
+            //visualizzare il tasso negativo come unico dato del grafico
+            data: [tasso, Math.abs(tasso)>100 ? 0 : 100-Math.abs(tasso)],
+            
             //con il tasso negativo il grafico è rosso, altrimenti verde
             backgroundColor: tasso<0 ? ['rgba(255, 99, 132, 0.5)', 'rgba(255, 99, 132, 0)'] : ['rgba(0, 255, 0, 0.2)', 'rgba(0, 255, 0, 0)'],
-            borderColor: tasso<0 ? ['rgba(255, 99, 132, 1)', 'rgba(255, 99, 132, 1)'] : ['rgba(0, 255, 0, 1)', 'rgba(0, 255, 0, 1)'],
+            borderColor: tasso<0 ? ['rgba(255, 99, 132, 1)', 'rgba(255, 99, 132, 0)'] : ['rgba(0, 255, 0, 1)', 'rgba(0, 255, 0, 1)'],
             borderWidth: 1
           }
       ]
