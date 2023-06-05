@@ -45,7 +45,7 @@ export default function SalaStudio({data}){
             </div>
 
                 {showModal && (
-                    <SalaStudioModal
+                    <SalaStudioDetailsModal
                         data={data}
                         onClose={handleCloseModal}
                     />

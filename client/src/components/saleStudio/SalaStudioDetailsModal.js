@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Card, Button, Modal, Table, Form } from 'react-bootstrap';
+import Rating from './Rating';
+
+
 
 export default function SalaStudioDetailsModal ({data, onClose}){
 
@@ -15,8 +18,26 @@ export default function SalaStudioDetailsModal ({data, onClose}){
                 style={{ minWidth: '800pt' }}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>{data.name}</Modal.Title>
+                    <Modal.Title>Dettagli sala studio</Modal.Title>
                 </Modal.Header>
+
+                <Modal.Body>
+
+                    <div className='salaStudio-title'>
+                        <span className="icona-salaStudio">
+                            <i
+                                className="bi bi-buildings"
+                                title="SALA STUDIO"
+                            ></i>
+                        </span>
+                        <h4 className='salaStudio-nome'>{data.name}</h4>
+                    </div>
+
+                    <p className='salaStudio-indirizzo'>{data.address}</p>
+                    <p className='salaStudio-restrizioni'>{data.restrictions}</p>
+                    <p className='salaStudio-rating'>{data.rating}</p>
+                    <Rating rating={data.rating} />
+                </Modal.Body>
 
                 {/* <Modal.Body>
                     
