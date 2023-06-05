@@ -36,7 +36,7 @@ const BottonePerMappa = (address) => {
 
 
     const handleMapRedirect = () => {
-        if (!latitude || !longitude) {
+        if (latitude && longitude) {
             const mapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
             window.open(mapsUrl, '_blank'); 
         } else {
