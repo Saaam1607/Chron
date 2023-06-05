@@ -13,6 +13,8 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
     const [confermaRimozioneMembroModal, setConfermaRimozioneMembroModal] = useState(false);
     const [membroDaRimuovere, setMembroDaRimuovere] = useState(null);
+
+    const [confermaAbbandonoModal, setConfermaAbbandonoModal] = useState(false);
     
     const [selectedMembers, setSelectedMembers] = useState([]);
     const [showTaskAssignmentModal, setShowTaskAssignmentModal] = useState(false);
@@ -106,6 +108,13 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                         handleAlert(error.message, false, "error");;
                     })
     }
+
+
+    function handleAbbandono() {
+
+    }
+
+
 
     return (
         <div>
@@ -201,6 +210,14 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                 }
             </div>
 
+            <div className="text-center">
+                {!isLeader && 
+                    <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaAbbandonoModal(true)}}>
+                        ABBANDONA GRUPPO
+                    </Button>
+                }
+            </div>
+
 
                 </Modal.Body>
 
@@ -273,6 +290,34 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                         </Button>
 
                         <Button variant="primary" style={{ width: "auto" }} onClick={() => {setConfermaRimozioneMembroModal(false)}}>
+                            ANNULLA
+                        </Button>
+
+                    </Modal.Footer>
+
+                </Modal>
+            }
+
+            {confermaAbbandonoModal &&
+                <Modal show={confermaAbbandonoModal} onHide={() => setConfermaAbbandonoModal(false)}>
+                
+                    <Modal.Header closeButton>
+                        <Modal.Title>Conferma abbandono del gruppo</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+
+                        <Card.Subtitle className="mb-2 text-muted">Attenzione, l'abbandono del gruppo comporta la tua esclusione da esso. Non potrai più visualizzare gli altri membri e ricevere tasks</Card.Subtitle>
+
+                    </Modal.Body>
+
+                    <Modal.Footer>
+
+                        <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaAbbandonoModal(false); setEsistenzaGruppo(false); handleAbbandono()}}>
+                            CONFERMA
+                        </Button>
+
+                        <Button variant="primary" style={{ width: "auto" }} onClick={() => {setConfermaAbbandonoModal(false)}}>
                             ANNULLA
                         </Button>
 
