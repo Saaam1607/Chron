@@ -41,7 +41,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
 
     function handleRimozioneMembro(membro_id){
-        fetch(`api/v1/gruppi/${_id}/${membro_id}`, {
+        fetch(`api/v1/gruppi/gruppo/${_id}/membro/${membro_id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -56,8 +56,10 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                     throw new Error("Parametri non presenti o non validi");
                 } else if (response.status === 401) {
                     throw new Error("Rimozione non autorizzata");
-                } else if (response.status === 500) {
+                } else if (response.status === 404) {
                     throw new Error("Gruppo o membro non trovati");
+                } else if (response.status === 403) {
+                    throw new Error("Non sei il leader del gruppo");
                 } else if (response.status === 500) {
                     throw new Error("Errore interno durante la rimozione");
                 }
@@ -78,7 +80,8 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
 
     function handleEliminazione(){
-        fetch(`api/v1/gruppi/${_id}`, {
+
+        fetch(`api/v1/gruppi/gruppo/${_id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -94,8 +97,8 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                     throw new Error("Parametri non presenti o non validi");
                 } else if (response.status === 401) {
                     throw new Error("Eliminazione non autorizzata");
-                } else if (response.status === 500) {
-                    throw new Error("Gruppo non trovato");
+                } else if (response.status === 404) {
+                    throw new Error("Gruppo o membro non trovati");
                 } else if (response.status === 500) {
                     throw new Error("Errore interno durante l'eliminazione");
                 }
@@ -112,6 +115,36 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
     function handleAbbandono() {
 
+        fetch(`api/v1/gruppi/abbandono`, {
+            method: 'DELETE',
+            headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/json',
+              "Authorization": `Bearer ${CookieManager.getAuthToken()}`
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return
+                } else if (response.status === 400) {
+                    throw new Error("Parametri non presenti o non validi");
+                } else if (response.status === 401) {
+                    throw new Error("Abbandono non autorizzato");
+                } else if (response.status === 404) {
+                    throw new Error("Gruppo o utente non trovati");
+                } else if (response.status === 403) {
+                    throw new Error("Sei il leader del gruppo");
+                } else if (response.status === 500) {
+                    throw new Error("Errore interno durante l'abbandono");
+                }
+            })
+                .then(() => {
+                    setNuovoGruppo();
+                    handleAlert("ABBANDONO COMPLETATO", false, "success");
+                })
+                    .catch(error => {
+                        handleAlert(error.message, false, "error");
+                    });
     }
 
 
@@ -119,9 +152,12 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
     return (
         <div>
 
+            {/* {
+                console.log("esistanza: " + esistenzaGruppo)
+            } */}
             <Modal
                 className='gruppo-modal'
-                show={!showTaskAssignmentModal && !confermaEliminazioneModal && !confermaRimozioneMembroModal && esistenzaGruppo}
+                show={!showTaskAssignmentModal && !confermaEliminazioneModal && !confermaRimozioneMembroModal && !confermaAbbandonoModal && esistenzaGruppo}
                 onHide={onClose}
                 dialogClassName="custom-modal-dialog"
                 backdrop="static"
@@ -131,93 +167,92 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                     <Modal.Title>{groupName}</Modal.Title>
                 </Modal.Header>
 
-            <Modal.Body>
-                
-                <div className='members-div'>
-                    <Card.Subtitle className="mb-2 text-muted" style={{ fontSize: '2em' }}>Leader: {leader}</Card.Subtitle>
-                </div>
-
-                <div className='members-div'>
+                <Modal.Body>
                     
-                    <div className='codice-div'>
-                            <Card.Subtitle className="mb-2 text-muted" style={{ fontSize: '2em' }}>Codice: {_id}</Card.Subtitle>
-
-                            <span className="icona-copy">
-                            <i
-                                className="bi bi-clipboard-plus"
-                                title="CLICCA PER COPIARE IL CODICE DEL GRUPPO"
-                                onClick={() => {
-                                    navigator.clipboard.writeText(_id);
-                                }}
-                            ></i>
-
-                        </span>
+                    <div className='members-div'>
+                        <Card.Subtitle className="mb-2 text-muted" style={{ fontSize: '2em' }}>Leader: {leader}</Card.Subtitle>
                     </div>
 
-                </div>
+                    <div className='members-div'>
+                        
+                        <div className='codice-div'>
+                                <Card.Subtitle className="mb-2 text-muted" style={{ fontSize: '2em' }}>Codice: {_id}</Card.Subtitle>
 
-                <div className='members-div'>
-                    <Table className='members-table' bordered hover>
-                        <thead>
-                            <tr>
-                            <th>Membro</th>
-                            <th>Email</th>
-                            <th>Seleziona</th>
-                            <th></th>
-                            </tr>
-                        </thead>
+                                <span className="icona-copy">
+                                <i
+                                    className="bi bi-clipboard-plus"
+                                    title="CLICCA PER COPIARE IL CODICE DEL GRUPPO"
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(_id);
+                                    }}
+                                ></i>
 
-                        <tbody>
-                            {members[0].length > 0 ? (
-                            members[0].map((membro) => (
-                                <tr key={membro[0]}>
-                                <td>{membro[1]}</td>
-                                <td>{membro[2]}</td>
-                                <td className="text-center">
-                                    {isLeader && (
-                                        <Form.Check
-                                            type="checkbox"
-                                            checked={selectedMembers.some((selectedMember) => selectedMember.id === membro[0])}
-                                            onChange={() => handleMemberSelection({ id: membro[0], name: membro[1], email: membro[2] })}
-                                        />
-                                    )}
-                                </td>
-                                <td className="text-center">
-                                    {isLeader && (
-                                    <Button variant="danger" onClick={() => {setMembroDaRimuovere(membro[0]); setConfermaRimozioneMembroModal(true)}}>
-                                        Rimuovi
-                                    </Button>
-                                    )}
-                                </td>
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div className='members-div'>
+                        <Table className='members-table' bordered hover>
+                            <thead>
+                                <tr>
+                                <th>Membro</th>
+                                <th>Email</th>
+                                <th>Seleziona</th>
+                                <th></th>
                                 </tr>
-                            ))
-                            ) : (
-                            <tr>
-                                <td colSpan="5" className="text-center">
-                                    Non ci sono membri da mostrare.
-                                </td>
-                            </tr>
-                            )}
-                        </tbody>
-                    </Table>
-                </div>
+                            </thead>
 
-            <div className="text-center">
-                {isLeader && 
-                    <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(true)}}>
-                        ELIMINA GRUPPO
-                    </Button>
-                }
-            </div>
+                            <tbody>
+                                {members[0].length > 0 ? (
+                                members[0].map((membro) => (
+                                    <tr key={membro[0]}>
+                                    <td>{membro[1]}</td>
+                                    <td>{membro[2]}</td>
+                                    <td className="text-center">
+                                        {isLeader && (
+                                            <Form.Check
+                                                type="checkbox"
+                                                checked={selectedMembers.some((selectedMember) => selectedMember.id === membro[0])}
+                                                onChange={() => handleMemberSelection({ id: membro[0], name: membro[1], email: membro[2] })}
+                                            />
+                                        )}
+                                    </td>
+                                    <td className="text-center">
+                                        {isLeader && (
+                                        <Button variant="danger" onClick={() => {setMembroDaRimuovere(membro[0]); setConfermaRimozioneMembroModal(true)}}>
+                                            Rimuovi
+                                        </Button>
+                                        )}
+                                    </td>
+                                    </tr>
+                                ))
+                                ) : (
+                                <tr>
+                                    <td colSpan="5" className="text-center">
+                                        Non ci sono membri da mostrare.
+                                    </td>
+                                </tr>
+                                )}
+                            </tbody>
+                        </Table>
+                    </div>
 
-            <div className="text-center">
-                {!isLeader && 
-                    <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaAbbandonoModal(true)}}>
-                        ABBANDONA GRUPPO
-                    </Button>
-                }
-            </div>
+                    <div className="text-center">
+                        {isLeader && 
+                            <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(true)}}>
+                                ELIMINA GRUPPO
+                            </Button>
+                        }
+                    </div>
 
+                    <div className="text-center">
+                        {!isLeader && 
+                            <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaAbbandonoModal(true)}}>
+                                ABBANDONA GRUPPO
+                            </Button>
+                        }
+                    </div>
 
                 </Modal.Body>
 
@@ -231,6 +266,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                     </Button>
                     )}
                 </Modal.Footer>
+
             </Modal>
 
             <Modal show={showTaskAssignmentModal} onHide={handleTaskAssignmentClose} backdrop="static"  >
@@ -250,9 +286,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                     </Modal.Header>
 
                     <Modal.Body>
-
-                        <Card.Subtitle className="mb-2 text-muted">Attenzione, l'eliminazione del gruppo è definitiva. L'operazione non potrà essere ripristinata in alcun modo. Procedere ugualmente? </Card.Subtitle>
-
+                        <Card.Subtitle className="mb-2 text-muted">Attenzione, l'eliminazione del gruppo è definitiva. L'operazione non potrà essere ripristinata in alcun modo. Procedere ugualmente?</Card.Subtitle>
                     </Modal.Body>
 
                     <Modal.Footer>
@@ -278,9 +312,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                     </Modal.Header>
 
                     <Modal.Body>
-
                         <Card.Subtitle className="mb-2 text-muted">Attenzione, l'eliminazione del membro è definitiva compoerterà l'esclusione del membro dal gruppo</Card.Subtitle>
-
                     </Modal.Body>
 
                     <Modal.Footer>
@@ -306,9 +338,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                     </Modal.Header>
 
                     <Modal.Body>
-
                         <Card.Subtitle className="mb-2 text-muted">Attenzione, l'abbandono del gruppo comporta la tua esclusione da esso. Non potrai più visualizzare gli altri membri e ricevere tasks</Card.Subtitle>
-
                     </Modal.Body>
 
                     <Modal.Footer>

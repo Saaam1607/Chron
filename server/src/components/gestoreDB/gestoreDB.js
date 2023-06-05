@@ -358,12 +358,14 @@ class GestoreDB {
             if (gruppo) {
                 await Gruppo.deleteOne({ _id: codice });
             } else {
-                throw new Error("Il gruppo non esiste. Rimozione non effettuata.");
+                throw new Error("Il gruppo non esiste. Eliminazione non effettuata.");
             }
         } catch (error) {
             console.log(error)
         }
     }
+
+    
 
     static ottieniGruppoByID(ID_gruppo) {
         return new Promise((resolve, reject) => {
