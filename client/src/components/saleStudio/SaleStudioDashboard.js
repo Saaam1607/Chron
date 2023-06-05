@@ -83,51 +83,51 @@ export default function GruppiDashboard(){
             </div>
             
             {!toggleState && 
-            <div className="input-group mb-3">
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Cerca per nome..."
-                    aria-label="Cerca"
-                    aria-describedby="button-cerca"
-                    value={nomePerRiceca}
-                    onChange={(e) => setNomePerRicerca(e.target.value)}
-                />
-                <button
-                    className="btn btn-primary"
-                    type="button"
-                    id="button-cerca"
-                    onClick={() => {
-                        getSaleStudio(nomePerRiceca, null)
-                    }}
-                >
-                    Cerca per nome
-                </button>
-            </div>
+                <div className="input-group mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Cerca per nome..."
+                        aria-label="Cerca"
+                        aria-describedby="button-cerca"
+                        value={nomePerRiceca}
+                        onChange={(e) => setNomePerRicerca(e.target.value)}
+                    />
+                    <button
+                        className="btn btn-primary"
+                        type="button"
+                        id="button-cerca"
+                        onClick={() => {
+                            getSaleStudio(nomePerRiceca, null)
+                        }}
+                    >
+                        Cerca per nome
+                    </button>
+                </div>
             }
 
             {toggleState &&
-            <div className="input-group mb-3">
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Cerca per indirizzo..."
-                    aria-label="Cerca"
-                    aria-describedby="button-cerca"
-                    value={indirizzoPerRicerca}
-                    onChange={(e) => setIndirizzoPerRicerca(e.target.value)}
-                />
-                <button
-                    className="btn btn-primary"
-                    type="button"
-                    id="button-cerca"
-                    onClick={() => {
-                        getSaleStudio(null, indirizzoPerRicerca)
-                    }}
-                >
-                    Cerca per indirizzo
-                </button>
-            </div>
+                <div className="input-group mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Cerca per indirizzo..."
+                        aria-label="Cerca"
+                        aria-describedby="button-cerca"
+                        value={indirizzoPerRicerca}
+                        onChange={(e) => setIndirizzoPerRicerca(e.target.value)}
+                    />
+                    <button
+                        className="btn btn-primary"
+                        type="button"
+                        id="button-cerca"
+                        onClick={() => {
+                            getSaleStudio(null, indirizzoPerRicerca)
+                        }}
+                    >
+                        Cerca per indirizzo
+                    </button>
+                </div>
             }
 
             { listaSaleStudio.length > 0 &&

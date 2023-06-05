@@ -1,15 +1,31 @@
 import React, { useState } from 'react';
 
 import Rating from './Rating';
+import SalaStudioDetailsModal from'./SalaStudioDetailsModal';
 
 
 
 export default function SalaStudio({data}){
 
+    const [showModal, setShowModal] = useState(false);
+    
+    const handleOpenModal = () => {
+        setShowModal(true);
+    };
+    
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
 
 
     return (
-        <div>
+        <div
+            onClick={() => {
+                if (!showModal){
+                    handleOpenModal()
+                }   
+        }}>
             <div className='salaStudio-div'>
 
                 <div className='salaStudio-title'>
@@ -26,7 +42,15 @@ export default function SalaStudio({data}){
                 <p className='salaStudio-restrizioni'>{data.restrictions}</p>
                 <p className='salaStudio-rating'>{data.rating}</p>
                 <Rating rating={data.rating} />
-            </div> 
+            </div>
+
+                {showModal && (
+                    <SalaStudioModal
+                        data={data}
+                        onClose={handleCloseModal}
+                    />
+                )}
+
         </div> 
     );
 }
