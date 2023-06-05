@@ -195,7 +195,7 @@ router.post("/assegnaTask", async (req, res) => {
             .replace('{{groupName}}', nomeGruppo)
 
         await Promise.all(members.map(async (member) => {
-            const token = jwt.sign( { taskId: new mongoose.Types.ObjectId(), taskName: nome, deadline: dataScadenza, groupName: nomeGruppo, memberID: member._id, groupID: ID_gruppo }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
+            const token = jwt.sign( { taskId: new mongoose.Types.ObjectId(), taskName: nome, deadline: dataScadenza, groupName: nomeGruppo, memberID: member.id, groupID: ID_gruppo }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
         
             const acceptRejectLink = process.env.BASE_URL + `/accept-reject-task/${token}`;
     
@@ -210,6 +210,35 @@ router.post("/assegnaTask", async (req, res) => {
     }
 });
 
+router.get("/verificaToken/:token", (req, res) => {
+    const { token } = req.params;
+
+    if (!token) {  
+        return res.status(400).json({ success: false, message: "Token mancante" });
+    }
+
+    try {
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        const task = {
+            taskId: decodedToken.taskId,
+            taskName: decodedToken.taskName,
+            deadline: decodedToken.deadline,
+            groupName: decodedToken.groupName,
+            groupID: decodedToken.groupID,
+            memberID: decodedToken.memberID
+        };
+
+        res.status(200).json({ success: true, message: "Token verificato con successo!", result: task });
+    }
+    catch (error) {
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ success: false, message: 'Token scaduto' });
+        }
+
+        return res.status(500).json({ success: false, message: `Si è verificato un errore durante la verifica del token. Errore: ${error.message}` });
+    }
+});
 
 router.put("/nuovoGruppo", (req, res) => {
     
