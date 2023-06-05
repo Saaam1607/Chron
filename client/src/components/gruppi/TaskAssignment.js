@@ -40,7 +40,7 @@ export default function TaskAssignment({ selectedMembers, groupName, ID_gruppo, 
             console.error('Si è verificato un errore durante l\'invio del email:', error);
             alert(error);
         }
-    };z
+    };
 
     return (
         <div>

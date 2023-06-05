@@ -195,7 +195,7 @@ router.post("/assegnaTask", async (req, res) => {
             .replace('{{groupName}}', nomeGruppo)
 
         await Promise.all(members.map(async (member) => {
-            const token = jwt.sign( { taskId: new mongoose.Types.ObjectId(), taskName: nome, deadline: dataScadenza, memberID: member._id, groupID: ID_gruppo }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
+            const token = jwt.sign( { taskId: new mongoose.Types.ObjectId(), taskName: nome, deadline: dataScadenza, groupName: nomeGruppo, memberID: member._id, groupID: ID_gruppo }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
         
             const acceptRejectLink = process.env.BASE_URL + `/accept-reject-task/${token}`;
     
