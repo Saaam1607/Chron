@@ -30,11 +30,11 @@ export default function GruppiDashboard(){
                 }
             })
                 .then(data => {
-                    if (data){ // c'è qualche gruppo
+                    if (data){ // c'è qualche sala studio
                         if (Array.isArray(data) && data.length > 0){
                             setListaSaleStudio(data);
                         }
-                    } else { // non ci sono gruppi
+                    } else { //altrimenti
                         setListaSaleStudio([]);
                     }
                 })

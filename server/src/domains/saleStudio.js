@@ -13,9 +13,12 @@ const jwt = require("jsonwebtoken")
 
 router.get("/", async (req, res) => {
 
-    const listaSaleStudio = await GestoreDB.leggiSaleStudio()
-
-    res.status(200).json(listaSaleStudio)
+    try {
+        const listaSaleStudio = await GestoreDB.leggiSaleStudio();
+        res.status(200).json(listaSaleStudio);
+    } catch (error) {
+        res.status(500).json({ error: "Errore durante la lettura delle sale studio" });
+    }
 
 })
 
