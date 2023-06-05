@@ -14,7 +14,10 @@ const jwt = require("jsonwebtoken")
 router.get("/", async (req, res) => {
 
     const listaSaleStudio = await GestoreDB.leggiSaleStudio()
-    res.send(listaSaleStudio)
+
+    //console.log(listaSaleStudio)
+
+    res.status(200).json(listaSaleStudio)
 
 })
 

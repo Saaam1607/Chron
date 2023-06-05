@@ -13,6 +13,7 @@ import Timer from "./components/timer/Timer"
 import Profilo from "./components/profilo/Profilo"
 import Todos from "./components/to-do/To-do"
 import Gruppi from "./components/gruppi/GruppiDasboard"
+import SaleStudio from "./components/saleStudio/SaleStudioDashboard"
 import ResetPasswordForm from './components/recupera-password/RecuperoPasswordForm';
 
 // routing elements
@@ -74,7 +75,7 @@ function App() {
         <Route path="/gruppi" element={<Gruppi />} />
         <Route path="/to-do" element={<Todos />} />
         <Route path="/timer" element={<Timer />} />
-        <Route path="/sale-studio" element={<h3>Questa funzionalità non è ancora disponibile</h3>} />
+        <Route path="/sale-studio" element={<SaleStudio />} />
         <Route path="/reset-password/:token" element={<ResetPasswordForm />} />
 
         
