@@ -49,9 +49,12 @@ export default function GruppiDashboard(){
                 }
             })
                 .then(data => {
+
                     if (data){ // c'è qualche sala studio
                         if (Array.isArray(data) && data.length > 0){
                             setListaSaleStudio(data);
+                        } else{
+                            setListaSaleStudio([]);
                         }
                     } else { //altrimenti
                         setListaSaleStudio([]);
@@ -125,15 +128,19 @@ export default function GruppiDashboard(){
             </div>
             }
 
-            <div className='salaStudio'>
+            { listaSaleStudio.length > 0 ?
+                <div className='salaStudio'>
 
-                {listaSaleStudio.map(item => (
-                    <div key={item._id}>
-                        <SalaStudio data={item}/>
-                    </div>
-                ))}
+                    {listaSaleStudio.map(item => (
+                        <div key={item._id}>
+                            <SalaStudio data={item}/>
+                        </div>
+                    ))}
 
-            </div>
+                </div>
+            :
+            <h6>Nessuna sala studio corrisponde ai termini di ricerca</h6>
+            }
 
 
 

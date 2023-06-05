@@ -33,7 +33,6 @@ class GestoreDB {
                             result.push(salaStudio);
                         }
                     });
-                    console.log(result)
                     resolve(result);
                 })
             .catch(error => {
