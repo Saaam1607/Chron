@@ -28,15 +28,43 @@ export default function SalaStudioDetailsModal ({data, onClose}){
                             <i
                                 className="bi bi-buildings"
                                 title="SALA STUDIO"
+                                style={{ fontSize: '5rem' }}
                             ></i>
                         </span>
-                        <h4 className='salaStudio-nome'>{data.name}</h4>
+
+                        <div>
+                            <div className='title-header'>
+                                <h4 className='salaStudio-nome'>{data.name}</h4>
+                                <div className='salaStudio-title'>
+                                    <p className='salaStudio-rating'>{data.rating / 10}</p>
+                                    <Rating rating={data.rating} />
+                                </div>
+                            </div>
+
+                            <div className='orari-div'>
+                                {data.openingHours.map((giorno, index) => (
+                                    <div className='orario-div'>
+                                        <p className="dettagli-orario">{giorno.day}</p>
+                                        { giorno.isOpen ?
+                                            <p className="dettagli-orario-apertura">{giorno.openingTime} - {giorno.closingTime}</p>
+                                            :
+                                            <p className="dettagli-orario-apertura">Chiuso</p>
+                                        }
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className='container-elementi-posizione'>
+                                <p className='salaStudio-indirizzo'>{data.address}</p>
+                                <p className='salaStudio-restrizioni'>{data.restrictions}</p>
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <p className='salaStudio-indirizzo'>{data.address}</p>
-                    <p className='salaStudio-restrizioni'>{data.restrictions}</p>
-                    <p className='salaStudio-rating'>{data.rating}</p>
-                    <Rating rating={data.rating} />
+                    
+
                 </Modal.Body>
 
                 {/* <Modal.Body>

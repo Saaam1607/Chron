@@ -43,6 +43,7 @@
 
 .salaStudio-rating {
     margin: 0;
+    margin-right: 10pt;
 }
 
 .mb-3 {
@@ -82,3 +83,33 @@
     border: none;
 }
 
+.orario-div{
+    display: flex;
+}
+
+.orari-div {
+    background-color: rgb(175, 225, 245);
+    padding: 10pt;
+    border-radius: 5pt;
+    width: fit-content;
+}
+
+.dettagli-orario {
+    margin: 0;
+    font-size: 10pt;
+}
+
+.dettagli-orario-apertura {
+    margin: 0;
+    font-size: 10pt;
+    margin-left: 10pt;
+    color: rgb(84, 84, 84);
+}
+
+.container-elementi-posizione {
+    margin-top: 20pt;
+}
+
+.title-header {
+    margin-bottom: 20pt;
+}

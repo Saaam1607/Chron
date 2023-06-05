@@ -40,8 +40,12 @@ export default function SalaStudio({data}){
 
                 <p className='salaStudio-indirizzo'>{data.address}</p>
                 <p className='salaStudio-restrizioni'>{data.restrictions}</p>
-                <p className='salaStudio-rating'>{data.rating}</p>
-                <Rating rating={data.rating} />
+
+                <div className='salaStudio-title'>
+                    <p className='salaStudio-rating'>{data.rating / 10}</p>
+                    <Rating rating={data.rating} />
+                </div>
+
             </div>
 
                 {showModal && (
