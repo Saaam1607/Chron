@@ -177,15 +177,22 @@ class GestoreDB {
     }
 
     static checkIfTaskExist(_id) {
-        TaskModel.countDocuments({ _id: _id })
-        .then((result) => {
-            if (result) {
-                return true;
-            } else {
-                return false;
-            }
-        })
-    }
+        return new Promise((resolve, reject) => {
+          TaskModel.countDocuments({ _id: _id })
+            .then((result) => {
+              if (result) {
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              reject(error);
+            });
+        });
+    }      
+      
     static ottieniGruppiMembro(membro_id) {
         const id = new mongoose.Types.ObjectId(membro_id)
         return new Promise((resolve, reject) => {

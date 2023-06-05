@@ -45,6 +45,10 @@ router.post('/new', async (req, res) => {
     if(_id == null){
         nuovaTask = new Task(req.id, nome, dataScadenza);
     }else{
+        console.log("Task di gruppo");
+        console.log("ID utente: " + ID_utente);
+        console.log("ID gruppo: " + ID_gruppo);
+        console.log("_id: " + _id);
         nuovaTask = new Task(ID_utente, nome, dataScadenza);
         nuovaTask._id = _id;
         nuovaTask.ID_gruppo = ID_gruppo;
@@ -56,8 +60,14 @@ router.post('/new', async (req, res) => {
 		res.status(201).json({success: true, task:task}); 
 
 	} catch (error) {
-        console.error(`Errore durante la creazione della task: ${error.message}`);
-        res.status(500).json({ success: false, message: `Si è verificato un errore durante la creazione della task. Errore: ${error.message}` });
+        if(error.message.includes("esistente")) {
+            res.status(409).json({ success: false, message: `Task già accettata` });
+        }
+        else {
+            console.error(`Errore durante la creazione della task: ${error.message}`);
+            res.status(500).json({ success: false, message: `Si è verificato un errore durante la creazione della task. Errore: ${error.message}` });
+        }
+
 	}
 });
 

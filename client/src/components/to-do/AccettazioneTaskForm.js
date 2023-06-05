@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { handleAlert, handleConfirmation } from "../alert/Alert";
 
-import jwtDecode from 'jwt-decode';
 import CookieManager from'../tokenManager/cookieManager';
 
 
@@ -12,19 +11,32 @@ export default function AcceptRejectTaskForm() {
     const [taskAccepted, setTaskAccepted] = useState(false);
     const [taskRejected, setTaskRejected] = useState(false);
     const [taskData, setTaskData] = useState(null);
-
-    const decodeToken = () => {
-        const decodedToken = jwtDecode(token);
-        const taskData = {
-            taskId: decodedToken.taskId,
-            taskName: decodedToken.taskName,
-            deadline: decodedToken.deadline,
-            memberID: decodedToken.memberID,
-            groupName: decodedToken.groupName,
-            groupID: decodedToken.groupID,
-        };
-        setTaskData(taskData);
-    };
+  
+    useEffect(() => {
+        const verifyToken = async () => {
+            try {
+                const requestOptions = {
+                    method: 'GET',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${CookieManager.getAuthToken()}`,
+                    },
+                };
+                const response = await fetch(`/api/v1/gruppi/verificaToken/${token}`, requestOptions);
+                const data = await response.json();
+            if (response.ok) {
+                setTaskData(data.result);
+                console.log(data.result);
+            } else {
+                handleAlert(data.message, false, "error");
+            }
+            } catch (error) {
+                handleAlert("Si è verificato un errore", false, "error");
+            }
+      };
+  
+      verifyToken();
+    }, [token]);
 
     const handleAcceptTask = () => {
 
@@ -35,29 +47,26 @@ export default function AcceptRejectTaskForm() {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${CookieManager.getAuthToken()}`,
                 },
-            body: JSON.stringify({ _id: taskData.nome, nome: taskData.taskName, dataScadenza: taskData.deadline, ID_utente: taskData.memberID, ID_gruppo: taskData.groupID})
+            body: JSON.stringify({ _id: taskData.taskId, nome: taskData.taskName, dataScadenza: taskData.deadline, ID_utente: taskData.memberID, ID_gruppo: taskData.groupID})
         };
 
         fetch('/api/v1/todos/new', requestOptions)
         .then(response => {
             if (response.ok) {
-                return response.json(); // Converti la risposta in formato JSON se la richiesta ha successo
+                return response.json(); 
             } else {
-                throw new Error('Errore nella richiesta'); // Lanciare un'eccezione in caso di errore nella risposta
+                return response.json().then(data => {
+                    throw new Error(data.message); 
+                });
             }
         })
         .then(data => {
-            // Gestisci la risposta del backend
-            console.log(data); // Puoi visualizzare la risposta nella console per debug
-            // Esegui le azioni necessarie per visualizzare la conferma con SweetAlert
             handleAlert('Task accettata con successo', false, 'success');
             setTaskAccepted(true);
         })
         .catch(error => {
-            // Gestisci eventuali errori di rete o del server
             console.error(error);
-            // Esegui le azioni necessarie per visualizzare l'errore con SweetAlert
-            handleAlert('Si è verificato un errore', false, 'error');
+            handleAlert(error.message, false, 'error');
         });
     };
 
@@ -92,7 +101,6 @@ export default function AcceptRejectTaskForm() {
     };
 
     if (!taskData) {
-        decodeToken(); // Decodifica il token e imposta i dati della task
         return <div>Loading...</div>;
     }
 
