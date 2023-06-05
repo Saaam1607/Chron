@@ -327,6 +327,11 @@ router.delete("/:idGruppo/:idMembro", async (req, res) => {
             return res.status(404).json({ success: false, message: `Il gruppo specificato non esiste!` });
         }
         // controllo che il membro faccia parte del gruppo
+        const esistenzaMembro = await GestoreDB.controllaMembroInGruppo(req.params.idMembro, req.params.idGruppo);
+        if (!esistenzaMembro) {
+            return res.status(404).json({ success: false, message: `Il membro specificato non esiste o non è membro del gruppo indicato!` });
+        }
+
 
 
         // 403 Forbidden: L'utente è autenticato, ma non ha i privilegi necessari per eliminare il gruppo.
