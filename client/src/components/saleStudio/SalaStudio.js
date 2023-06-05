@@ -39,7 +39,7 @@ export default function SalaStudio({data}){
                 </div>
 
                 <p className='salaStudio-indirizzo'>{data.address}</p>
-                <p className='salaStudio-restrizioni'>{data.restrictions}</p>
+                {data.restrictions && <p className='salaStudio-restrizioni'>Accesso limitato da restrizioni</p>}
 
                 <div className='salaStudio-title'>
                     <p className='salaStudio-rating'>{data.rating / 10}</p>

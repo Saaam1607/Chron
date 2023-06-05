@@ -56,61 +56,14 @@ export default function SalaStudioDetailsModal ({data, onClose}){
 
                             <div className='container-elementi-posizione'>
                                 <p className='salaStudio-indirizzo'>{data.address}</p>
-                                <p className='salaStudio-restrizioni'>{data.restrictions}</p>
+                                <p className='salaStudio-restrizioni'>ACCESSO LIMITATO DA RESTRIZIONI: <br/>{data.restrictions}</p>
                             </div>
 
                         </div>
 
                     </div>
 
-                    
-
                 </Modal.Body>
-
-                {/* <Modal.Body>
-                    
-                    <div className='members-div'>
-                        <Card.Subtitle className="mb-2 text-muted" style={{ fontSize: '2em' }}>Leader: {leader}</Card.Subtitle>
-                    </div>
-
-                    <div className='members-div'>
-                        
-                        <div className='codice-div'>
-                                <Card.Subtitle className="mb-2 text-muted" style={{ fontSize: '2em' }}>Codice: {_id}</Card.Subtitle>
-
-                                <span className="icona-copy">
-                                <i
-                                    className="bi bi-clipboard-plus"
-                                    title="CLICCA PER COPIARE IL CODICE DEL GRUPPO"
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(_id);
-                                    }}
-                                ></i>
-
-                            </span>
-                        </div>
-
-                    </div>
-
-
-
-                    <div className="text-center">
-                        {isLeader && 
-                            <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(true)}}>
-                                ELIMINA GRUPPO
-                            </Button>
-                        }
-                    </div>
-
-                    <div className="text-center">
-                        {!isLeader && 
-                            <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaAbbandonoModal(true)}}>
-                                ABBANDONA GRUPPO
-                            </Button>
-                        }
-                    </div>
-
-                </Modal.Body> */}
 
                 <Modal.Footer>
                     <Button variant="secondary" onClick={onClose}>
