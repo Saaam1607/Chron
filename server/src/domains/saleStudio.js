@@ -8,15 +8,9 @@ var bodyParser = require('body-parser')
 var app = express()
 app.use(bodyParser.json())
 
-const jwt = require("jsonwebtoken")
 
 
 router.get("/", async (req, res) => {
-
-    // console.log("LEGGIAMO")
-    // console.log(req.query.nome)
-    // console.log(req.query.indirizzo)
-
     try {
 
         if (req.query.nome) {
@@ -25,7 +19,8 @@ router.get("/", async (req, res) => {
         }
 
         if (req.query.indirizzo) {
-            //
+            const listaSaleStudio = await GestoreDB.leggiSaleStudioPerIndirizzo(req.query.indirizzo);
+            return res.status(200).json(listaSaleStudio);
         }
 
         const listaSaleStudio = await GestoreDB.leggiSaleStudio();

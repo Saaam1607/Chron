@@ -25,24 +25,36 @@ class GestoreDB {
     static leggiSaleStudioPerNome(nome) {
         return new Promise((resolve, reject) => {
             let result = [];
-
-            SalaStudio.find()
+        
+            SalaStudio.find({ name: { $regex: new RegExp(nome, 'i') } })
                 .then(listaSaleStudio => {
                     listaSaleStudio.forEach(salaStudio => {
-                        if (salaStudio.name.includes(nome)) {
-                            result.push(salaStudio);
-                        }
+                        result.push(salaStudio);
                     });
                     resolve(result);
                 })
-            .catch(error => {
-                reject({ message: `Errore durante la lettura dei gruppi: ${error}` });
+                        .catch(error => {
+                            reject({ message: `Errore durante la lettura dei gruppi: ${error}` });
+                        });
             });
-        });
-    }
+        }
 
-    static leggiSaleStudioPerIndirizzo(indirizzo) {
-    }
+        static leggiSaleStudioPerIndirizzo(indirizzo) {
+            return new Promise((resolve, reject) => {
+                let result = [];
+            
+                SalaStudio.find({ address: { $regex: new RegExp(indirizzo, 'i') } })
+                    .then(listaSaleStudio => {
+                        listaSaleStudio.forEach(salaStudio => {
+                            result.push(salaStudio);
+                        });
+                        resolve(result);
+                    })
+                            .catch(error => {
+                                reject({ message: `Errore durante la lettura dei gruppi: ${error}` });
+                            });
+                });
+            }
 
     static controllaEsistenzaEmail(email) {
         Credenziali.countDocuments({ email: email })
