@@ -21,6 +21,7 @@ export default function GruppiDashboard(){
     const [newGroupPopupActive, setNewGroupPopupActive] = useState(false);
     const [nomeGruppo, setNomeGruppo] = useState("");
     const [nuovoGruppo, setNuovoGruppo] = useState(null);
+    const [rimozioneMembro, setRimozioneMembro] = useState(null);
 
     const [addGroupPopupActive, setAddGroupPopupActive] = useState(false);
     const [codice, setCodice] = useState("");
@@ -100,7 +101,7 @@ export default function GruppiDashboard(){
         getGruppiMembro();
         getGruppiLeader();
         
-    }, [nuovoGruppo]);
+    }, [nuovoGruppo, rimozioneMembro]);
 
 
 
@@ -210,7 +211,7 @@ export default function GruppiDashboard(){
 
                 {gruppiLeader.map(item => (
                     <div key={item._id}>
-                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username}  isLeader={true} membersData={item.membersData} setNuovoGruppo={setNuovoGruppo}/>
+                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username}  isLeader={true} membersData={item.membersData} setNuovoGruppo={setNuovoGruppo} setRimozioneMembro={setRimozioneMembro}/>
                     </div>
                 ))}
 
@@ -221,7 +222,7 @@ export default function GruppiDashboard(){
 
                 {gruppiMembro.map(item => (
                     <div key={item._id}>
-                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username} membersData={item.membersData} setNuovoGruppo={setNuovoGruppo}/>
+                        <Gruppo groupName={item.name} groupID={item._id} leader={item.leader_username} membersData={item.membersData} setNuovoGruppo={setNuovoGruppo} setRimozioneMembro={setRimozioneMembro}/>
                     </div>
                 ))}
 

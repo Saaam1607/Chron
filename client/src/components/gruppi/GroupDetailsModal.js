@@ -6,7 +6,7 @@ import CookieManager from '../tokenManager/cookieManager';
 
 
 
-export default function GroupDetailsModal ({_id, groupName, leader, members, isLeader, onClose, setNuovoGruppo }){
+export default function GroupDetailsModal ({_id, groupName, leader, members, isLeader, onClose, setNuovoGruppo, setRimozioneMembro}){
 
     const [selectedMembers, setSelectedMembers] = useState([]);
     const [showTaskAssignmentModal, setShowTaskAssignmentModal] = useState(false);
@@ -31,6 +31,10 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
     const [confermaEliminazioneModal, setConfermaEliminazioneModal] = useState(false);
     const [esistenzaGruppo, setEsistenzaGruppo] = useState(true);
 
+    const [confermaRimozioneMembroModal, setConfermaRimozioneMembroModal] = useState(false);
+    const [membroDaRimuovere, setMembroDaRimuovere] = useState(null);
+    //const [membroRimosso, setMembroRimosso] = useState(false);
+
 
 
     function handleRimozioneMembro(membro_id){
@@ -44,10 +48,16 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                 "Authorization": `Bearer ${CookieManager.getAuthToken()}`
             }
         })
-        .then(response => {
-            console.log("RICEVUTO: " + response.status);
-            console.log("RICEVUTO: " + response.message);
+        .then(() => {
+            //console.log("RICEVUTO: " + response.status);
+            //console.log("RICEVUTO: " + response.message);
+            
         })
+
+        setShowTaskAssignmentModal(false);
+        setRimozioneMembro();
+        setMembroDaRimuovere(null);
+        //setMembroRimosso(false);
     }
 
 
@@ -88,7 +98,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
             <Modal
                 className='gruppo-modal'
-                show={!showTaskAssignmentModal && !confermaEliminazioneModal && esistenzaGruppo}
+                show={!showTaskAssignmentModal && !confermaEliminazioneModal && !confermaRimozioneMembroModal && esistenzaGruppo}
                 onHide={onClose}
                 dialogClassName="custom-modal-dialog"
                 backdrop="static"
@@ -151,7 +161,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                                 </td>
                                 <td className="text-center">
                                     {isLeader && (
-                                    <Button variant="danger" onClick={() => handleRimozioneMembro(membro[0])}>
+                                    <Button variant="danger" onClick={() => {setMembroDaRimuovere(membro[0]); setConfermaRimozioneMembroModal(true)}}>
                                         Rimuovi
                                     </Button>
                                     )}
@@ -182,7 +192,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
                 <Modal.Footer>
                     <Button variant="secondary" onClick={onClose}>
-                    Close
+                        Close
                     </Button>
                     {isLeader && (
                     <Button variant="primary" className={`add-button ${selectedMembers.length < 1 ? 'disabled' : ''}`} onClick={handleAssignTask}>
@@ -221,6 +231,34 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                         </Button>
 
                         <Button variant="primary" style={{ width: "auto" }} onClick={() => {setConfermaEliminazioneModal(false)}}>
+                            ANNULLA
+                        </Button>
+
+                    </Modal.Footer>
+
+                </Modal>
+            }
+
+            {confermaRimozioneMembroModal &&
+                <Modal show={confermaRimozioneMembroModal} onHide={() => setConfermaRimozioneMembroModal(false)}>
+                
+                    <Modal.Header closeButton>
+                        <Modal.Title>Conferma rimozione del membro dal gruppo</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+
+                        <Card.Subtitle className="mb-2 text-muted">Attenzione, l'eliminazione del membro è definitiva compoerterà l'esclusione del membro dal gruppo</Card.Subtitle>
+
+                    </Modal.Body>
+
+                    <Modal.Footer>
+
+                        <Button variant="danger" style={{ width: "auto" }} onClick={() => {setConfermaRimozioneMembroModal(false); setEsistenzaGruppo(false); handleRimozioneMembro(membroDaRimuovere)}}>
+                            CONFERMA
+                        </Button>
+
+                        <Button variant="primary" style={{ width: "auto" }} onClick={() => {setConfermaRimozioneMembroModal(false)}}>
                             ANNULLA
                         </Button>
 

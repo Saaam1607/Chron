@@ -346,7 +346,6 @@ router.delete("/:idGruppo/:idMembro", async (req, res) => {
 
         // elimino il gruppo
         await GestoreDB.rimuoviMembroDaGruppo(req.params.idMembro, req.params.idGruppo)
-
         return res.status(204)
 
     } catch (error) {

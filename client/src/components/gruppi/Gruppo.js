@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import GroupDetailsModal from'./GroupDetailsModal';
 
-export default function Gruppo({ groupName, groupID, leader, membersData, isLeader, setNuovoGruppo}){
+export default function Gruppo({ groupName, groupID, leader, membersData, isLeader, setNuovoGruppo, setRimozioneMembro}){
 
 
     const [showModal, setShowModal] = useState(false);
@@ -62,6 +62,7 @@ export default function Gruppo({ groupName, groupID, leader, membersData, isLead
                     isLeader={isLeader}
                     onClose={handleCloseModal}
                     setNuovoGruppo={setNuovoGruppo}
+                    setRimozioneMembro={setRimozioneMembro}
                 />
             )}
 
