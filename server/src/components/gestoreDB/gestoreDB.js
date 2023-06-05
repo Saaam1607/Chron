@@ -247,6 +247,23 @@ class GestoreDB {
         }
     }
 
+    static async controllaMembroInGruppo(id_utente, id_gruppo) {
+        try {
+            const gruppo = await Gruppo.findOne({ _id: new mongoose.Types.ObjectId(id_gruppo) });
+            if (gruppo) {
+                if (gruppo.members_id.includes(id_utente)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
     static async controllaEsistenzaGruppo(codice) {
         try {
             const gruppo = await Gruppo.findOne({ _id: new mongoose.Types.ObjectId(codice) });

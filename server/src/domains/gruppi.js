@@ -289,6 +289,73 @@ router.delete("/:idGruppo", async (req, res) => {
     }
 })
 
+/*
+    204 No Content: La richiesta è stata elaborata con successo e non è necessario restituire alcun corpo nella risposta. Il gruppo è stato eliminato correttamente.
+    
+    
+    
+    500 Internal Server Error: Si è verificato un errore interno del server durante l'eliminazione del gruppo. Questo potrebbe essere dovuto a un problema tecnico o a un errore imprevisto.
+
+*/
+
+
+
+
+router.delete("/:idGruppo/:idMembro", async (req, res) => {
+
+    // console.log("sono in delete")
+    // console.log(req.params.idGruppo)
+    // console.log(req.params.idMembro)
+    // console.log(req.id)
+
+    try {
+
+        // 400 Bad Request: La richiesta non è valida o mancano parametri necessari. Ad esempio, potrebbe mancare l'ID del gruppo da eliminare.
+        // controllo che ci sia l'id del gruppo e l'id dell'utente
+        if (req.params.idGruppo == undefined || req.params.idMembro == undefined || req.id == undefined) {
+            return res.status(400).json({success: "false", message: `Errore, parametri assenti o non validi`})
+        }
+        // controllo che l'id del gruppo sia un ObjectId
+        if (!GestoreDB.checkIfObjectId(req.params.idGruppo) || !GestoreDB.checkIfObjectId(req.params.idMembro)) {
+            return res.status(400).json({success: "false", message: `Errore, formato del codice o del membro non valido`})
+        }
+
+        // 404 Not Found: Il gruppo specificato non è stato trovato. Potrebbe non esistere o essere già stato eliminato in precedenza.
+        // controllo sull'esistenza del gruppo
+        const esistenzaGruppo = await GestoreDB.controllaEsistenzaGruppo(req.params.idGruppo);
+        if (!esistenzaGruppo) {
+            return res.status(404).json({ success: false, message: `Il gruppo specificato non esiste!` });
+        }
+        // controllo che il membro faccia parte del gruppo
+
+
+        // 403 Forbidden: L'utente è autenticato, ma non ha i privilegi necessari per eliminare il gruppo.
+        // ricerca del leader del gruppo (ID) e verifica che sia l'utente che ha richiesto l'eliminazione
+        let leader = await GestoreDB.getLeaderIDfromGroupID(req.params.idGruppo)
+        if (leader){
+            leader = leader.toString();
+            const utente_id = req.id
+            if (leader !== utente_id){
+                return res.status(403).json({success: "false", message: `L'utente che ha richiesto la rimozione del membro non è il leader!`})
+            }
+        }
+
+        // elimino il gruppo
+        // await GestoreDB.eliminaGruppo(req.params.idGruppo)
+        return res.status(204).json({success: "true", message: "Gruppo eliminato correttamente"})
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: `Errore durante l'eliminazione del gruppo: ${error}` });
+    }
+})
+
+
+
+
+
+
+
+
 router.get("/username", (req, res) => {
     if (req.query.id == undefined) {
         res.status(400).json({success: "false", message: "Errore, ID non trovato"})

@@ -31,6 +31,26 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
     const [confermaEliminazioneModal, setConfermaEliminazioneModal] = useState(false);
     const [esistenzaGruppo, setEsistenzaGruppo] = useState(true);
 
+
+
+    function handleRimozioneMembro(membro_id){
+        console.log("PRUOVO A RIMUOVERE: " + membro_id);
+
+        fetch(`api/v1/gruppi/${_id}/${membro_id}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${CookieManager.getAuthToken()}`
+            }
+        })
+        .then(response => {
+            console.log("RICEVUTO: " + response.status);
+        })
+    }
+
+
+
     function handleEliminazione(){
         fetch(`api/v1/gruppi/${_id}`, {
             method: 'DELETE',
@@ -130,7 +150,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                                 </td>
                                 <td className="text-center">
                                     {isLeader && (
-                                    <Button variant="danger" onClick={() => console.log('RIMUOVI')}>
+                                    <Button variant="danger" onClick={() => handleRimozioneMembro(membro[0])}>
                                         Rimuovi
                                     </Button>
                                     )}
@@ -140,7 +160,7 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
                             ) : (
                             <tr>
                                 <td colSpan="5" className="text-center">
-                                Non ci sono membri da mostrare.
+                                    Non ci sono membri da mostrare.
                                 </td>
                             </tr>
                             )}
