@@ -289,24 +289,7 @@ router.delete("/:idGruppo", async (req, res) => {
     }
 })
 
-/*
-    204 No Content: La richiesta è stata elaborata con successo e non è necessario restituire alcun corpo nella risposta. Il gruppo è stato eliminato correttamente.
-    
-    
-    
-    500 Internal Server Error: Si è verificato un errore interno del server durante l'eliminazione del gruppo. Questo potrebbe essere dovuto a un problema tecnico o a un errore imprevisto.
-
-*/
-
-
-
-
 router.delete("/:idGruppo/:idMembro", async (req, res) => {
-
-    // console.log("sono in delete")
-    // console.log(req.params.idGruppo)
-    // console.log(req.params.idMembro)
-    // console.log(req.id)
 
     try {
 
@@ -346,7 +329,7 @@ router.delete("/:idGruppo/:idMembro", async (req, res) => {
 
         // elimino il gruppo
         await GestoreDB.rimuoviMembroDaGruppo(req.params.idMembro, req.params.idGruppo)
-        return res.status(204)
+        return res.status(204).end()
 
     } catch (error) {
         res.status(500).json({ success: false, message: `Errore durante l'eliminazione del gruppo: ${error}` });

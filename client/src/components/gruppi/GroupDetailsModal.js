@@ -33,7 +33,6 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
 
     const [confermaRimozioneMembroModal, setConfermaRimozioneMembroModal] = useState(false);
     const [membroDaRimuovere, setMembroDaRimuovere] = useState(null);
-    //const [membroRimosso, setMembroRimosso] = useState(false);
 
 
 
@@ -49,8 +48,6 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
             }
         })
         .then(() => {
-            //console.log("RICEVUTO: " + response.status);
-            //console.log("RICEVUTO: " + response.message);
             
         })
 
@@ -58,7 +55,6 @@ export default function GroupDetailsModal ({_id, groupName, leader, members, isL
         setRimozioneMembro(true);
         setMembroDaRimuovere(null);
         setEsistenzaGruppo(true)
-        //setMembroRimosso(false);
     }
 
 
