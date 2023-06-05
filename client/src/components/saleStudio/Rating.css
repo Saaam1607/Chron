@@ -1,0 +1,23 @@
+.star {
+    font-size: 20px;
+    position: relative;
+    color: rgb(236, 192, 35);
+    width: 15pt;
+    height: 15pt;
+    text-align: center;
+    vertical-align: middle;
+}
+  
+.star.half {
+    overflow: hidden;
+}
+  
+.star.half::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+}

@@ -1,0 +1,30 @@
+.listaSaleStudio{
+    margin: 20pt;
+}
+
+
+.salaStudio-div{
+    color: rgb(27, 123, 161);
+    background-color: white;
+    border: 2px solid rgb(27, 123, 161);
+    border-radius: 5px;
+    margin-bottom: 15px;
+    padding: 10pt;
+}
+
+.salaStudio-nome {
+    margin: 0;
+}
+
+.salaStudio-indirizzo {
+    margin: 0;
+}
+
+.salaStudio-restrizioni {
+    margin: 0;
+    color: rgb(198, 55, 55);
+}
+
+.salaStudio-rating {
+    margin: 0;
+}

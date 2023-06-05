@@ -30,10 +30,6 @@ export default function GruppiDashboard(){
                 }
             })
                 .then(data => {
-
-                    console.log(data);
-                    console.log(data.length);
-
                     if (data){ // c'è qualche gruppo
                         if (Array.isArray(data) && data.length > 0){
                             setListaSaleStudio(data);
@@ -53,9 +49,6 @@ export default function GruppiDashboard(){
 
         
         <div className='listaSaleStudio'>
-
-            <h1>Lista Sale Studio</h1>
-
 
             <div className='salaStudio'>
 
