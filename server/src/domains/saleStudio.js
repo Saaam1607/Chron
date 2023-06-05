@@ -11,10 +11,11 @@ app.use(bodyParser.json())
 const jwt = require("jsonwebtoken")
 
 
-router.get("/", (req, res) => {
-    // carico dati su db
-    console.log("ECCOMi")
-    res.send("FUNZIONA")
+router.get("/", async (req, res) => {
+
+    const listaSaleStudio = await GestoreDB.leggiSaleStudio()
+    res.send(listaSaleStudio)
+
 })
 
 

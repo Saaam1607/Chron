@@ -5,9 +5,10 @@ let SalaStudioSchema = new mongoose.Schema({
     name: String,
     address: String,
     restrictions: String,
-    rating: Int16Array,
+    rating: Number,
     openingHours: [{
         day: String,
+        isOpen: Boolean,
         openingTime: String,
         closingTime: String
     }]

@@ -5,9 +5,22 @@ const SessioneModel = require("../../models/Sessione");
 const Credenziali = require("../../models/UserSchema");
 const Gruppo = require("../../models/GruppoSchema");
 const TaskModel = require("../../models/Task");
+const SalaStudio = require("../../models/SalaStudioSchema");
 
 
 class GestoreDB {
+
+    static leggiSaleStudio() {
+        return new Promise((resolve, reject) => {
+            SalaStudio.find()
+                .then(listaSaleStudio => {
+                    resolve(listaSaleStudio);
+                })
+                    .catch(error => {
+                        reject({ message: `Errore durante la lettura dei gruppi: ${error}` });
+                    });
+        });
+    }
 
     static controllaEsistenzaEmail(email) {
         Credenziali.countDocuments({ email: email })
