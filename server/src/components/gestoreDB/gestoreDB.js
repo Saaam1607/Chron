@@ -22,6 +22,29 @@ class GestoreDB {
         });
     }
 
+    static leggiSaleStudioPerNome(nome) {
+        return new Promise((resolve, reject) => {
+            let result = [];
+
+            SalaStudio.find()
+                .then(listaSaleStudio => {
+                    listaSaleStudio.forEach(salaStudio => {
+                        if (salaStudio.name.includes(nome)) {
+                            result.push(salaStudio);
+                        }
+                    });
+                    console.log(result)
+                    resolve(result);
+                })
+            .catch(error => {
+                reject({ message: `Errore durante la lettura dei gruppi: ${error}` });
+            });
+        });
+    }
+
+    static leggiSaleStudioPerIndirizzo(indirizzo) {
+    }
+
     static controllaEsistenzaEmail(email) {
         Credenziali.countDocuments({ email: email })
             .then((result) => {

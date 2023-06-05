@@ -33,7 +33,7 @@ export default function GruppiDashboard(){
             stringaRicerca = stringaRicerca + "?nome=" + nome;
         }
         if (toggleState && posizione){
-            stringaRicerca = stringaRicerca + "?posizione=" + posizione;
+            stringaRicerca = stringaRicerca + "?indirizzo=" + posizione;
         }
 
         fetch(('api/v1/saleStudio' + stringaRicerca), {
@@ -64,15 +64,8 @@ export default function GruppiDashboard(){
 
 
 
-    function cercaPerNome(nome){
-
-    }
-
-
-
     return (
 
-        
         <div className='listaSaleStudio'>
 
             <div className="form-check form-switch">
@@ -103,7 +96,7 @@ export default function GruppiDashboard(){
                     className="btn btn-primary"
                     type="button"
                     id="button-cerca"
-                    onClick={() => {cercaPerNome(nomePerRiceca)}}
+                    onClick={() => {getSaleStudio(nomePerRiceca, null)}}
                 >
                     Cerca per nome
                 </button>
@@ -125,6 +118,7 @@ export default function GruppiDashboard(){
                     className="btn btn-primary"
                     type="button"
                     id="button-cerca"
+                    onClick={() => {getSaleStudio(null, indirizzoPerRicerca)}}
                 >
                     Cerca per indirizzo
                 </button>
