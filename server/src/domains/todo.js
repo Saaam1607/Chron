@@ -32,26 +32,38 @@ router.get('/', async (req, res) => {
 
 router.post('/new', async (req, res) => {
 	console.log("POST /todo/new");
-	const { nome, dataScadenza } = req.body;
+    const { _id, ID_utente, nome, dataScadenza, ID_gruppo } = req.body;
   
 	if (!nome) {
         res.status(400).json({ success: false, message: "Nome mancante" }); 
         return;
 	}
-  
-	const nuovaTask = new Task(req.id, nome, dataScadenza);
+
+    let nuovaTask;
+    
+    // Se non è presente l'id, la task è personale
+    if(_id == null){
+        nuovaTask = new Task(req.id, nome, dataScadenza);
+    }else{
+        nuovaTask = new Task(ID_utente, nome, dataScadenza);
+        nuovaTask._id = _id;
+        nuovaTask.ID_gruppo = ID_gruppo;
+    }
   
 	try {
 	  	const task  = await nuovaTask.crea();
-		nuovaTask._id = task._id;
-		nuovaTask.contrassegna = task.contrassegna;
-		nuovaTask.ID_gruppo = task.ID_gruppo;
 
 		res.status(201).json({success: true, task:task}); 
 
 	} catch (error) {
-        console.error(`Errore durante la creazione della task: ${error.message}`);
-        res.status(500).json({ success: false, message: `Si è verificato un errore durante la creazione della task. Errore: ${error.message}` });
+        if(error.message.includes("esistente")) {
+            res.status(409).json({ success: false, message: `Task già accettata` });
+        }
+        else {
+            console.error(`Errore durante la creazione della task: ${error.message}`);
+            res.status(500).json({ success: false, message: `Si è verificato un errore durante la creazione della task. Errore: ${error.message}` });
+        }
+
 	}
 });
 

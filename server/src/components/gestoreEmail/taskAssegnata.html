@@ -7,39 +7,62 @@
       font-family: Arial, sans-serif;
       background-color: #f2f2f2;
       color: #333333;
+      padding: 20px;
     }
     h1 {
       color: #0099cc;
+      font-size: 24px;
+      margin-bottom: 20px;
     }
     .task-info {
       margin-bottom: 20px;
     }
     .task-info p {
       margin: 0;
+      line-height: 1.5;
     }
-    .task-info strong {
-      font-weight: bold;
+    .accept-reject-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #0099cc;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    
+    .accept-reject-btn span {
+      color: #ffffff; 
     }
     .footer {
       margin-top: 30px;
       text-align: center;
+      font-size: 14px;
     }
     .footer a {
       color: #0099cc;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <h1>Notifica di assegnazione task</h1>
-  <div class="task-info">
-    <p>È stata assegnata una nuova task:</p>
-    <p><strong>Nome Task:</strong> {{taskName}}</p>
-    <p><strong>Data di scadenza:</strong> {{deadline}}</p>
-    <p><strong>Gruppo:</strong> {{groupName}}</p>
-  </div>
-  <p>Grazie per l'attenzione.</p>
-  <div class="footer">
-    <p>Per ulteriori informazioni, visita <a href="https://chron-app.onrender.com/">CHRON</a>.</p>
+  <div style="max-width: 600px; margin: 0 auto;">
+    <h1>Notifica di assegnazione task</h1>
+    <div class="task-info">
+      <p>È stata assegnata una nuova task:</p>
+      <p><strong>Nome Task:</strong> {{taskName}}</p>
+      <p><strong>Data di scadenza:</strong> {{deadline}}</p>
+      <p><strong>Gruppo:</strong> {{groupName}}</p>
+    </div>
+    <p>Per accettare o rifiutare la task, devi prima essere autenticato. Hai 24 ore di tempo per prendere una decisione.</p>
+    <p>Una volta autenticato, clicca sul seguente pulsante:</p>
+    <div class="footer">
+      <a class="accept-reject-btn" href="{{acceptRejectLink}}"><span>Accetta/Rifiuta Task</span></a>
+    </div>
+    <p>Grazie per l'attenzione.</p>
+    <div class="footer">
+      <p>Per ulteriori informazioni, visita <a href="https://chron-app.onrender.com/">CHRON</a>.</p>
+    </div>
   </div>
 </body>
 </html>

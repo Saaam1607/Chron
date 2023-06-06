@@ -15,8 +15,13 @@ class Task {
         this.emailLeader = null;        
     }
 
-    async crea() {        
-        return await GestoreDB.aggiornaTask(null, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna, this.ID_gruppo, false);
+    async crea() {
+        // controllo l'esistenza per le task di gruppo
+        if (this._id != null && await GestoreDB.checkIfTaskExist(this._id)) {
+            throw new Error("esistente");
+        }
+      
+        return await GestoreDB.aggiornaTask(this._id, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna, this.ID_gruppo, false);
     }
 
     async contrassegnaTask() {

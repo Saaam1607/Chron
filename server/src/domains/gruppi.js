@@ -189,30 +189,109 @@ router.post("/assegnaTask", async (req, res) => {
 
         const templatePath = path.join(__dirname, '..', 'components', 'gestoreEmail', 'taskAssegnata.html');
         const htmlBody = fs.readFileSync(templatePath, 'utf8');
-
-        const formattedHtmlBody = htmlBody
+        let formattedHtmlBody = htmlBody
             .replace('{{taskName}}', nome)
             .replace('{{deadline}}', dataScadenza)
-            .replace('{{groupName}}', nomeGruppo);
+            .replace('{{groupName}}', nomeGruppo)
+
+        await Promise.all(members.map(async (member) => {
+            const token = jwt.sign( { taskId: new mongoose.Types.ObjectId(), taskName: nome, deadline: dataScadenza, groupName: nomeGruppo, memberID: member.id, groupID: ID_gruppo }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
         
-        const tasks = await Promise.all(members.map(async (member) => {
-            const nuovaTask = new Task(member.id, nome, dataScadenza);
-            nuovaTask.ID_gruppo = ID_gruppo;
+            const acceptRejectLink = process.env.BASE_URL + `/accept-reject-task/${token}`;
+    
+            formattedHtmlBody = formattedHtmlBody.replace('{{acceptRejectLink}}', acceptRejectLink);
 
-            const task = await nuovaTask.crea();
+            await gestoreEmail([member.email], subject, formattedHtmlBody);
+            
+            await GestoreDB.salvaToken(token);
+        }))
 
-            return task;
-        }));
-        const recipients = members.map((member) => member.email);
-        await gestoreEmail(recipients, subject, formattedHtmlBody);
-
-        res.status(201).json({ success: true, tasks });
+        res.status(200).json({ success: true, message: "Email inviate con successo!" });
     } catch (error) {
-        res.status(500).json({ success: false, message: `Si è verificato un errore durante la creazione della task di gruppo. Errore: ${error.message}` });
+        res.status(500).json({ success: false, message: `Si è verificato un errore durante l'invio delle email per l'assegnazione task. Errore: ${error.message}` });
     }
 });
 
+router.get("/verificaToken/:token", async (req, res) => {
+    const { token } = req.params;
 
+    if (!token) {  
+        return res.status(400).json({ success: false, message: "Token mancante" });
+    }
+
+    try {
+        if(!await GestoreDB.checkIfTokenExist(token)) {
+            return res.status(409).json({ success: false, message: "Task già rifiutata o accettata!" });
+        }
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        const task = {
+            taskId: decodedToken.taskId,
+            taskName: decodedToken.taskName,
+            deadline: decodedToken.deadline,
+            groupName: decodedToken.groupName,
+            groupID: decodedToken.groupID,
+            memberID: decodedToken.memberID
+        };
+
+        return res.status(200).json({ success: true, message: "Token verificato con successo!", result: task });
+    }
+    catch (error) {
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ success: false, message: 'Token scaduto' });
+        }
+
+        return res.status(500).json({ success: false, message: `Si è verificato un errore durante la verifica del token. Errore: ${error.message}` });
+    }
+});
+
+router.delete('/rejectTask', async (req, res) => {
+    console.log("DELETE /rejectTask");
+    const {token} = req.body;
+    
+    if (!token) {
+        return res.status(400).json({ success: false, message: "Token mancante" });
+    }
+    
+    try {
+        if(!await GestoreDB.checkIfTokenExist(token)) {
+           return res.status(409).json({ success: false, message: "Task già rifiutata o accettata!" });
+        }
+        await GestoreDB.deleteToken(token);
+        return res.status(200).json({ success: true, message: "Task rifiutata con sucesso!" });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: `Si è verificato un errore durante il rifiuto della task Errore: ${error.message}` });
+    }
+});
+
+router.post('/acceptTask', async (req, res) => {
+    console.log("POST /acceptTask");
+    const {token} = req.body;
+
+    if (!token) {
+        return res.status(400).json({ success: false, message: "Token mancante" });
+    }
+
+    try {
+
+        if(!await GestoreDB.checkIfTokenExist(token)) {
+            return res.status(409).json({ success: false, message: "Task già rifiutata o accettata!" });
+        }
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        nuovaTask = new Task(decodedToken.memberID, decodedToken.taskName, decodedToken.deadline);
+        nuovaTask._id = decodedToken.taskId;
+        nuovaTask.ID_gruppo = decodedToken.groupID;
+
+        const task = await nuovaTask.crea();
+
+        await GestoreDB.deleteToken(token);
+
+        return res.status(201).json({ success: true, message: "Task accettata con sucesso!", result: task});
+    } catch (error) {
+        return res.status(500).json({ success: false, message: `Si è verificato un errore durante l'accettazione della task Errore: ${error.message}` });
+    }
+
+});
 router.put("/nuovoGruppo", (req, res) => {
     
     if (req.body.codice == undefined || req.id == undefined) {

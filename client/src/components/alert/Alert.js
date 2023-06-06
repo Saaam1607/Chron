@@ -20,4 +20,22 @@ export function handleAlert (message, sound, icon) {
     })
 }
 
+export function handleConfirmation(title, confirmButtonText, cancelButtonText, onConfirm) {
+    MySwal.fire({
+      title: title,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: confirmButtonText,
+      cancelButtonText: cancelButtonText,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (onConfirm) {
+          onConfirm();
+        }
+      }
+    });
+  }
+
  

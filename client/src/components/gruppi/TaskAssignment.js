@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import CookieManager from'../tokenManager/cookieManager';
+import { handleAlert } from '../alert/Alert';
+
 
 
 export default function TaskAssignment({ selectedMembers, groupName, ID_gruppo, onClose }) {
@@ -28,14 +30,14 @@ export default function TaskAssignment({ selectedMembers, groupName, ID_gruppo, 
 
         if (response.ok) {
             const data = await response.json();
-            console.log('Task assegnata con successo:', data);
+            handleAlert(data.message, false, "success")
             onClose(); 
         } else {
             const error = await response.json();
             throw new Error(error.message);
         }
         } catch (error) {
-            console.error('Si è verificato un errore durante l\'assegnazione della task:', error);
+            console.error('Si è verificato un errore durante l\'invio del email:', error);
             alert(error);
         }
     };
