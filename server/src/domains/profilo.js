@@ -53,7 +53,7 @@ router.post("/registrazione", bodyParser.json(), async (req, res) => {
       return res.status(401).json({ success: false, message: "Errore, credenziali non valide" });
     }
 
-    const token = jwt.sign({ email: req.body.email, password: req.body.password }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ email: req.body.email, password: req.body.password, username: req.body.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
 
     const accountConfirmationLink = process.env.BASE_URL + `/verifica-registrazione/${token}`;
 
@@ -82,10 +82,10 @@ router.post("/verifica-registrazione", bodyParser.json(), async (req, res) => {
       return res.status(401).json({ success: "false", message: "Token di verifica non valido o scaduto." });
     }
 
-    const { email, password } = decodedToken;
+    const { email, password, username } = decodedToken;
 
     try {
-      await GestoreDB.registra(email, password);
+      await GestoreDB.registra(username, email, password);
 
       await GestoreDB.deleteToken(token);
 
