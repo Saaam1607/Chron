@@ -152,28 +152,28 @@ export default function Todo(){
         <div className="container py-5">
             {isAuthenticated ? (
                 <>
-                    <h1 className="text-center mb-5">The Path to Efficiency</h1>
-                    <h4 className="mb-3">Your Task Agenda</h4>
+                    <h1 className="text-center mb-5">TO-DO</h1>
+                    {/* <h4 className="mb-3">Your Task Agenda</h4> */}
 
                     <div className="d-flex justify-content-between mb-3">
                         <Button variant="primary" className="add-button" onClick={() => setPopupActive(true)}>
-                            Add Task
+                            Aggiungi Task
                         </Button>
                         <Form.Select className="sort-select" value={sortOption} onChange={handleSortOptionChange}>
-                            <option value="">Sort by...</option>
-                            <option value="name">Name</option>
+                            <option value="">Ordina per...</option>
+                            <option value="name">Nome</option>
                             <option value="date">Deadline</option>
-                            <option value="group">Group</option>
+                            <option value="group">Gruppo</option>
                         </Form.Select>
                     </div>
 
                     <Table bordered hover>
                         <thead>
                             <tr>
-                                <th className="text-center">Completed</th>
-                                <th>Name</th>
+                                <th className="text-center">Completata</th>
+                                <th>Nome</th>
                                 <th>Deadline</th>
-                                <th>Group</th>
+                                <th>Gruppo</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -197,7 +197,7 @@ export default function Todo(){
                                         <td>{todo.nomeGruppo ? todo.nomeGruppo : "-"}</td>
                                         <td className="text-center">
                                             <Button variant="danger" onClick={() => deleteTodo(todo._id)} disabled={deleteButtonDisabled}>
-                                                Delete
+                                                Elimina
                                             </Button>
                                         </td>
                                     </tr>
@@ -211,16 +211,23 @@ export default function Todo(){
                             )}
                         </tbody>
                     </Table>
-                    <Modal show={popupActive} onHide={() => setPopupActive(false)}>
+                    <Modal
+                        show={popupActive}
+                        onHide={() => setPopupActive(false)}
+                        dialogClassName="custom-modal-dialog"
+                        backdrop="static"
+                        style={{ minWidth: 'fit-content' }}
+                    >
                         <Modal.Header closeButton>
-                            <Modal.Title>Add a new task</Modal.Title>
+                            <Modal.Title>Aggiungi una nuova task</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Form.Group className="mb-3" controlId="formName">
-                                <Form.Label>Name</Form.Label>
+                                <Form.Label>Nome</Form.Label>
                                 <Form.Control
                                     type="text"
                                     placeholder="Enter task name"
+                                    style={{ width: '300pt' }}
                                     value={newTodo}
                                     onChange={(e) => setNewTodo(e.target.value)}
                                 />
@@ -230,17 +237,18 @@ export default function Todo(){
                                 <Form.Label>Deadline</Form.Label>
                                 <Form.Control
                                     type="date"
+                                    style={{ width: '300pt' }}
                                     value={newDeadline}
                                     onChange={(e) => setNewDeadline(e.target.value)}
                                 />
                             </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" className="add-button" onClick={() => setPopupActive(false)}>
-                                Close
+                            <Button variant="danger" className="add-button" onClick={() => setPopupActive(false)}>
+                                Annulla
                             </Button>
                             <Button variant="primary" className="add-button" onClick={addTodo}>
-                                Add
+                                Aggiungi
                             </Button>
                         </Modal.Footer>
                     </Modal>
