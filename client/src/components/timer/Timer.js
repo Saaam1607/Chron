@@ -80,7 +80,7 @@ export default function Timer(){
                 })
     }
 
-    // ------------------------------------------------------
+
 
     const aggiornaTimer = async () =>{
         const requestBody = {
@@ -308,7 +308,7 @@ export default function Timer(){
                 {showSettingsModal && <TimerSettings readTimerData={readTimerData} onClose={handleCloseSettingsModal}/>}
 
                 {/* <SessionForm /> */}
-                {showSessionFormModal && <SessionForm sessionFromClicked={showSessionFormModal} setsessionFromClicked={setShowSessionFormModal}/>}
+                {showSessionFormModal && <SessionForm onClose={handleCloseSessionFormModal}/>}
 
             </div>
 

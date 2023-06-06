@@ -1,18 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { Button, Modal, Form } from 'react-bootstrap';
 import CookieManager from'../tokenManager/cookieManager';
+import { handleAlert } from '../alert/Alert';
 
-export default function SessionForm(){
+export default function SessionForm({onClose}){
     
     const today = new Date();
 
     const [date, setDate] = useState(new Date(today).toISOString().split('T')[0]); // yyyy-mm-dd
     const [time, setTime] = useState('');
     
-    const handleSubmit = (e) => {
-        e.preventDefault();
 
-        let[hours, mins] = time.split(":");
-        const minutes = parseInt(mins) + parseInt(hours * 60);
+
+    function handleSubmit(){
+
+        let[ore, minuti] = time.split(":");
+        const minutiTotali = parseInt(minuti) + parseInt(ore * 60);
 
         fetch('api/v1/timerSessione', {
             method: 'PUT',
@@ -21,7 +24,7 @@ export default function SessionForm(){
                 'Content-Type': 'application/json',
                 "Authorization": `Bearer ${CookieManager.getAuthToken()}`
             },
-            body: JSON.stringify({minuti: minutes, date: date})
+            body: JSON.stringify({minuti: minutiTotali, date: date})
         })
             .then(response => {
                 if (response.ok) {
@@ -34,44 +37,81 @@ export default function SessionForm(){
                     throw new Error("Errore durante il salvataggio della sessione");
                 }
             })
-                .then(data => {
-                    //console.log("SALVATO")
+                .then(() => {
+                    handleAlert ("Sessione salvata", false, "success", 1000);
                 })
-                .catch(error => {
-                    alert(error.message);
-                })
+                    .catch(error => {
+                        alert(error.message);
+                    })
     };
 
+
+
     return (
-            <form className='timer-form' onSubmit={handleSubmit}>
-                <div className='form-div'>
+        <Modal
+            show={true}
+            onHide={onClose}
+            dialogClassName="custom-modal-dialog"
+            backdrop="static"
+            style={{ minWidth: '500pt'}}
+        >
 
-                    <label htmlFor="date">Date:</label>
-                    <input
-                        type="date"
-                        id="date"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                        required
-                    />
-                
-                    <label htmlFor="time">Time:</label>
-                    <input
-                        type="time"
-                        id="time"
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                        min="00:10"
-                        max="10:00"
-                        required
-                    />
+            <Modal.Header closeButton>
 
-                </div>
+                <Modal.Title>Salvataggio sessione manuale</Modal.Title>
 
-                <div className='form-button'>
-                    <button type="submit">Submit</button>
-                </div>
+            </Modal.Header>
 
-            </form>
+            <Modal.Body>
+            
+                <Form.Group controlId='dataFrom'>
+                    <div className='setting-div'>
+                        <Form.Label className="setting-label">Data:</Form.Label>
+                        <Form.Control
+                                className="setting-input"
+                                type="date"
+                                value={date}
+                                onChange={(e) => setDate(e.target.value)}
+                                required
+                        />
+                    </div>
+                </Form.Group>
+
+                <Form.Group controlId="timeForm">
+                    <div className='setting-div'>
+                        <Form.Label className="setting-label">Time:</Form.Label>
+                        <Form.Control
+                            className="setting-input"
+                            type="time"
+                            value={time}
+                            onChange={(e) => setTime(e.target.value)}
+                            required
+                        />
+                    </div>
+                </Form.Group>
+
+            </Modal.Body>
+
+            <Modal.Footer>
+
+                <Button
+                    variant="primary"
+                    type="submit"
+                    className="add-button"
+                    onClick={()=> {
+                        handleSubmit();
+                        onClose();
+                    }}
+                >
+                    Salva sessione
+                </Button>
+
+                <Button variant="secondary" onClick={onClose}>
+                    Close
+                </Button>
+
+            </Modal.Footer>
+
+        </Modal>
     );
 }

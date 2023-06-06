@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Button, Modal, Table, Form } from 'react-bootstrap';
+import { Button, Modal, Form } from 'react-bootstrap';
 import './TimerSettings.css';
 import { handleAlert } from '../alert/Alert';
 

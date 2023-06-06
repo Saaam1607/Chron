@@ -8,7 +8,6 @@ function verificaAutenticazione(req, res, next) {
     } else {
 
         const esito = GestoreDB.controllaEsistenzaUtente(req.id)
-        console.log("esito: " + esito)
         if (esito) {
             // Utente autenticato
         } else {
