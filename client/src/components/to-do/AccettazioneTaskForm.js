@@ -39,18 +39,16 @@ export default function AcceptRejectTaskForm() {
     }, [token]);
 
     const handleAcceptTask = () => {
-
-        // Invia la scelta al backend
         const requestOptions = {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${CookieManager.getAuthToken()}`,
-                },
-            body: JSON.stringify({ _id: taskData.taskId, nome: taskData.taskName, dataScadenza: taskData.deadline, ID_utente: taskData.memberID, ID_gruppo: taskData.groupID})
+            },
+            body: JSON.stringify({ token: token})
         };
 
-        fetch('/api/v1/todos/new', requestOptions)
+        fetch('/api/v1/gruppi/acceptTask', requestOptions)
         .then(response => {
             if (response.ok) {
                 return response.json(); 
@@ -80,23 +78,31 @@ export default function AcceptRejectTaskForm() {
     };
 
     const handleTaskRejection = () => {
-        // Esegui azioni per rifiutare la task
-        setTaskRejected(true);
-        handleAlert('Task rifiutata con successo', false, 'success');
-
-        // Invia la scelta al backend
         const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: token, choice: 'reject' })
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${CookieManager.getAuthToken()}`,
+            },
+            body: JSON.stringify({ token: token})
         };
 
-        fetch('/api/v1/todos/new', requestOptions)
+        fetch('/api/v1/gruppi/rejectTask', requestOptions)
         .then(response => {
-            // Gestisci la risposta del backend
+            if (response.ok) {
+                return response.json(); 
+            } else {
+                return response.json().then(data => {
+                    throw new Error(data.message); 
+                });
+            }
+        }).then(data => {
+            setTaskRejected(true);
+            handleAlert('Task rifiutata con successo', false, 'success');
         })
         .catch(error => {
-            // Gestisci eventuali errori di rete o del server
+            console.error(error);
+            handleAlert(error.message, false, 'error');
         });
     };
 
@@ -106,34 +112,40 @@ export default function AcceptRejectTaskForm() {
 
     return (
         <div className="col-md-4">
-        <div className="card-body">
-            <div className="accept-reject-task-form">
-            {taskAccepted ? (
-                <>
-                <h2>Task accettata con successo</h2>
-                <p>Ora puoi iniziare a lavorare sulla task assegnata.</p>
-                </>
-            ) : taskRejected ? (
-                <>
-                <h2>Task rifiutata</h2>
-                <p>La task è stata rifiutata con successo.</p>
-                </>
-            ) : (
-                <div>
-                <h2>Accetta o rifiuta la task</h2>
-                <p>Nome Task: {taskData.taskName}</p>
-                <p>Scadenza: {taskData.deadline}</p>
-                <p>Nome Gruppo: {taskData.groupName}</p>
-                <Button variant="primary" onClick={handleAcceptTask}>
-                    Accetta Task
-                </Button>{" "}
-                <Button variant="danger" onClick={handleRejectTask}>
-                    Rifiuta Task
-                </Button>
+            <div className="card-body">
+                <div className="accept-reject-task-form">
+                {taskAccepted ? (
+                    <>
+                    <h2>Task accettata con successo</h2>
+                    <p>Ora puoi iniziare a lavorare sulla task assegnata.</p>
+                    <a href="/to-do">Vai alla lista delle task</a>
+                    </>
+                ) : taskRejected ? (
+                    <>
+                    <h2>Task rifiutata</h2>
+                    <p>La task è stata rifiutata con successo.</p>
+                    <a href="/to-do">Vai alla lista delle task</a>
+                    </>
+                ) : (
+                    <div className="login-div">
+                        <form className='auth-form'>
+                            <h2>Accetta o rifiuta la task</h2>
+                            <br></br>
+                            <p><strong>Nome Task:</strong> {taskData.taskName}</p>
+                            <p><strong>Scadenza:</strong> {taskData.deadline}</p>
+                            <p><strong>Nome Gruppo:</strong> {taskData.groupName}</p>
+                            <br></br>
+                            <Button variant="primary" className="add-button"  onClick={handleAcceptTask} disabled={taskAccepted}>
+                                Accetta Task
+                            </Button>{" "}
+                            <Button variant="danger" style={{ width: "auto" }} onClick={handleRejectTask} disabled={taskRejected}>
+                                Rifiuta Task
+                            </Button>
+                        </form>
+                    </div>
+                )}
                 </div>
-            )}
             </div>
-        </div>
         </div>
     );
 }
