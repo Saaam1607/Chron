@@ -45,10 +45,6 @@ router.post('/new', async (req, res) => {
     if(_id == null){
         nuovaTask = new Task(req.id, nome, dataScadenza);
     }else{
-        console.log("Task di gruppo");
-        console.log("ID utente: " + ID_utente);
-        console.log("ID gruppo: " + ID_gruppo);
-        console.log("_id: " + _id);
         nuovaTask = new Task(ID_utente, nome, dataScadenza);
         nuovaTask._id = _id;
         nuovaTask.ID_gruppo = ID_gruppo;
