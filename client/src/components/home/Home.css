@@ -1,0 +1,49 @@
+.home-container {
+    margin: 20pt;
+    width: 100%;
+}
+
+.introduction-div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.welcome-message {
+    width: fit-content;
+    font-size: 40pt;
+    background-color: rgb(35, 156, 204);
+    color: white;
+    padding: 10pt;
+    border-radius: 5pt;
+}
+
+
+.data-e-ora {
+    margin-top: 20pt;
+    background-color: rgb(175, 225, 245);
+    padding: 10pt;
+    border-radius: 5pt;
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.data {
+    color: white;
+    font-size: 30pt;
+    background-color: rgb(35, 156, 204);
+    padding: 10pt;
+    border-radius: 5pt;
+    width: fit-content;
+}
+
+.ora {
+    color: white;
+    font-size: 30pt;
+    background-color: rgb(35, 156, 204);
+    padding: 10pt;
+    border-radius: 5pt;
+    width: fit-content;
+    justify-content: right;
+}
