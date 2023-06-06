@@ -17,7 +17,7 @@ export default function SessionForm({onClose}){
         let[ore, minuti] = time.split(":");
         const minutiTotali = parseInt(minuti) + parseInt(ore * 60);
 
-        fetch('api/v1/timerSessione', {
+        fetch('api/v1/sessione', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
