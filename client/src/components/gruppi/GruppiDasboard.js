@@ -107,7 +107,7 @@ export default function GruppiDashboard(){
 
     function creaGruppo(){
 
-        fetch('api/v1/gruppi/nuovoGruppo', {
+        fetch('api/v1/gruppi/', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -146,7 +146,7 @@ export default function GruppiDashboard(){
 
     function uniscitiGruppo(codice){
 
-        fetch('api/v1/gruppi/nuovoGruppo', {
+        fetch('api/v1/gruppi/', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -272,7 +272,13 @@ export default function GruppiDashboard(){
 
             
 
-            <Modal show={newGroupPopupActive} onHide={() => setNewGroupPopupActive(false)}>
+            <Modal
+                show={newGroupPopupActive}
+                onHide={() => setNewGroupPopupActive(false)}
+                dialogClassName="custom-modal-dialog"
+                backdrop="static"
+                style={{ minWidth: 'fit-content' }}
+            >
                 
                 <Modal.Header closeButton>
                     <Modal.Title>Crea un nuovo gruppo</Modal.Title>
@@ -284,6 +290,7 @@ export default function GruppiDashboard(){
                         <Form.Control
                             type="text"
                             placeholder="Nome nuovo gruppo"
+                            style={{ width: '300pt' }}
                             value={nomeGruppo}
                             onChange={(e) => setNomeGruppo(e.target.value)}
                         />
@@ -293,18 +300,16 @@ export default function GruppiDashboard(){
                 <Modal.Footer>
                     
                     <Button
-                        variant="secondary"
-                        className="add-button"
+                        variant="danger"
                         onClick={() => {
                             setNewGroupPopupActive(false)
                         }}
                         >
-                        Close
+                        Annulla
                     </Button>
 
                     <Button
                         variant="primary"
-                        className="add-button"
                         onClick={() => {
                             creaGruppo(nomeGruppo);
                             setNewGroupPopupActive(false);
@@ -318,7 +323,13 @@ export default function GruppiDashboard(){
             </Modal>
 
 
-            <Modal show={addGroupPopupActive} onHide={() => setAddGroupPopupActive(false)}>
+            <Modal
+                show={addGroupPopupActive}
+                onHide={() => setAddGroupPopupActive(false)}
+                dialogClassName="custom-modal-dialog"
+                backdrop="static"
+                style={{ minWidth: 'fit-content' }}
+            >
                 
                 <Modal.Header closeButton>
                     <Modal.Title>Unisciti ad un gruppo</Modal.Title>
@@ -330,6 +341,7 @@ export default function GruppiDashboard(){
                         <Form.Control
                             type="text"
                             placeholder="codice gruppo"
+                            style={{ width: '300pt' }}
                             value={codice}
                             onChange={(e) => setCodice(e.target.value)}
                         />
@@ -337,12 +349,11 @@ export default function GruppiDashboard(){
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="secondary" className="add-button" onClick={() => setAddGroupPopupActive(false)}>
-                        Close
+                    <Button variant="danger" onClick={() => setAddGroupPopupActive(false)}>
+                        Annulla
                     </Button>
                     <Button
                         variant="primary"
-                        className="add-button"
                         onClick={() => {
                             setAddGroupPopupActive(false);
                             setCodice("");

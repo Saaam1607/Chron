@@ -10,3 +10,7 @@ root.render(
     <App />
 
 );
+
+document.title = "Chron";
+
+

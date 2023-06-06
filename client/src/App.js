@@ -71,7 +71,8 @@ function App() {
 
 
       <Routes>
-        <Route path="/home" element={<h3>Questa funzionalità non è ancora disponibile</h3>} />
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/profilo" element={<Profilo />} />
         <Route path="/gruppi" element={<Gruppi />} />
         <Route path="/to-do" element={<Todos />} />

@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken")
 const leggiToken = require("./leggiToken")
 
 const timer = require("../domains/timer")
-const timerSessione = require("../domains/timerSessione")
+const timerSessione = require("../domains/Timersessione")
 const gruppi = require("../domains/gruppi")
 const profilo = require("../domains/profilo")
 const profiloData = require("../domains/profiloData")
@@ -33,7 +33,7 @@ router.use(bodyParser.json());
 
 
 router.use("/api/v1/timer", timer)
-router.use("/api/v1/timerSessione", leggiToken, timerSessione)
+router.use("/api/v1/sessione", leggiToken, timerSessione)
 
 router.use("/api/v1/profilo", profilo)
 router.use("/api/v1/profiloData", leggiToken, profiloData)

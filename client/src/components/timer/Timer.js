@@ -14,11 +14,30 @@ export default function Timer(){
     const [fase, setFase] = useState(0);
     const [message, setMessage] = useState("");
 
-    const [settingsClicked, setSettingsClicked] = useState(false);
-    const [sessionFormClicked, setsessionFormClicked] = useState(false);
+    const [showSettingsModal, setShowSettingsModal] = useState(false);
+    const [showSessionFormModal, setShowSessionFormModal] = useState(false);
+
     const [soundUP, setSoundUP] = useState(true);
 
-    // ------------------------------------------------------
+
+
+    const handleOpenSettingsModal = () => {
+        setShowSettingsModal(true);
+    };
+    
+    const handleCloseSettingsModal = () => {
+        setShowSettingsModal(false);
+    };
+
+    const handleOpenSessionFormModal = () => {
+        setShowSessionFormModal(true);
+    };
+    
+    const handleCloseSessionFormModal = () => {
+        setShowSessionFormModal(false);
+    };
+
+
 
     const readTimerData = async () =>{
 
@@ -43,13 +62,13 @@ export default function Timer(){
                     // setting up message
                     switch (data.fase) {
                         case 0:
-                            setMessage("TIME TO GET FOCUSED!");
+                            setMessage("È ORA DI CONCENTRARSI!");
                             break;
                         case 1:
-                            setMessage("TIME TO TAKE A SHORT BREAK!");
+                            setMessage("È ORA DI PRENDERSI UNA BREVE PAUSA!");
                             break;
                         case 2:
-                            setMessage("TIME TO TAKE A LONG BREAK!");
+                            setMessage("È ORA DI PRENDERSI UNA PAUSA LUNGA!");
                             break;
                             default:
                             break;
@@ -61,7 +80,7 @@ export default function Timer(){
                 })
     }
 
-    // ------------------------------------------------------
+
 
     const aggiornaTimer = async () =>{
         const requestBody = {
@@ -91,7 +110,7 @@ export default function Timer(){
 
     const salvaSessione = async (tempo) =>{
 
-        fetch('api/v1/timerSessione/salva-sessione', {
+        fetch('api/v1/sessione/salva-sessione', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -244,13 +263,13 @@ export default function Timer(){
                                 title="ADD TIME MANUALLY"
                                 onClick={() =>{
                                     if (timerState == "stoppato" || timerState == "inizializzato") {
-                                        setsessionFormClicked(!sessionFormClicked)
-                                        setSettingsClicked(false)
+                                        setShowSessionFormModal(!showSessionFormModal)
+                                        setShowSettingsModal(false)
                                     } else{
                                         alert("Prima di aggiungere sessioni manualmente devi fermare il timer!")
                                     }
                                 }}
-                                style={{color: (sessionFormClicked) ? 'rgb(27, 123, 161)' : 'rgb(35, 156, 204)'}}
+                                style={{color: (showSessionFormModal) ? 'rgb(27, 123, 161)' : 'rgb(35, 156, 204)'}}
                             ></i>
                         </span>
 
@@ -260,13 +279,13 @@ export default function Timer(){
                                 title="SETTINGS"
                                 onClick={() =>{
                                     if (timerState == "stoppato" || timerState == "inizializzato") {
-                                        setSettingsClicked(!settingsClicked)
-                                        setsessionFormClicked(false)
+                                        setShowSettingsModal(!showSettingsModal)
+                                        setShowSessionFormModal(false)
                                     } else{
                                         alert("Prima di cambiare le impostazioni devi fermare il timer!")
                                     }
                                 }} 
-                                style={{color: (settingsClicked) ? 'rgb(93, 123, 134)' : 'rgb(139, 148, 151)'}}
+                                style={{color: (showSettingsModal) ? 'rgb(93, 123, 134)' : 'rgb(139, 148, 151)'}}
                             ></i>
                         </span>
 
@@ -286,10 +305,10 @@ export default function Timer(){
                 </div>
 
                 {/* <SessionForm /> */}
-                {settingsClicked && <TimerSettings readTimerData={readTimerData} settingsClicked={settingsClicked} setSettingsClicked={setSettingsClicked}/>}
+                {showSettingsModal && <TimerSettings readTimerData={readTimerData} onClose={handleCloseSettingsModal}/>}
 
                 {/* <SessionForm /> */}
-                {sessionFormClicked && <SessionForm sessionFromClicked={sessionFormClicked} setsessionFromClicked={setsessionFormClicked}/>}
+                {showSessionFormModal && <SessionForm onClose={handleCloseSessionFormModal}/>}
 
             </div>
 

@@ -12,7 +12,7 @@ export default function Login({setIsAuthenticated}){
 
     const onSubmit = (values, actions) => {
         actions.resetForm();
-        fetch('api/v1/profilo/login', {
+        fetch('api/v1/profilo/autenticazione', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',

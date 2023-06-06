@@ -5,7 +5,7 @@ export default function Registrazione({setIsAuthenticated}){
 
     const onSubmit = (values, actions) => {
         actions.resetForm();
-        fetch('api/v1/profilo/registrazione', {
+        fetch('api/v1/profilo/nuova-autenticazione', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',

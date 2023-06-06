@@ -1,0 +1,14 @@
+.setting-div{
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+    height: 30pt;
+}
+
+.setting-label {
+    margin-top: 10pt;
+    min-width: 120pt;
+    min-height: 25pt;
+}
+

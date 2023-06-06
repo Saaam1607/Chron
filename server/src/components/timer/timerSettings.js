@@ -1,7 +1,7 @@
 module.exports = class DefaultSettings {
 
     static getDefaultDurataPomodoro() {
-        return time;
+        return 25;
     }
 
     static getDefaultSettings() {

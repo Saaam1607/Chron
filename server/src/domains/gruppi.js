@@ -156,7 +156,7 @@ router.get("/leader", bodyParser.json(), (req, res) => {
     }
 })
 
-router.post("/nuovoGruppo", (req, res) => {
+router.post("/", (req, res) => {
     
     if (req.body.name == undefined || req.body.name == "" || req.id == undefined) {
         return res.status(400).json({success: "false", message: `Errore, Parametri ricevuti non validi: ${error}`})
@@ -176,7 +176,7 @@ router.post("/nuovoGruppo", (req, res) => {
 
 })
 
-router.post("/assegnaTask", async (req, res) => {
+router.post("/task", async (req, res) => {
     const { nome, dataScadenza, members, nomeGruppo, ID_gruppo } = req.body;
 
     if (!nome || !members || !nomeGruppo) {
@@ -291,8 +291,7 @@ router.post('/acceptTask', async (req, res) => {
         return res.status(500).json({ success: false, message: `Si è verificato un errore durante l'accettazione della task Errore: ${error.message}` });
     }
 
-});
-router.put("/nuovoGruppo", (req, res) => {
+router.put("/", (req, res) => {
     
     if (req.body.codice == undefined || req.id == undefined) {
         return res.status(400).json({success: "false", message: `Errore, parametri assenti o non validi`})
@@ -327,8 +326,6 @@ router.put("/nuovoGruppo", (req, res) => {
 })
 
 router.delete("/:idGruppo", async (req, res) => {
-
-    console.log("SONO DENTRO DELETE GRUPPO")
 
     try {
 
@@ -506,27 +503,6 @@ router.put("/:idGruppo/:idMembro", async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ success: false, message: `Errore durante l'eliminazione del gruppo: ${error}` });
-    }
-})
-
-
-
-
-
-
-
-
-router.get("/username", (req, res) => {
-    if (req.query.id == undefined) {
-        res.status(400).json({success: "false", message: "Errore, ID non trovato"})
-    } else {
-        GestoreDB.getDataFromID(req.query.id)
-            .then((esito) => {
-                res.status(200).json(esito.username)
-            })
-                .catch((error) => {
-                    res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
-                });
     }
 })
 

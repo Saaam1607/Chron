@@ -19,7 +19,7 @@ export default function RecuperaPassword() {
 
   const sendPasswordResetEmail = async (email) => {
     try {
-      const response = await fetch("/api/v1/profilo/forgot-password", {
+      const response = await fetch("/api/v1/profilo/richiesta-nuova-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

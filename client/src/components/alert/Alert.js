@@ -1,25 +1,32 @@
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import './Alert.css';
 
 const MySwal = withReactContent(Swal)
 
-export function handleAlert (message, sound, icon) {
-    MySwal.fire({
+
+
+export function handleAlert (message, sound, icon, timer) {
+
+    const configurazioneAlert = {
         icon: icon,
-        confirmButtonText: message,
-        customClass: {
-            confirmButton: 'custom-confirm-button'
-        },
+        text: message,
+        confirmButtonText: 'OK',
         didOpen: () => {
-            if (sound){
-                var audio = new Audio("Notification.mp3"); 
+            if (sound) {
+                var audio = new Audio('Notification.mp3');
                 audio.play();
             }
         }
-    })
-}
+    };
+    
+    if (timer) {
+            configurazioneAlert.timer = timer;
+            configurazioneAlert.timerProgressBar = true;
+            configurazioneAlert.showConfirmButton = false;
+    }
 
+    MySwal.fire(configurazioneAlert);
+}
 export function handleConfirmation(title, confirmButtonText, cancelButtonText, onConfirm) {
     MySwal.fire({
       title: title,

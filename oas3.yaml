@@ -10,7 +10,7 @@ servers:
   - url: http://localhost:8000/api/v1
     description: localhost
 paths:
-  /profilo/login:
+  /profilo/autenticazione:
     x-summary: Effetua il login
     post:
       summary: Effetua il login
@@ -72,7 +72,7 @@ paths:
                   message:
                     type: string
                     example: Errore durante l'autenticazione
-  /profilo/registrazione:
+  /profilo/nuova-autenticazione:
     x-summary: Effetua la registrazione
     post:
       summary: Effetua la registrazione
@@ -343,7 +343,7 @@ paths:
                   message:
                     type: string
                     example: Errore nella lettura delle impostazioni
-  /timer/impostazioni/aggiorna:
+  /timer/impostazioni:
     x-summary: Aggiorna le impostazioni del timer
     put:
       summary: Modifica le impostazioni del timer
@@ -537,7 +537,7 @@ paths:
                   message:
                     type: string
                     example: "L'operazione di lettura delle task non è andata a buon fine. ID_utdfente is not defined"
-  /todos/new:
+  /todos/:
     post:
       summary: Crea una nuova task
       description: "Crea una nuova task e la aggiunge sia alla ListaTasks che nel database. La data di scadenza è facoltativa."
@@ -605,7 +605,7 @@ paths:
                   message:
                     type: string
                     example: "Si è verificato un errore durante la creazione del task. Errore: [messaggio di errore]"
-  /todos/complete:
+  /todos/:
     put:
       summary: Contrassegna una task come completata
       description: "Contrassegna una task come completata sulla base dell'ID fornito nella richiesta."
@@ -670,7 +670,7 @@ paths:
                   message:
                     type: string
                     example: "Si è verificato un errore durante l'operazione. Messaggio: [messaggio di errore]"
-  /todos/delete:
+  /todos/:
     delete:
       summary: Elimina una task contrassegnata
       description: "Elimina una task contrassegnata sulla base dell'ID fornito nella richiesta. Una task può essere eliminata soltanto se è stata contrassegnata in precedenza."

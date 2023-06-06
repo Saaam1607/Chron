@@ -30,8 +30,8 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/new', async (req, res) => {
-	console.log("POST /todo/new");
+router.post('/', async (req, res) => {
+	console.log("POST /todo/");
     const { _id, ID_utente, nome, dataScadenza, ID_gruppo } = req.body;
   
 	if (!nome) {
@@ -67,8 +67,8 @@ router.post('/new', async (req, res) => {
 	}
 });
 
-router.put('/complete', async (req, res) => {
-    console.log("PUT /complete");
+router.put('/', async (req, res) => {
+    console.log("PUT /");
     const idTask = req.body.id;
     let listaTask = new ListaTasks(req.id);
 
@@ -94,8 +94,8 @@ router.put('/complete', async (req, res) => {
 
 });
 
-router.delete('/delete', async (req, res) => {
-    console.log("DELETE /delete");
+router.delete('/', async (req, res) => {
+    console.log("DELETE /");
     const idTask = req.body.id;
     let listaTask = new ListaTasks(req.id);
 
@@ -121,8 +121,8 @@ router.delete('/delete', async (req, res) => {
 
 });
 
-router.get('/sort', async (req, res) => {
-    console.log("GET /sort");
+router.get('/ordinata', async (req, res) => {
+    console.log("GET /ordinata");
     const listaTask = new ListaTasks(req.id);
 
     try {
