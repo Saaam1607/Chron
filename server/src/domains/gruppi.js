@@ -290,6 +290,7 @@ router.post('/acceptTask', async (req, res) => {
     } catch (error) {
         return res.status(500).json({ success: false, message: `Si è verificato un errore durante l'accettazione della task Errore: ${error.message}` });
     }
+});
 
 router.put("/", (req, res) => {
     
