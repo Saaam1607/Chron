@@ -5,6 +5,7 @@ const SessioneModel = require("../../models/Sessione");
 const Credenziali = require("../../models/UserSchema");
 const Gruppo = require("../../models/GruppoSchema");
 const TaskModel = require("../../models/Task");
+const TokenModel = require("../../models/TokenSchema");
 
 
 class GestoreDB {
@@ -191,7 +192,52 @@ class GestoreDB {
               reject(error);
             });
         });
-    }      
+    }
+    
+    static checkIfTokenExist(token) {
+        return new Promise((resolve, reject) => {
+            TokenModel.countDocuments({ token: token })
+                .then((result) => {
+                    if (result) {
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                    reject(error);
+                });
+        });
+    }
+
+    static salvaToken(token) {
+        return new Promise((resolve, reject) => {
+            const nuovoToken = new TokenModel({
+                _id: new mongoose.Types.ObjectId(),
+                token: token,
+            });
+            nuovoToken.save()
+                .then(() => {
+                    resolve(true);
+                })
+                .catch(error => {
+                    reject({ message: `Non è possibile effettuare il salvataggio del token. Messaggio errore: ${error}` });
+                });
+        });
+    }
+
+    static deleteToken(token) {
+        return new Promise((resolve, reject) => {
+            TokenModel.deleteOne({ token: token })
+                .then(() => {
+                    resolve(true);
+                })
+                .catch(error => {
+                    reject({ message: `Non è possibile effettuare la rimozione del token. Messaggio errore: ${error}` });
+                });
+        });     
+    }
       
     static ottieniGruppiMembro(membro_id) {
         const id = new mongoose.Types.ObjectId(membro_id)
