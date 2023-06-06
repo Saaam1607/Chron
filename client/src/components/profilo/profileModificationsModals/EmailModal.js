@@ -43,7 +43,7 @@ export default function EmailModal({mostraEmailModal, setMostraEmailModal}){
                 }
             })
                 .then(() => {
-                    handleAlert("Email aggiornata", false, "success");
+                    handleAlert("Controlla L'email per completare l'aggiornamento", false, "warning");
                     setMostraEmailModal(false);
                 })
                     .catch(error => {

@@ -4,7 +4,8 @@ const express = require("express");
 const router = express.Router();
 const GestoreDB = require("../components/gestoreDB/gestoreDB");
 const gestoreEmail = require("../components/gestoreEmail/gestoreEmail");
-const htmlBody = require("fs").readFileSync(require("path").join(__dirname, "..", "components", "gestoreEmail", "recuperoPassword.html" ), "utf8");
+const htmlBodyRecuperoPwd = require("fs").readFileSync(require("path").join(__dirname, "..", "components", "gestoreEmail", "recuperoPassword.html" ), "utf8");
+const htmlBodyConfermaAcc = require("fs").readFileSync(require("path").join(__dirname, "..", "components", "gestoreEmail", "confermaAccount.html" ), "utf8");
 
 var bodyParser = require("body-parser");
 var app = express();
@@ -32,37 +33,69 @@ router.post("/autenticazione", bodyParser.json(), (req, res) => {
       });
 })
 
-router.post("/nuova-autenticazione", bodyParser.json(), (req, res) => {
-  if (GestoreDB.controllaEsistenzaEmail(req.body.email)) {
-      return res.status(409).json({success: "false", message: "Errore, email già utilizzata"})
-  }
-  if (
-      // controlli sul formato password
-      (req.body.password).length < 8 ||
+router.post("/nuova-autenticazione", bodyParser.json(), async (req, res) => {
+  try {
+    if (GestoreDB.controllaEsistenzaEmail(req.body.email)) {
+      return res.status(409).json({ success: false, message: "Errore, email già utilizzata" });
+    }
+
+    if (
+      // controlli sul formato della password
+      req.body.password.length < 8 ||
       !/[a-z]/.test(req.body.password) ||
       !/[A-Z]/.test(req.body.password) ||
       !/\d/.test(req.body.password) ||
+      // controlli sul formato dell'email
+      !req.body.email.includes("@") ||
+      // controlli sul formato dell'username
+      req.body.username.length < 4
+    ) {
+      return res.status(401).json({ success: false, message: "Errore, credenziali non valide" });
+    }
 
-      // controlli sul formato email
-      !(req.body.email).includes("@") ||
+    const token = jwt.sign({ email: req.body.email, password: req.body.password, username: req.body.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
 
-      // controlli sul formato username
-      (req.body.username).length < 4
+    const accountConfirmationLink = process.env.BASE_URL + `/verifica-registrazione/${token}`;
 
-  ){
-      return res.status(401).json({success: "false", message: "Errore, credenziali non valide"})
+    const formattedHtmlBody = htmlBodyConfermaAcc.replace("{{accountConfirmationLink}}", accountConfirmationLink);
+
+    await gestoreEmail([req.body.email], "Conferma Account", formattedHtmlBody);
+
+    await GestoreDB.salvaToken(token);
+
+    res.status(200).json({ success: true, message: "Email di verifica inviata con successo!" });
+  } catch (error) {
+    console.error("Errore durante la registrazione:", error);
+    res.status(500).json({ success: false, message: "Errore durante la registrazione e invio email" });
   }
-  GestoreDB.registra(req.body.username, req.body.email, req.body.password)
-      .then(() => {
-          return res.status(201).json({
-              success: "true",
-              token: jwt.sign({ emal: `${req.body.email}` }, process.env.ACCESS_TOKEN_SECRET),
-          });
-      })
-      .catch((error) => {
-          res.status(500).json({success: "errore", message: "Errore durante la registrazione"})
-      });  
-})
+});
+
+router.post("/verifica-registrazione", bodyParser.json(), async (req, res) => {
+  const { token } = req.body;
+
+  if(!await GestoreDB.checkIfTokenExist(token)) {
+    return res.status(409).json({ success: false, message: "Account già esistente!" });
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async(error, decodedToken) => {
+    if (error) {
+      return res.status(401).json({ success: "false", message: "Token di verifica non valido o scaduto." });
+    }
+
+    const { email, password, username } = decodedToken;
+
+    try {
+      await GestoreDB.registra(username, email, password);
+
+      await GestoreDB.deleteToken(token);
+
+      res.status(201).json({ success: true, message: "Account registrato con successo!" });
+
+    } catch (error) {
+      res.status(500).json({ success: false, message: `Errore durante la registrazione: ${error}` });
+    }
+  });
+});
 
 
 
@@ -81,7 +114,7 @@ router.post("/richiesta-nuova-password", (req, res) => {
 
         const recoveryLink = process.env.BASE_URL + `/richiesta-reset-password/${token}`;
 
-        const formattedHtmlBody = htmlBody.replace("{{passwordResetLink}}", recoveryLink);
+        const formattedHtmlBody = htmlBodyRecuperoPwd.replace("{{passwordResetLink}}", recoveryLink);
 
         gestoreEmail([email], "Recupero password", formattedHtmlBody);
 
