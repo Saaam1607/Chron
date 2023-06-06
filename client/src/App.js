@@ -16,6 +16,7 @@ import Gruppi from "./components/gruppi/GruppiDasboard"
 import ResetPasswordForm from './components/recupera-password/RecuperoPasswordForm';
 import TaskForm from './components/to-do/AccettazioneTaskForm';
 import AccountConfirmation from './components/profilo/AccountConfirmation';
+import EmailUpdateConfirmation from './components/profilo/profileModificationsModals/EmailUpdateCofirmation'
 
 // routing elements
 import {
@@ -80,9 +81,8 @@ function App() {
         <Route path="/reset-password/:token" element={<ResetPasswordForm />} />
         <Route path='/accept-reject-task/:token' element={<TaskForm />} />
         <Route path='/verifica-registrazione/:token' element={<AccountConfirmation />} />
+        <Route path='/verifica-email/:token' element={<EmailUpdateConfirmation />} />
 
-
-        
       </Routes>
     </div>
     </Router>
