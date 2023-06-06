@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 const jwt = require("jsonwebtoken");
 
-router.post("/login", bodyParser.json(), (req, res) => {
+router.post("/autenticazione", bodyParser.json(), (req, res) => {
   GestoreDB.login(req.body.email, req.body.password)
       .then((esito) => {
           if (esito) {
@@ -32,7 +32,7 @@ router.post("/login", bodyParser.json(), (req, res) => {
       });
 })
 
-router.post("/registrazione", bodyParser.json(), (req, res) => {
+router.post("/nuova-autenticazione", bodyParser.json(), (req, res) => {
   if (GestoreDB.controllaEsistenzaEmail(req.body.email)) {
       return res.status(409).json({success: "false", message: "Errore, email già utilizzata"})
   }
@@ -66,7 +66,7 @@ router.post("/registrazione", bodyParser.json(), (req, res) => {
 
 
 
-router.post("/forgot-password", (req, res) => {
+router.post("/richiesta-nuova-password", (req, res) => {
   const { email } = req.body;
 
   if (email == undefined) {
@@ -79,7 +79,7 @@ router.post("/forgot-password", (req, res) => {
         }
         const token = jwt.sign( { id: result._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
 
-        const recoveryLink = process.env.BASE_URL + `/reset-password/${token}`;
+        const recoveryLink = process.env.BASE_URL + `/richiesta-reset-password/${token}`;
 
         const formattedHtmlBody = htmlBody.replace("{{passwordResetLink}}", recoveryLink);
 
@@ -94,7 +94,7 @@ router.post("/forgot-password", (req, res) => {
 });
 
 // API per il reset della password
-router.post("/reset-password", (req, res) => {
+router.post("/richiesta-reset-password", (req, res) => {
   const { token, password } = req.body;
 
   // Verifica e decodifica del token di recupero password

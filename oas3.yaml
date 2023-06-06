@@ -10,7 +10,7 @@ servers:
   - url: http://localhost:8000/api/v1
     description: localhost
 paths:
-  /profilo/login:
+  /profilo/autenticazione:
     x-summary: Effetua il login
     post:
       summary: Effetua il login
@@ -72,7 +72,7 @@ paths:
                   message:
                     type: string
                     example: Errore durante l'autenticazione
-  /profilo/registrazione:
+  /profilo/nuova-autenticazione:
     x-summary: Effetua la registrazione
     post:
       summary: Effetua la registrazione

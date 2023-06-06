@@ -15,7 +15,7 @@ export default function ResetPasswordForm() {
     validationSchema: resetPasswordSchema,
     onSubmit: async (values) => {
       try {
-        const response = await fetch("/api/v1/profilo/reset-password", {
+        const response = await fetch("/api/v1/profilo/richiesta-reset-password", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
