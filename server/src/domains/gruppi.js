@@ -249,8 +249,6 @@ router.put("/nuovoGruppo", (req, res) => {
 
 router.delete("/:idGruppo", async (req, res) => {
 
-    console.log("SONO DENTRO DELETE GRUPPO")
-
     try {
 
         // controllo che ci sia l'id del gruppo e l'id dell'utente

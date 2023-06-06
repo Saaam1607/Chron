@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, Button, Modal, Table, Form } from 'react-bootstrap';
 import './TimerSettings.css';
+import { handleAlert } from '../alert/Alert';
 
 
 
@@ -117,7 +118,8 @@ export default function TimerSettings({readTimerData, onClose}){
                 }
             })
                 .then(() =>{
-                    readTimerData()
+                    readTimerData();
+                    handleAlert ("Modifica salvata", false, "success", 1000);
                 })
                 .catch(error => {
                     alert(error.message);
@@ -127,17 +129,15 @@ export default function TimerSettings({readTimerData, onClose}){
 
 
     return (
-        <div>
             <Modal
-                className='gruppo-modal'
                 show={true}
                 onHide={onClose}
                 dialogClassName="custom-modal-dialog"
                 backdrop="static"
-                style={{ minWidth: '800pt' }}
+                style={{ minWidth: 'fit-content'}}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Dettagli sala studio</Modal.Title>
+                    <Modal.Title>Impostazioni del timer</Modal.Title>
                 </Modal.Header>
         
                 <Modal.Body>
@@ -228,6 +228,5 @@ export default function TimerSettings({readTimerData, onClose}){
 
                 </Modal.Footer>
             </Modal>
-        </div>
     );
 }
