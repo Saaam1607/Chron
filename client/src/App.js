@@ -80,7 +80,7 @@ function App() {
         <Route path="/to-do" element={<Todos />} />
         <Route path="/timer" element={<Timer />} />
         <Route path="/sale-studio" element={<SaleStudio />} />
-        <Route path="/reset-password/:token" element={<ResetPasswordForm />} />
+        <Route path="/richiesta-reset-password/:token" element={<ResetPasswordForm />} />
         <Route path='/accept-reject-task/:token' element={<TaskForm />} />
         <Route path='/verifica-registrazione/:token' element={<AccountConfirmation />} />
         <Route path='/verifica-email/:token' element={<EmailUpdateConfirmation />} />
