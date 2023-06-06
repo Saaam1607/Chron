@@ -430,25 +430,4 @@ router.put("/:idGruppo/:idMembro", async (req, res) => {
 
 
 
-
-
-
-
-
-router.get("/username", (req, res) => {
-    if (req.query.id == undefined) {
-        res.status(400).json({success: "false", message: "Errore, ID non trovato"})
-    } else {
-        GestoreDB.getDataFromID(req.query.id)
-            .then((esito) => {
-                res.status(200).json(esito.username)
-            })
-                .catch((error) => {
-                    res.status(500).json({success: "false", message: `Errore durante la lettura dei dati: ${error}`})
-                });
-    }
-})
-
-
-
 module.exports = router
