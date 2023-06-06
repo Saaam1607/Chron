@@ -62,13 +62,13 @@ export default function Timer(){
                     // setting up message
                     switch (data.fase) {
                         case 0:
-                            setMessage("TIME TO GET FOCUSED!");
+                            setMessage("È ORA DI CONCENTRARSI!");
                             break;
                         case 1:
-                            setMessage("TIME TO TAKE A SHORT BREAK!");
+                            setMessage("È ORA DI PRENDERSI UNA BREVE PAUSA!");
                             break;
                         case 2:
-                            setMessage("TIME TO TAKE A LONG BREAK!");
+                            setMessage("È ORA DI PRENDERSI UNA PAUSA LUNGA!");
                             break;
                             default:
                             break;
