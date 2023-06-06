@@ -11,16 +11,58 @@ export default function TimerSettings({readTimerData, onClose}){
     const [pausaLunga, setPausaLunga] = useState(15);
     const [numeroSessioni, setNumeroSessioni] = useState(4);
 
-    const aggiornaImpostazioni = async (pomdoro, pausaCorta, pausaLunga, sessioni) => {
+    function handleNuovoPomodoro(value){
+        if (value < 15){
+            setPomdoro(15);
+        } else if (value > 60){
+            setPomdoro(60);
+        } else {
+            setPomdoro(value);
+        }
+    }
+
+    function handleNuovaPausaCorta(value){
+        if (value < 5){
+            setPausaCorta(5);
+        } else if (value > 15){
+            setPausaCorta(15);
+        } else {
+            setPausaCorta(value);
+        }
+    }
+
+    function handleNuovaPausaLunga(value){
+        if (value < 15){
+            setPausaLunga(15);
+        } else if (value > 30){
+            setPausaLunga(30);
+        } else {
+            setPausaLunga(value);
+        }
+    }
+
+    function handleNuovoNumeroSessioni(value){
+        if (value < 2){
+            setNumeroSessioni(2);
+        } else if (value > 6){
+            setNumeroSessioni(6);
+        } else {
+            setNumeroSessioni(value);
+        }
+    }
+
+
+
+    async function aggiornaImpostazioni(pomdoro, pausaCorta, pausaLunga, sessioni){
         setPomdoro(pomdoro);
         setPausaCorta(pausaCorta);
         setPausaLunga(pausaLunga);
         setNumeroSessioni(sessioni);
     }
 
-    useEffect(() => {
 
-        // recupera dati dal server
+
+    function leggiImpostazioni(){
         fetch('api/v1/timer/impostazioni', {
             method: 'GET',
             headers: {
@@ -40,12 +82,20 @@ export default function TimerSettings({readTimerData, onClose}){
                 .catch(error => {
                     alert(error.message);
                 })
+    }
+
+
+
+
+
+    useEffect(() => {
+        // quando il componente viene aperto, viene eseguita una lettura delle impostazioni attuali del timer
+        leggiImpostazioni();
     }, []);
   
 
     
     function handleSubmit(){
-
         const requestBody = {
             pomdoro: pomdoro,
             pausaCorta: pausaCorta,
@@ -72,167 +122,112 @@ export default function TimerSettings({readTimerData, onClose}){
                 .catch(error => {
                     alert(error.message);
                 })
-
     };
   
+
+
     return (
         <div>
-          <Modal
-            className='gruppo-modal'
-            show={true}
-            onHide={onClose}
-            dialogClassName="custom-modal-dialog"
-            backdrop="static"
-            style={{ minWidth: '800pt' }}
-          >
-            <Modal.Header closeButton>
-              <Modal.Title>Dettagli sala studio</Modal.Title>
-            </Modal.Header>
-      
-            <Modal.Body>
-              
-                <Form.Group controlId="pomdoro">
-                    <div className='setting-div'>
-                        <Form.Label className="setting-label">Durata pomodoro:</Form.Label>
-                        <Form.Control
+            <Modal
+                className='gruppo-modal'
+                show={true}
+                onHide={onClose}
+                dialogClassName="custom-modal-dialog"
+                backdrop="static"
+                style={{ minWidth: '800pt' }}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Dettagli sala studio</Modal.Title>
+                </Modal.Header>
+        
+                <Modal.Body>
+                
+                    <Form.Group controlId="pomdoro">
+                        <div className='setting-div'>
+                            <Form.Label className="setting-label">Durata pomodoro:</Form.Label>
+                            <Form.Control
+                                    className="setting-input"
+                                    type="number"
+                                    value={pomdoro}
+                                    onChange={(e) => setPomdoro(parseInt(e.target.value))}
+                                    onBlur={(e) => handleNuovoPomodoro(parseInt(e.target.value))}
+                                    min="15"
+                                    max="60"
+                                    required
+                            />
+                        </div>
+                    </Form.Group>
+        
+                    <Form.Group controlId="pausa-corta">
+                        <div className='setting-div'>
+                            <Form.Label className="setting-label">Durata pausa corta:</Form.Label>
+                            <Form.Control
                                 className="setting-input"
                                 type="number"
-                                value={pomdoro}
-                                onChange={(e) => setPomdoro(parseInt(e.target.value))}
-                                min="15"
-                                max="60"
+                                value={pausaCorta}
+                                onChange={(e) => setPausaCorta(parseInt(e.target.value))}
+                                onBlur={(e) => handleNuovaPausaCorta(parseInt(e.target.value))}
+                                min="5"
+                                max="15"
                                 required
-                        />
-                    </div>
-                </Form.Group>
-      
-                <Form.Group controlId="pausa-corta">
-                    <div className='setting-div'>
-                        <Form.Label className="setting-label">Durata pausa corta:</Form.Label>
-                        <Form.Control
-                            className="setting-input"
-                            type="number"
-                            value={pausaCorta}
-                            onChange={(e) => setPausaCorta(parseInt(e.target.value))}
-                            min="5"
-                            max="15"
-                            required
-                        />
-                    </div>
-                </Form.Group>
-      
-                <Form.Group controlId="pausaLunga">
-                    <div className='setting-div'>
-                        <Form.Label className="setting-label">Durata pausa lunga:</Form.Label>
-                        <Form.Control
-                            className="setting-input"
-                            type="number"
-                            value={pausaLunga}
-                            onChange={(e) => setPausaLunga(parseInt(e.target.value))}
-                            min="10"
-                            max="30"
-                            required
-                        />
-                    </div>
-                </Form.Group>
-      
-                <Form.Group controlId="numeroSessioni">
-                    <div className='setting-div'>
-                        <Form.Label className="setting-label">Numero sessioni:</Form.Label>
-                        <Form.Control
-                            className="setting-input"
-                            type="number"
-                            value={numeroSessioni}
-                            onChange={(e) => setNumeroSessioni(parseInt(e.target.value))}
-                            min="2"
-                            max="6"
-                            required
-                        />
-                    </div>
-                </Form.Group>
-      
-                
-
-            </Modal.Body>
-      
-            <Modal.Footer>
-                <Button
-                    variant="primary"
-                    type="submit"
-                    className="add-button"
-                    onClick={()=> {
-                        handleSubmit()
-                        onClose()
-                    }}
-                >
-                    Salva
-                </Button>
-                <Button variant="secondary" onClick={onClose}>
-                    Close
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        </div>
-      );
-    }
-
-
-
-        // <form className="timer-form" onSubmit={handleSubmit}>
+                            />
+                        </div>
+                    </Form.Group>
         
-        //     <div className='setting-div'>
-        //         <label htmlFor="pomdoro">Durata pomodoro:</label>
-        //         <input
-        //             type="number"
-        //             id="pomdoro"
-        //             value={pomdoro}
-        //             onChange={(e) => setPomdoro(parseInt(e.target.value))}
-        //             min="15"
-        //             max="60"
-        //             required
-        //         />
-        //     </div>
-    
-        //     <div className='setting-div'>
-        //         <label htmlFor="pausa-corta">Duarata pausa corta:</label>
-        //         <input
-        //             type="number"
-        //             id="pausa-corta"
-        //             value={pausaCorta}
-        //             onChange={(e) => setPausaCorta(parseInt(e.target.value))}
-        //             min="5"
-        //             max="15"
-        //             required
-        //         />
-        //     </div>
+                    <Form.Group controlId="pausaLunga">
+                        <div className='setting-div'>
+                            <Form.Label className="setting-label">Durata pausa lunga:</Form.Label>
+                            <Form.Control
+                                className="setting-input"
+                                type="number"
+                                value={pausaLunga}
+                                onChange={(e) => setPausaLunga(parseInt(e.target.value))}
+                                onBlur={(e) => handleNuovaPausaLunga(parseInt(e.target.value))}
+                                min="10"
+                                max="30"
+                                required
+                            />
+                        </div>
+                    </Form.Group>
+        
+                    <Form.Group controlId="numeroSessioni">
+                        <div className='setting-div'>
+                            <Form.Label className="setting-label">Numero sessioni:</Form.Label>
+                            <Form.Control
+                                className="setting-input"
+                                type="number"
+                                value={numeroSessioni}
+                                onChange={(e) => setNumeroSessioni(parseInt(e.target.value))}
+                                onBlur={(e) => handleNuovoNumeroSessioni(parseInt(e.target.value))}
+                                min="2"
+                                max="6"
+                                required
+                            />
+                        </div>
+                    </Form.Group>
+        
+                </Modal.Body>
+        
+                <Modal.Footer>
 
-        //     <div className='setting-div'>
-        //         <label htmlFor="pausaLunga">Durata pausa lunga:</label>
-        //         <input
-        //             type="number"
-        //             id="pausaLunga"
-        //             value={pausaLunga}
-        //             onChange={(e) => setPausaLunga(parseInt(e.target.value))}
-        //             min="10"
-        //             max="30"
-        //             required
-        //         />
-        //     </div>
+                    <Button
+                        variant="primary"
+                        type="submit"
+                        className="add-button"
+                        onClick={()=> {
+                            handleSubmit()
+                            onClose()
+                        }}
+                    >
+                        Salva
+                    </Button>
 
-        //     <div className='setting-div'>
-        //         <label htmlFor="numeroSessioni">Numero sessioni:</label>
-        //         <input
-        //             type="number"
-        //             id="numeroSessioni"
-        //             value={numeroSessioni}
-        //             onChange={(e) => setNumeroSessioni(parseInt(e.target.value))}
-        //             min="2"
-        //             max="6"
-        //             required
-        //         />
-        //     </div>
-    
-        //     <button type="submit">Save</button>
-        // </form>
-//     );
-// }
+                    <Button variant="secondary" onClick={onClose}>
+                        Close
+                    </Button>
+
+                </Modal.Footer>
+            </Modal>
+        </div>
+    );
+}
