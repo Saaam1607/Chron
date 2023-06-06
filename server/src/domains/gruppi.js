@@ -176,7 +176,7 @@ router.post("/nuovoGruppo", (req, res) => {
 
 })
 
-router.post("/assegnaTask", async (req, res) => {
+router.post("/task", async (req, res) => {
     const { nome, dataScadenza, members, nomeGruppo, ID_gruppo } = req.body;
 
     if (!nome || !members || !nomeGruppo) {

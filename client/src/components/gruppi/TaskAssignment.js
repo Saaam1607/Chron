@@ -17,7 +17,7 @@ export default function TaskAssignment({ selectedMembers, groupName, ID_gruppo, 
             ID_gruppo: ID_gruppo,
         };
 
-        const response = await fetch('api/v1/gruppi/assegnaTask', {
+        const response = await fetch('api/v1/gruppi/task', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
