@@ -1,5 +1,7 @@
 import { useFormik } from 'formik';
 import { basicSchema  } from './schemas';
+import { handleAlert } from "../alert/Alert";
+
 
 export default function Registrazione({setIsAuthenticated}){
 
@@ -23,7 +25,7 @@ export default function Registrazione({setIsAuthenticated}){
                 }
             })
                 .then(data => {
-                    alert("Registrazione Completata");
+                    handleAlert("Controlla L'email per attivare l'account", false, "warning");
                 })
                 .catch(error => {
                     alert(error.message);
