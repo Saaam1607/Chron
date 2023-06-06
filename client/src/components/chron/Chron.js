@@ -62,20 +62,18 @@ function Chron() {
 
     //function per ottenere i dati dal db
   function fetchData(){
-        fetch( `/api/v1/grafici?arrowClick=${arrowclick}&isMonth=${isMonth}`, {method: "GET", headers: CookieManager.generateHeader() })
+        fetch( `/api/v1/sessione?arrowClick=${arrowclick}&isMonth=${isMonth}`, {method: "GET", headers: CookieManager.generateHeader() })
         .then(response => {
           console.log(response);
             if (response.ok) {
               return response.json();
             } else if (response.status === 400){
             throw new Error(response.statusText);
-            } else if (response.status === 500){
-            throw new Error(response.statusText);
             } else if (response.status === 401){
             throw new Error(response.statusText);
-            } else if (response.status === 404){
+            } else if (response.status === 500){
             throw new Error(response.statusText);
-             }
+            }
           })
         .then(data => {
           if (data !== undefined) {        

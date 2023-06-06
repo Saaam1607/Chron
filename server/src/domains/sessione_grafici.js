@@ -2,16 +2,13 @@ const express = require("express")
 const router = express.Router()
 const ListaSessioni = require("../components/chron/Chron.js")
 
-let isFirstTime = true;
-const listaSessioni = new ListaSessioni(1);
 
 
 router.get('/', async (req, res) => {
 
-     if(isFirstTime && req.id){
-         isFirstTime = false;
-         listaSessioni.ID_utente = req.id;
-     }
+
+    let listaSessioni = new ListaSessioni(req.id);
+     
     
 	try {
             //fetch data from listaSessioni
