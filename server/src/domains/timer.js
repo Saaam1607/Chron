@@ -2,8 +2,6 @@ const express = require("express")
 const session = require('express-session')
 const cookieParser = require("cookie-parser");
 const DefaultSettings = require("./../components/timer/timerSettings")
-const { Data, Tempo, Sessione } = require('../components/utils/utils');
-const GestoreDB = require("../components/gestoreDB/gestoreDB")
 const router = express.Router()
 
 
@@ -33,7 +31,7 @@ function getDurataFromSettings(fase, impostazioni){
 router.use(cookieParser());
 router.use(
     session({
-        secret: "some secret",
+        secret: "secret_key_for_timer_settings",
     })
 );
 
@@ -61,6 +59,7 @@ router.get("/stato", (req, res) => {
             
         }
     } catch (err){
+        console.log(err)
         res.status(500).json({success: false, message: "Errore durante la lettura dello stato del timer"})
     }
        
