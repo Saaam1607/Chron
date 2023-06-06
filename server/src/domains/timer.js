@@ -136,7 +136,7 @@ router.get("/impostazioni", (req, res) => {
     }
 })
 
-router.put("/impostazioni/aggiorna", async (req, res) => {
+router.put("/impostazioni/", async (req, res) => {
     try {
 
         const pomdoro = parseInt(req.body.pomdoro);

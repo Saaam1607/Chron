@@ -104,7 +104,7 @@ export default function TimerSettings({readTimerData, onClose}){
             sessioni: numeroSessioni
         };
       
-        fetch('api/v1/timer/impostazioni/aggiorna', {
+        fetch('api/v1/timer/impostazioni/', {
             method: 'PUT',
             body: JSON.stringify(requestBody),
             headers: {

@@ -343,7 +343,7 @@ paths:
                   message:
                     type: string
                     example: Errore nella lettura delle impostazioni
-  /timer/impostazioni/aggiorna:
+  /timer/impostazioni:
     x-summary: Aggiorna le impostazioni del timer
     put:
       summary: Modifica le impostazioni del timer
