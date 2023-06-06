@@ -146,7 +146,7 @@ export default function TimerSettings({readTimerData, onClose}){
                         <div className='setting-div'>
                             <Form.Label className="setting-label">Durata pomodoro:</Form.Label>
                             <Form.Control
-                                    className="setting-input"
+                                    className="input-field"
                                     type="number"
                                     value={pomdoro}
                                     onChange={(e) => setPomdoro(parseInt(e.target.value))}
@@ -162,7 +162,7 @@ export default function TimerSettings({readTimerData, onClose}){
                         <div className='setting-div'>
                             <Form.Label className="setting-label">Durata pausa corta:</Form.Label>
                             <Form.Control
-                                className="setting-input"
+                                className="input-field"
                                 type="number"
                                 value={pausaCorta}
                                 onChange={(e) => setPausaCorta(parseInt(e.target.value))}
@@ -178,7 +178,7 @@ export default function TimerSettings({readTimerData, onClose}){
                         <div className='setting-div'>
                             <Form.Label className="setting-label">Durata pausa lunga:</Form.Label>
                             <Form.Control
-                                className="setting-input"
+                                className="input-field"
                                 type="number"
                                 value={pausaLunga}
                                 onChange={(e) => setPausaLunga(parseInt(e.target.value))}
@@ -194,7 +194,7 @@ export default function TimerSettings({readTimerData, onClose}){
                         <div className='setting-div'>
                             <Form.Label className="setting-label">Numero sessioni:</Form.Label>
                             <Form.Control
-                                className="setting-input"
+                                className="input-field"
                                 type="number"
                                 value={numeroSessioni}
                                 onChange={(e) => setNumeroSessioni(parseInt(e.target.value))}

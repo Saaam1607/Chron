@@ -64,11 +64,11 @@ export default function SessionForm({onClose}){
 
             <Modal.Body>
             
-                <Form.Group controlId='dataFrom'>
+                <Form.Group controlId='dataForm'>
                     <div className='setting-div'>
-                        <Form.Label className="setting-label">Data:</Form.Label>
+                        <Form.Label>Data:</Form.Label>
                         <Form.Control
-                                className="setting-input"
+                                className="input-field"
                                 type="date"
                                 value={date}
                                 onChange={(e) => setDate(e.target.value)}
@@ -79,9 +79,9 @@ export default function SessionForm({onClose}){
 
                 <Form.Group controlId="timeForm">
                     <div className='setting-div'>
-                        <Form.Label className="setting-label">Time:</Form.Label>
+                        <Form.Label>Time:</Form.Label>
                         <Form.Control
-                            className="setting-input"
+                            className="input-field"
                             type="time"
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
