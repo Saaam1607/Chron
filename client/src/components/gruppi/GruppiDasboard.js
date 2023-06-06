@@ -107,7 +107,7 @@ export default function GruppiDashboard(){
 
     function creaGruppo(){
 
-        fetch('api/v1/gruppi/nuovoGruppo', {
+        fetch('api/v1/gruppi/', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -146,7 +146,7 @@ export default function GruppiDashboard(){
 
     function uniscitiGruppo(codice){
 
-        fetch('api/v1/gruppi/nuovoGruppo', {
+        fetch('api/v1/gruppi/', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',

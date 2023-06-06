@@ -156,7 +156,7 @@ router.get("/leader", bodyParser.json(), (req, res) => {
     }
 })
 
-router.post("/nuovoGruppo", (req, res) => {
+router.post("/", (req, res) => {
     
     if (req.body.name == undefined || req.body.name == "" || req.id == undefined) {
         return res.status(400).json({success: "false", message: `Errore, Parametri ricevuti non validi: ${error}`})
@@ -213,7 +213,7 @@ router.post("/task", async (req, res) => {
 });
 
 
-router.put("/nuovoGruppo", (req, res) => {
+router.put("/", (req, res) => {
     
     if (req.body.codice == undefined || req.id == undefined) {
         return res.status(400).json({success: "false", message: `Errore, parametri assenti o non validi`})
