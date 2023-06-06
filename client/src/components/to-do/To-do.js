@@ -25,7 +25,7 @@ export default function Todo(){
 
     const GetTodos = async () => {
         try {
-            const url = sortOption ? `${api_base}/sort?sort=${sortOption}` : `${api_base}/`;
+            const url = sortOption ? `${api_base}/ordinata?sort=${sortOption}` : `${api_base}/`;
             const res = await fetch(url, {
                 method: "GET",
                 headers: CookieManager.generateHeader(),
@@ -55,7 +55,7 @@ export default function Todo(){
             return;
         }
         setAddButtonDisabled(true);
-        const data = await fetch(api_base + "/new", {
+        const data = await fetch(api_base + "/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export default function Todo(){
 
     const completeTodo = async (id) => {
         try {
-            const response = await fetch(api_base + "/complete", {
+            const response = await fetch(api_base + "/", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -117,7 +117,7 @@ export default function Todo(){
         if (todo.contrassegna) {
             setDeleteButtonDisabled(true);
             try {
-                const response = await fetch(api_base + "/delete", {
+                const response = await fetch(api_base + "/", {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
