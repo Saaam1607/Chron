@@ -37,11 +37,12 @@ export default function AccountConfirmation() {
   return (
         <div className="container">
             <div className="row">
-                <div className="col-md-4">
-                <div className="login-div">
+                <div className="col-md-12">
                     <div className="card-body">
-                        <form className="aut-form">
-                        <div className="reset-password-form">
+                      <h1>Form di conferma account</h1>
+
+                        <div className="my-special-custom col-md-6">
+                            <form className="my-special-custom-form">
                                 {verificationStatus === "pending" && (
                                 <p className="text-center">Verifica in corso...</p>
                                 )}
@@ -49,6 +50,7 @@ export default function AccountConfirmation() {
                                 {verificationStatus === "success" && (
                                 <>
                                     <h2 className="text-center">Account Verificato!</h2>
+                                    <br></br>
                                     <p>
                                     Ora puoi effettuare il{" "}
                                     <Link to="/profilo">login</Link> con le tue credenziali.
@@ -62,16 +64,16 @@ export default function AccountConfirmation() {
                                 {verificationStatus === "error" && (
                                 <>
                                     <h2 className="text-center">Errore durante la verifica</h2>
+                                    <br></br>
                                     <p>{error}</p>
                                     <p className="text-center">
                                     Si prega di riprovare più tardi o contattare il supporto.
                                     </p>
                                 </>
                                 )}
-                            </div>
-                        </form>
+                            </form>    
+                          </div>                        
                     </div>
-                </div>
                 </div>
             </div>
         </div>

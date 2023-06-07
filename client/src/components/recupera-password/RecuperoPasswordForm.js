@@ -48,10 +48,10 @@ export default function ResetPasswordForm() {
         <div className="card-body">
           <h1>Reimposta la tua password</h1>
 
-          <div className="reset-password col-md-6">
+          <div className="my-special-custom col-md-6">
             {passwordResetSuccessful ? (
               <>
-                <div  className="reset-password-form">
+                <div  className="my-special-custom-form">
                   <h2>Password reimpostata con successo</h2>
                   <br />
                   <p>
@@ -61,7 +61,7 @@ export default function ResetPasswordForm() {
                 </div>
               </>
             ) : (
-              <form onSubmit={formik.handleSubmit} className="reset-password-form">
+              <form onSubmit={formik.handleSubmit} className="my-special-custom-form">
                 <h2>Inseresci la nuova Password</h2>
                 <div className="col-mb-3">
                   <label htmlFor="password" className="form-label">

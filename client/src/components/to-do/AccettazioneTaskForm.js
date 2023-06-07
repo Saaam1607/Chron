@@ -119,8 +119,8 @@ export default function AcceptRejectTaskForm() {
                     <div className="accept-reject-task-form col-md-6">
                     {taskAccepted ? (
                         <>
-                            <div className="reset-password">
-                                <div className="reset-password-form">
+                            <div className="my-special-custom">
+                                <div className="my-special-custom-form">
                                     <h2>Task accettata con successo</h2>
                                     <br></br>
                                     <p>Ora puoi iniziare a lavorare sulla task assegnata.</p>
@@ -130,8 +130,8 @@ export default function AcceptRejectTaskForm() {
                         </>
                     ) : taskRejected ? (
                         <>
-                            <div className="reset-password">
-                                <div className="reset-password-form">
+                            <div className="my-special-custom">
+                                <div className="my-special-custom-form">
                                     <h2>Task rifiutata</h2>
                                     <br></br>
                                     <p>La task è stata rifiutata con successo.</p>
@@ -140,8 +140,8 @@ export default function AcceptRejectTaskForm() {
                             </div>
                         </>
                     ) : (
-                        <div className="reset-password">
-                            <form className='reset-password-form'>
+                        <div className="my-special-custom">
+                            <form className='my-special-custom-form'>
                                 <h2>Accetta o rifiuta la task</h2>
                                 <br></br>
                                 <p><strong>Nome Task:</strong> {taskData.taskName}</p>

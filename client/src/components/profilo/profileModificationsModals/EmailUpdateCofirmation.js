@@ -42,11 +42,13 @@ export default function EmailUpdateConfirmation() {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-md-4">
-          <div className="login-div">
+        <div className="col-md-12">
+          
             <div className="card-body">
-              <form className="aut-form">
-                <div className="reset-password-form">
+              <h1>Form di conferma aggiornamento email</h1>
+
+              <div className="my-special-custom col-md-6">
+                <form className="my-special-custom-form">
                   {confirmationStatus === "pending" && (
                     <p className="text-center">Conferma in corso...</p>
                   )}
@@ -54,6 +56,7 @@ export default function EmailUpdateConfirmation() {
                   {confirmationStatus === "success" && (
                     <>
                       <h2 className="text-center">Email Aggiornata!</h2>
+                      <br></br>
                       <p>
                         La tua email è stata aggiornata correttamente.
                       </p>
@@ -66,16 +69,17 @@ export default function EmailUpdateConfirmation() {
                   {confirmationStatus === "error" && (
                     <>
                       <h2 className="text-center">Errore durante la conferma</h2>
+                      <br></br>
                       <p>{error}</p>
                       <p className="text-center">
                         Si prega di riprovare più tardi o contattare il supporto.
                       </p>
                     </>
                   )}
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
-          </div>
+          
         </div>
       </div>
     </div>
