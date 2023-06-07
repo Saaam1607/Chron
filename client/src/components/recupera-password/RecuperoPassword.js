@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { handleAlert } from '../alert/Alert';
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -31,6 +32,8 @@ export default function RecuperaPassword() {
         // Email di recupero password inviata con successo
         setEmailSent(true);
         console.log("Email di recupero password inviata con successo");
+        handleAlert("Controlla la tua casella di posta", false, "warning");
+
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message);
