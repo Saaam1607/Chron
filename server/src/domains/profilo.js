@@ -149,4 +149,45 @@ router.post("/richiesta-reset-password", (req, res) => {
     });
 });
 
+
+router.post("/autenticazioneEsterna", (req, res) => {
+  const { gToken, clientId } = req.body
+  console.log(req.body)
+  if (gToken == undefined || clientId == undefined) {
+    return res.status(400).json({ success: "false", message: "Errore, token o clientId mancanti!" });
+  }
+
+  try {
+
+  const jwtDetail = jwt.decode(gToken);
+
+  const { name, email, userName, email_verified } = jwtDetail;
+
+  if (email_verified) {
+    GestoreDB.controllaEsistenzaEmail(email).then((esiste) => {
+      if (esiste) {
+        GestoreDB.getDataFromEmail(email).then((result) => {
+          const token = jwt.sign({ id: result._id }, process.env.ACCESS_TOKEN_SECRET);
+          return res.status(200).json({ success: true, message: "Login effettuato con successo!", token });
+        });
+      } else {
+        const password = email + clientId;
+        GestoreDB.registra( name, email, password).then((result) => {
+          const token = jwt.sign({ id: result._id }, process.env.ACCESS_TOKEN_SECRET);
+          gestoreEmail([email], "ACCOUNT CREATO", "Il tuo account è stato creato con successo!");
+          return res.status(200).json({ success: true, message: "Utente registrato e Login effettuato con successo!", token });
+        });
+      }
+    });
+  } else {
+    res.status(401).json({ success: false, message: `Email non verificata!` });
+  }
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: `L'operazione di  l'autenticazione esterna non è andata a buon fine.  ${error}` });
+  }
+});
+
+
+
 module.exports = router;
