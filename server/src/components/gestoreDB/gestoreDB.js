@@ -58,7 +58,7 @@ class GestoreDB {
             }
 
     static controllaEsistenzaEmail(email) {
-        Credenziali.countDocuments({ email: email })
+        return Credenziali.countDocuments({ email: email })
             .then((result) => {
                 if (result) {
                     return true;
@@ -77,8 +77,8 @@ class GestoreDB {
                 _id: new mongoose.Types.ObjectId()
             });
             user.save({ username: username, email: email, password: password })
-                .then(() => {
-                    resolve();
+                .then((result) => {
+                    resolve(result);
                 })
                 .catch((error) => {
                     reject({message: "Errore durante la registrazione", errore: error}); // Reject with the error if there was an error

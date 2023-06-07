@@ -67,15 +67,14 @@ export default function Profilo(){
                         <h6>RECUPERA PASSWORD</h6>
                     </button>
                 </div>
-                <div className='auth-button-div'>
-                    <AutenticazioneEsterna />
-                 </div>
             </div> : <></> }
         
         {!isAuthenticated ? <div>  
             {(loginClicked) ? <Login setIsAuthenticated={setIsAuthenticated}/> : <></> }
             {(registrazioneClicked) ? <Registrazione setIsAuthenticated={setIsAuthenticated}/> : <></> }
             {(recuperoPasswordClicked) ? <RecuperoPassword setAuthenticated={setIsAuthenticated} /> : <></> }
+            { <AutenticazioneEsterna setIsAuthenticated={setIsAuthenticated} /> }
+
             
         </div> : <></>}
 
