@@ -5,6 +5,7 @@ import DatiProfilo from "./DatiProfilo"
 import RecuperoPassword from '../recupera-password/RecuperoPassword';
 import './Profilo.css';
 import CookieManager from'../tokenManager/cookieManager';
+import AutenticazioneEsterna from './AutenticazioneEsterna'
 
 
 export default function Profilo(){
@@ -66,6 +67,9 @@ export default function Profilo(){
                         <h6>RECUPERA PASSWORD</h6>
                     </button>
                 </div>
+                <div className='auth-button-div'>
+                    <AutenticazioneEsterna />
+                 </div>
             </div> : <></> }
         
         {!isAuthenticated ? <div>  
