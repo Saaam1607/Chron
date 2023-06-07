@@ -4,6 +4,7 @@ const gestoreEmail = require("../gestoreEmail/gestoreEmail");
 const htmlBody = require('fs').readFileSync(require('path').join(__dirname, '..', 'gestoreEmail', 'taskCompletata.html'), 'utf8');
 
 class Task {
+
     constructor(ID_utente, nome, dataScadenza) {
         this._id = null;
         this.ID_utente = ID_utente;
@@ -16,17 +17,14 @@ class Task {
     }
 
     async crea() {
-        // controllo l'esistenza per le task di gruppo
-        if (this._id != null && await GestoreDB.checkIfTaskExist(this._id)) {
-            throw new Error("esistente");
-        }
-      
         return await GestoreDB.aggiornaTask(this._id, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna, this.ID_gruppo, false);
     }
 
     async contrassegnaTask() {
         this.contrassegna = !this.contrassegna;
         const result = await GestoreDB.aggiornaTask(this._id, this.ID_utente, this.nome, this.dataScadenza, this.contrassegna,this.ID_gruppo, false);
+
+        //if the task is completed and it belongs to a group, send an email to the group leader
         if(this.ID_gruppo != null && this.contrassegna == true) {
             const dataLeader = await GestoreDB.getDataFromID(this.ID_leader);
             const dataUtente = await GestoreDB.getDataFromID(this.ID_utente);

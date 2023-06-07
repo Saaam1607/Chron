@@ -2,6 +2,7 @@ const Task = require('./task');
 const  GestoreDB  = require('../gestoreDB/gestoreDB');
 
 class ListaTasks {
+  
   constructor(ID_utente) {
     this.ID_utente = ID_utente;
     this.tasks = [];
