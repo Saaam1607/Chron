@@ -1,4 +1,5 @@
 import React from 'react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // styling
 import './assets/global.css';
@@ -33,59 +34,63 @@ function App() {
   return (
     <Router>
     <div className="main">
-      <div className="sidebar">
-      <Logo/>
-        <div>
-          <ul className='list-unstyled'>
-            <li>
-              <Link to="/home" style={{ textDecoration: 'none' }}>
-                <SidebarItem title="HOME" icon="bi bi-house"/>
-              </Link>
-            </li>
-            <li>
-              <Link to="/profilo" style={{ textDecoration: 'none' }}>
-                <SidebarItem title="PROFILO" icon="bi bi-person-circle"/>
-              </Link>
-            </li>
-            <li>
-              <Link to="/gruppi" style={{ textDecoration: 'none' }}>
-                <SidebarItem title="GRUPPI" icon="bi bi-people-fill"/>
-              </Link>
-            </li>
-            <li>
-              <Link to="/to-do" style={{ textDecoration: 'none' }}>
-              <SidebarItem title="TO-DO" icon="bi bi-clipboard-check"/>
-              </Link>
-            </li>
-            <li>
-              <Link to="/timer" style={{ textDecoration: 'none' }}>
-                <SidebarItem title="TIMER" icon="bi bi-clock"/>
-              </Link>
-            </li>
-            <li>
-              <Link to="/sale-studio" style={{ textDecoration: 'none' }}>
-              <SidebarItem title="SALE STUDIO" icon="bi bi-map"/>
-              </Link>
-            </li>
-          </ul>
+      <GoogleOAuthProvider clientId="508808479756-kr9tjhfj2mgkfi6f72pekir32emppbng.apps.googleusercontent.com">
+
+        <div className="sidebar">
+        <Logo/>
+          <div>
+            <ul className='list-unstyled'>
+              <li>
+                <Link to="/home" style={{ textDecoration: 'none' }}>
+                  <SidebarItem title="HOME" icon="bi bi-house"/>
+                </Link>
+              </li>
+              <li>
+                <Link to="/profilo" style={{ textDecoration: 'none' }}>
+                  <SidebarItem title="PROFILO" icon="bi bi-person-circle"/>
+                </Link>
+              </li>
+              <li>
+                <Link to="/gruppi" style={{ textDecoration: 'none' }}>
+                  <SidebarItem title="GRUPPI" icon="bi bi-people-fill"/>
+                </Link>
+              </li>
+              <li>
+                <Link to="/to-do" style={{ textDecoration: 'none' }}>
+                <SidebarItem title="TO-DO" icon="bi bi-clipboard-check"/>
+                </Link>
+              </li>
+              <li>
+                <Link to="/timer" style={{ textDecoration: 'none' }}>
+                  <SidebarItem title="TIMER" icon="bi bi-clock"/>
+                </Link>
+              </li>
+              <li>
+                <Link to="/sale-studio" style={{ textDecoration: 'none' }}>
+                <SidebarItem title="SALE STUDIO" icon="bi bi-map"/>
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
 
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/profilo" element={<Profilo />} />
-        <Route path="/gruppi" element={<Gruppi />} />
-        <Route path="/to-do" element={<Todos />} />
-        <Route path="/timer" element={<Timer />} />
-        <Route path="/sale-studio" element={<SaleStudio />} />
-        <Route path="/richiesta-reset-password/:token" element={<ResetPasswordForm />} />
-        <Route path='/accept-reject-task/:token' element={<TaskForm />} />
-        <Route path='/verifica-registrazione/:token' element={<AccountConfirmation />} />
-        <Route path='/verifica-email/:token' element={<EmailUpdateConfirmation />} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/profilo" element={<Profilo />} />
+          <Route path="/gruppi" element={<Gruppi />} />
+          <Route path="/to-do" element={<Todos />} />
+          <Route path="/timer" element={<Timer />} />
+          <Route path="/sale-studio" element={<SaleStudio />} />
+          <Route path="/richiesta-reset-password/:token" element={<ResetPasswordForm />} />
+          <Route path='/accept-reject-task/:token' element={<TaskForm />} />
+          <Route path='/verifica-registrazione/:token' element={<AccountConfirmation />} />
+          <Route path='/verifica-email/:token' element={<EmailUpdateConfirmation />} />
 
-      </Routes>
+        </Routes>
+        
+      </GoogleOAuthProvider>;
     </div>
     </Router>
   );
