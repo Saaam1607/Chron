@@ -111,42 +111,57 @@ export default function AcceptRejectTaskForm() {
     }
 
     return (
-        <div className="col-md-4">
-            <div className="card-body">
-                <div className="accept-reject-task-form">
-                {taskAccepted ? (
-                    <>
-                    <h2>Task accettata con successo</h2>
-                    <p>Ora puoi iniziare a lavorare sulla task assegnata.</p>
-                    <a href="/to-do">Vai alla lista delle task</a>
-                    </>
-                ) : taskRejected ? (
-                    <>
-                    <h2>Task rifiutata</h2>
-                    <p>La task è stata rifiutata con successo.</p>
-                    <a href="/to-do">Vai alla lista delle task</a>
-                    </>
-                ) : (
-                    <div className="login-div">
-                        <form className='auth-form'>
-                            <h2>Accetta o rifiuta la task</h2>
-                            <br></br>
-                            <p><strong>Nome Task:</strong> {taskData.taskName}</p>
-                            <p><strong>Scadenza:</strong> {taskData.deadline}</p>
-                            <p><strong>Nome Gruppo:</strong> {taskData.groupName}</p>
-                            <br></br>
-                            <Button variant="primary" className="add-button"  onClick={handleAcceptTask} disabled={taskAccepted}>
-                                Accetta Task
-                            </Button>{" "}
-                            <Button variant="danger" style={{ width: "auto" }} onClick={handleRejectTask} disabled={taskRejected}>
-                                Rifiuta Task
-                            </Button>
-                        </form>
+        <div className="container">
+            <div className="col-md-12">
+                <div className="card-body">
+                    <h1>Form di decisione</h1>
+
+                    <div className="accept-reject-task-form col-md-6">
+                    {taskAccepted ? (
+                        <>
+                            <div className="reset-password">
+                                <div className="reset-password-form">
+                                    <h2>Task accettata con successo</h2>
+                                    <br></br>
+                                    <p>Ora puoi iniziare a lavorare sulla task assegnata.</p>
+                                    <a href="/to-do">Vai alla lista delle task</a>
+                                </div>
+                            </div>
+                        </>
+                    ) : taskRejected ? (
+                        <>
+                            <div className="reset-password">
+                                <div className="reset-password-form">
+                                    <h2>Task rifiutata</h2>
+                                    <br></br>
+                                    <p>La task è stata rifiutata con successo.</p>
+                                    <a href="/to-do">Vai alla lista delle task</a>
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="reset-password">
+                            <form className='reset-password-form'>
+                                <h2>Accetta o rifiuta la task</h2>
+                                <br></br>
+                                <p><strong>Nome Task:</strong> {taskData.taskName}</p>
+                                <p><strong>Scadenza:</strong> {taskData.deadline}</p>
+                                <p><strong>Nome Gruppo:</strong> {taskData.groupName}</p>
+                                <br></br>
+                                <Button variant="primary" className="add-button"  onClick={handleAcceptTask} disabled={taskAccepted}>
+                                    Accetta Task
+                                </Button>{" "}
+                                <Button variant="danger" style={{ width: "auto" }} onClick={handleRejectTask} disabled={taskRejected}>
+                                    Rifiuta Task
+                                </Button>
+                            </form>
+                        </div>
+                    )}
                     </div>
-                )}
                 </div>
             </div>
         </div>
+
     );
 }
 
