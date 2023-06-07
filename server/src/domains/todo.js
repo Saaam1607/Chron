@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
         const todos = await listaTask.leggiTasks();
 
         if (todos.length == 0) {
-            res.status(204).end();
+            return res.status(204).end();
         } else {
             // filtro la lista di task per restituire solo i campi necessari
             todos.map(task => ({
@@ -24,6 +24,7 @@ router.get('/', async (req, res) => {
 
             res.status(200).json({ success: true, tasks: todos });
         }
+
     } catch (error) {
         console.error(`L'operazione di lettura delle task non è andata a buon fine. ${error.message}`);
         res.status(500).json({ success: false, message: `L'operazione di lettura delle task non è andata a buon fine. ${error.message}` });
@@ -35,8 +36,7 @@ router.post('/', async (req, res) => {
 	const { nome, dataScadenza } = req.body;
   
 	if (!nome) {
-        res.status(400).json({ success: false, message: "Nome mancante" }); 
-        return;
+        return res.status(400).json({ success: false, message: "Nome mancante" }); 
 	}
     
 	try {
@@ -58,11 +58,11 @@ router.put('/', async (req, res) => {
     let listaTask = new ListaTasks(req.id);
 
     if (!idTask) {
-        res.status(400).json({ success: false, message: "id Task mancante" }); 
-        return;
+        return res.status(400).json({ success: false, message: "id Task mancante" }); 
 	}
     
     try {
+
         listaTask.tasks = await listaTask.leggiTasks();
         const task = listaTask.tasks.find((task) => task._id == idTask);
   
@@ -72,6 +72,7 @@ router.put('/', async (req, res) => {
         } else {
             res.status(404).json({ success: false, message: `Task con id ${idTask} non trovata` });
         }
+
     } catch (error) {
         console.error(`L'operazione di aggiornamento della task non è andata a buon fine. ${error.message}`);
         res.status(500).json({ success: false, message: `L'operazione di aggiornamento della task non è andata a buon fine. ${error.message} ` });
@@ -85,11 +86,11 @@ router.delete('/', async (req, res) => {
     let listaTask = new ListaTasks(req.id);
 
     if (!idTask) {
-        res.status(400).json({ success: false, message: "id Task mancante" }); 
-        return;
+        return res.status(400).json({ success: false, message: "id Task mancante" }); 
 	}
 
     try {
+
         listaTask.tasks = await listaTask.leggiTasks();
         const task = listaTask.tasks.find((task) => task._id == idTask);
   
@@ -99,6 +100,7 @@ router.delete('/', async (req, res) => {
         } else {
             res.status(404).json({ success: false, message: `Task con id ${idTask} non trovata` });
         }
+
     } catch (error) {
         console.error(`L'operazione di rimozione della task non è andata a buon fine. ${error.message}`);
         res.status(500).json({ success: false, message: `L'operazione di rimozione della task non è andata a buon fine. ${error.message}`});
@@ -111,24 +113,31 @@ router.get('/ordinata', async (req, res) => {
     const listaTask = new ListaTasks(req.id);
 
     try {
+
         await listaTask.leggiTasks();
         const sort = req.query.sort;
 
-        if(listaTask.tasks.length == 0){
-            res.status(204).end();
-        }else{
-            if(sort == "name"){
-                listaTask.ordinaPerNome();
-            }else if(sort == "date"){
-                listaTask.ordinaPerDataScadenza();
-            }else if(sort == "group"){
-                listaTask.ordinaPerGruppo();
-            }else{
-                res.status(400).json({ success: false, message: `Parametro di ordinamento non valido. Utilizzare 'name', 'date' o 'group'.`});
-                return;
-            }
+        if(listaTask.tasks.length == 0) {
+            return res.status(204).end();
+        } else {
+
+            switch (sort) {
+                case "name":
+                  listaTask.ordinaPerNome();
+                  break;
+                case "date":
+                  listaTask.ordinaPerDataScadenza();
+                  break;
+                case "group":
+                  listaTask.ordinaPerGruppo();
+                  break;
+                default:
+                  return res.status(400).json({ success: false, message: "Parametro di ordinamento non valido. Utilizzare 'name', 'date' o 'group'." });
+              }
+
             res.status(200).json({ success: true, tasks: listaTask.tasks });
         }
+
     }
     catch (error) {
         console.error(`L'operazione di ordinamento delle task non è andata a buon fine. ${error.message}`);
