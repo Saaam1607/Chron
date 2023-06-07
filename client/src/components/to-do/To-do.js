@@ -155,7 +155,7 @@ export default function Todo(){
                     <h1 className="text-center mb-5">TO-DO</h1>
                     {/* <h4 className="mb-3">Your Task Agenda</h4> */}
 
-                    <div className="d-flex justify-content-between mb-3">
+                    <div className="d-flex justify-content-between mb-5">
                         <Button variant="primary" className="add-button" onClick={() => setPopupActive(true)}>
                             Aggiungi Task
                         </Button>
