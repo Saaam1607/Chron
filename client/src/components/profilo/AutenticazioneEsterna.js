@@ -5,7 +5,7 @@ import { handleAlert } from "../alert/Alert";
 
 
 
-export default function SignUp() {
+export default function AutenticazioneEsterna({setIsAuthenticated}) {
     
     const continueWithGoogle =(credentialResponse)=>{
         console.log(credentialResponse);
@@ -27,6 +27,7 @@ export default function SignUp() {
             } else {
                 console.log(data)
                 CookieManager.setAuthToken(data.token);
+                setIsAuthenticated(true);
             }
             console.log(data)
         })
