@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
         if (todos.length == 0) {
             res.status(204).end();
         } else {
-            // Restituisci un nuovo array di oggetti filtrati
+            // filtro la lista di task per restituire solo i campi necessari
             todos.map(task => ({
                 _id: task._id,
                 nome: task.nome,
@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
             res.status(200).json({ success: true, tasks: todos });
         }
     } catch (error) {
-        console.error(`Errore durante la lettura delle tasks: ${error.message}`);
+        console.error(`L'operazione di lettura delle task non è andata a buon fine. ${error.message}`);
         res.status(500).json({ success: false, message: `L'operazione di lettura delle task non è andata a buon fine. ${error.message}` });
     }
 });
@@ -60,8 +60,8 @@ router.post('/', async (req, res) => {
             res.status(409).json({ success: false, message: `Task già accettata` });
         }
         else {
-            console.error(`Errore durante la creazione della task: ${error.message}`);
-            res.status(500).json({ success: false, message: `Si è verificato un errore durante la creazione della task. Errore: ${error.message}` });
+            console.error(`L'operazione di creazione della task non è andata a buon fine. ${error.message}`);
+            res.status(500).json({ success: false, message: `L'operazione di creazione della task non è andata a buon fine. ${error.message}` });
         }
 
 	}
@@ -88,8 +88,8 @@ router.put('/', async (req, res) => {
             res.status(404).json({ success: false, message: `Task con id ${idTask} non trovata` });
         }
     } catch (error) {
-        console.error(`Errore durante la lettura delle task: ${error.message}`);
-        res.status(500).json({ success: false, message: `Si è verificato un errore durante l'operazione. Messaggio: ` + error.message });
+        console.error(`L'operazione di aggiornamento della task non è andata a buon fine. ${error.message}`);
+        res.status(500).json({ success: false, message: `L'operazione di aggiornamento della task non è andata a buon fine. ${error.message} ` });
     }
 
 });
@@ -115,8 +115,8 @@ router.delete('/', async (req, res) => {
             res.status(404).json({ success: false, message: `Task con id ${idTask} non trovata` });
         }
     } catch (error) {
-        console.error(`Errore durante la lettura delle task: ${error.message}`);
-        res.status(500).json({ success: false, message: `Si è verificato un errore durante l'operazione. Messaggio: ` + error.message });
+        console.error(`L'operazione di rimozione della task non è andata a buon fine. ${error.message}`);
+        res.status(500).json({ success: false, message: `L'operazione di rimozione della task non è andata a buon fine. ${error.message}`});
     }
 
 });
@@ -139,14 +139,14 @@ router.get('/ordinata', async (req, res) => {
             }else if(sort == "group"){
                 listaTask.ordinaPerGruppo();
             }else{
-                res.status(400).json({ success: false, message: "Sort non valido" });
+                res.status(400).json({ success: false, message: `Parametro di ordinamento non valido. Utilizzare 'name', 'date' o 'group'.`});
                 return;
             }
             res.status(200).json({ success: true, tasks: listaTask.tasks });
         }
     }
     catch (error) {
-        console.error(`Errore durante la lettura delle tasks: ${error.message}`);
+        console.error(`L'operazione di ordinamento delle task non è andata a buon fine. ${error.message}`);
         res.status(500).json({ success: false, message: `L'operazione di ordinamento delle task non è andata a buon fine. ${error.message}` });
     }
 });
