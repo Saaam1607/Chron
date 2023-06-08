@@ -135,3 +135,12 @@
     padding: 7pt;
     border-radius: 5pt;
 }
+
+.auth-esterna-div{
+    padding-top: 10pt;
+    padding-bottom: 20pt;
+    border: 0;
+    border-radius: 5pt;
+    margin: 0pt;;
+}
+

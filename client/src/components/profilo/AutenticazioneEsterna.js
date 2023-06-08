@@ -6,6 +6,8 @@ import { handleAlert } from "../alert/Alert";
 
 
 export default function AutenticazioneEsterna({setIsAuthenticated}) {
+
+    
     
     const continueWithGoogle =(credentialResponse)=>{
         console.log(credentialResponse);
@@ -34,13 +36,13 @@ export default function AutenticazioneEsterna({setIsAuthenticated}) {
     }
 
     return (
-        <div className="signUp">
-            <GoogleLogin
+        <div className="auth-esterna-div" >
+            <GoogleLogin 
                 onSuccess={credentialResponse => {
-                continueWithGoogle(credentialResponse)
+                    continueWithGoogle(credentialResponse)
                 }}
                 onError={() => {
-                console.log('Login Failed');
+                    console.log('Login Failed');
                 }}
             />
         </div>
