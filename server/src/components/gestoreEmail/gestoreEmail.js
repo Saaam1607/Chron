@@ -47,7 +47,7 @@ class GestoreEmail {
       await GestoreEmail.inviaEmail(recipients, subject, formattedHtmlBody);
   }
 
-  static async inviaEmailTaskAssegnata(recipients, subject, nomeTask, deadline, nomeGruppo) {
+  static async inviaEmailTaskAssegnata(recipients, subject, nomeTask, deadline, nomeGruppo, acceptRejectLink) {
     const formattedHtmlBody = htmlBodyTaskAssegnata
         .replace('{{taskName}}', nomeTask)
         .replace('{{deadline}}', deadline)
