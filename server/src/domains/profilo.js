@@ -152,7 +152,6 @@ router.post("/richiesta-reset-password", (req, res) => {
 
 router.post("/autenticazioneEsterna", async (req, res) => {
   const { gToken, clientId } = req.body;
-  console.log(req.body);
 
   if (!gToken || !clientId) {
     return res.status(400).json({ success: false, message: "Errore, token o clientId mancanti!" });
@@ -161,21 +160,35 @@ router.post("/autenticazioneEsterna", async (req, res) => {
   try {
     const jwtDetail = jwt.decode(gToken);
     const { name, email, userName, email_verified } = jwtDetail;
+    const password = email + clientId;
 
     if (email_verified) {
+
       const esiste = await GestoreDB.controllaEsistenzaEmail(email);
-      console.log("email",email);
-      console.log("Esiste",esiste);
+
       if (esiste) {
+        // login solo se l'account non è stato creato con la registrazione interna di CHRON
+        const login = await GestoreDB.login(email, password);
+
+        if(!login) {
+          return res.status(409).json({ success: false, message: `Questa email è già stata utilizza per creare l'account con  la registrazione interna di CHRON. Se hai dimenicato la password pui recuperarla tramite l'apposito form` });
+        }
+
         const _id = await GestoreDB.getIDfromEmail(email);
         const token = jwt.sign({ id: _id }, process.env.ACCESS_TOKEN_SECRET);
+
         return res.status(200).json({ success: true, message: "Login effettuato con successo!", token });
+
       } else {
-        const password = email + clientId;
+        // registrazione (con notifica email) e login
         const result = await GestoreDB.registra(name, email, password);
+
         const token = jwt.sign({ id: result._id }, process.env.ACCESS_TOKEN_SECRET);
+
         gestoreEmail([email], "ACCOUNT CREATO", "Il tuo account è stato creato con successo!");
-        return res.status(200).json({ success: true, message: "Utente registrato e Login effettuato con successo!", token });
+
+        return res.status(201).json({ success: true, message: "Utente registrato e Login effettuato con successo!", token });
+
       }
     } else {
       return res.status(401).json({ success: false, message: "Email non verificata!" });
