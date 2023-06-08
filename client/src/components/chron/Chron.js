@@ -11,7 +11,7 @@ import {
     ArcElement,
   } from 'chart.js';
   import { Bar, Pie } from 'react-chartjs-2';
-
+  import CookieManager from'../tokenManager/cookieManager';
 
   ChartJS.register(
     CategoryScale,
@@ -41,16 +41,11 @@ import {
       tooltip: false,
     },
   };
-  const CookieManager = require("../tokenManager/cookieManager.js")  
+
 
 function Chron() {
     //auth
     const [isAuthenticated, setIsAuthenticated] = useState(CookieManager.generateHeader() !== undefined);
-    useEffect(() => {
-        //console.log("isAuthenticated: " + CookieManager.generateHeader());
-        setIsAuthenticated(CookieManager.generateHeader() !== undefined);
-    }, [CookieManager.generateHeader()]);
-
     //variabili per il grafico
     const [minuti, setMinuti] = React.useState([0, 0]);
     const [dataSessione, setDataSessione] = React.useState(["", ""]);
@@ -64,7 +59,7 @@ function Chron() {
   function fetchData(){
         fetch( `/api/v1/grafici?arrowClick=${arrowclick}&isMonth=${isMonth}`, {method: "GET", headers: CookieManager.generateHeader() })
         .then(response => {
-          console.log(response);
+          //console.log(response);
             if (response.ok) {
               return response.json();
             } else if (response.status === 400){
