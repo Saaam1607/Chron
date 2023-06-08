@@ -110,15 +110,29 @@ router.post("/richiesta-nuova-password", (req, res) => {
         if (result == null) {
           return res.status(404).json({ success: "false", message: "Utente non trovato!" });
         }
-        const token = jwt.sign( { id: result._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
 
-        const recoveryLink = process.env.BASE_URL + `/richiesta-reset-password/${token}`;
+        // recupero password solo se l'account è stato creato con la registrazione interna di CHRON        
+        const password = email + process.env.CLIENT_ID;
 
-        const formattedHtmlBody = htmlBodyRecuperoPwd.replace("{{passwordResetLink}}", recoveryLink);
+        GestoreDB.login(email, password).then((login) => {
+          if(login) {
+            return res.status(409).json({ success: false, message: `Non puoi recuperare la password di un account creato con  la registrazione esterna. Per autenticarti utilizza direttamente l'apposito bottone` });
+          } else {
+            
+            // Procedi con il recupero della password
+            const token = jwt.sign( { id: result._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
 
-        gestoreEmail([email], "Recupero password", formattedHtmlBody);
+            const recoveryLink = process.env.BASE_URL + `/richiesta-reset-password/${token}`;
 
-        res.status(200).json({ success: "true", message: "Email inviata con successo!" });
+            const formattedHtmlBody = htmlBodyRecuperoPwd.replace("{{passwordResetLink}}", recoveryLink);
+
+            gestoreEmail([email], "Recupero password", formattedHtmlBody);
+
+            res.status(200).json({ success: "true", message: "Email inviata con successo!" });
+          }
+        });
+
+
       })
       .catch((error) => {
         res.status(500).json({ success: "false",  message: `Errore durante il forgot-password: ${error}` });
