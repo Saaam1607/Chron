@@ -2,8 +2,6 @@ const express = require("express")
 const router = express.Router()
 const ListaSessioni = require("../components/chron/Chron.js")
 
-
-
 router.get('/', async (req, res) => {
 
 

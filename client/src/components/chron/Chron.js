@@ -62,7 +62,7 @@ function Chron() {
 
     //function per ottenere i dati dal db
   function fetchData(){
-        fetch( `/api/v1/sessione?arrowClick=${arrowclick}&isMonth=${isMonth}`, {method: "GET", headers: CookieManager.generateHeader() })
+        fetch( `/api/v1/grafici?arrowClick=${arrowclick}&isMonth=${isMonth}`, {method: "GET", headers: CookieManager.generateHeader() })
         .then(response => {
           console.log(response);
             if (response.ok) {
