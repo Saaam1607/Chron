@@ -10,8 +10,7 @@ export default function AutenticazioneEsterna({setIsAuthenticated}) {
     
     
     const continueWithGoogle =(credentialResponse)=>{
-        console.log(credentialResponse);
-        console.log(credentialResponse.credential)
+
         fetch("api/v1/profilo/autenticazioneEsterna", {
         method: "post",
         headers: {
@@ -27,11 +26,9 @@ export default function AutenticazioneEsterna({setIsAuthenticated}) {
             if (data.success === false) {
                 handleAlert(data.message, false, "error")
             } else {
-                console.log(data)
                 CookieManager.setAuthToken(data.token);
                 setIsAuthenticated(true);
             }
-            console.log(data)
         })
     }
 
