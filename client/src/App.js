@@ -27,6 +27,7 @@ import {
     Route,
     Link
   } from "react-router-dom";
+import Chron from './components/chron/Chron';
 
 
 
@@ -37,8 +38,10 @@ function App() {
       <GoogleOAuthProvider clientId="508808479756-kr9tjhfj2mgkfi6f72pekir32emppbng.apps.googleusercontent.com">
 
         <div className="sidebar">
-        <Logo/>
-          <div>
+          <Link to="/Chron" style={{ textDecoration: 'none' }}>
+            <Logo />
+          </Link>
+        <div>
             <ul className='list-unstyled'>
               <li>
                 <Link to="/home" style={{ textDecoration: 'none' }}>
@@ -87,8 +90,8 @@ function App() {
           <Route path='/accept-reject-task/:token' element={<TaskForm />} />
           <Route path='/verifica-registrazione/:token' element={<AccountConfirmation />} />
           <Route path='/verifica-email/:token' element={<EmailUpdateConfirmation />} />
-
-        </Routes>
+          <Route path="/Chron" element={<Chron />} />
+      </Routes>
         
       </GoogleOAuthProvider>;
     </div>

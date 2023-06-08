@@ -555,8 +555,21 @@ class GestoreDB {
     }
 
 
+      static leggiStorico(ID_utente, startDate, endDate) {
+        return new Promise((resolve, reject) =>{
+        SessioneModel.find({ ID_utente: ID_utente, data : { $gte: startDate, $lte: endDate }}) 
+            .sort({ data: 1 }) //ordered by date
+            .then(dati => {
+                resolve(dati);
+            })
+            .catch(error => {
+                console.error(`Errore durante la lettura delle ore di studio per l'utente ${ID_utente}: ${error}`);
+                reject({ message: error });
+            });
+        });
+    }
 }
-    
+
     
 
 module.exports = GestoreDB;

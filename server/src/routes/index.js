@@ -15,6 +15,7 @@ const profilo = require("../domains/profilo")
 const profiloData = require("../domains/profiloData")
 const todos = require("../domains/todo")
 const saleStudio = require("../domains/saleStudio")
+const sessione_grafici = require("../domains/sessione_grafici")
 
 // Imposta l'header Access-Control-Allow-Origin per consentire tutte le origini
 router.use((req, res, next) => {
@@ -44,5 +45,6 @@ router.use("/api/v1/todos", leggiToken, todos)
 
 router.use("/api/v1/saleStudio", saleStudio)
 
+router.use("/api/v1/grafici", leggiToken, sessione_grafici)
 
 module.exports = router
