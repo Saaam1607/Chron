@@ -194,7 +194,7 @@ router.post("/autenticazioneEsterna", async (req, res) => {
 
         const token = jwt.sign({ id: result._id }, process.env.ACCESS_TOKEN_SECRET);
 
-        gestoreEmail([email], "ACCOUNT CREATO", "Il tuo account è stato creato con successo!");
+        GestoreEmail.inviaEmailBenvenuto([email], "ACCOUNT CREATO");
 
         return res.status(201).json({ success: true, message: "Utente registrato e Login effettuato con successo!", token });
 
