@@ -5,7 +5,7 @@ const router = express.Router()
 const path = require('path');
 const fs = require('fs');
 const GestoreDB = require("../components/gestoreDB/gestoreDB")
-const gestoreEmail = require("../components/gestoreEmail/gestoreEmail");
+const GestoreEmail = require("../components/gestoreEmail/gestoreEmail");
 const Task = require('../components/to-do/task');
 
 
@@ -187,21 +187,12 @@ router.post("/task", async (req, res) => {
 
         const subject = 'Nuova task assegnata';
 
-        const templatePath = path.join(__dirname, '..', 'components', 'gestoreEmail', 'taskAssegnata.html');
-        const htmlBody = fs.readFileSync(templatePath, 'utf8');
-        let formattedHtmlBody = htmlBody
-            .replace('{{taskName}}', nome)
-            .replace('{{deadline}}', dataScadenza)
-            .replace('{{groupName}}', nomeGruppo)
-
         await Promise.all(members.map(async (member) => {
             const token = jwt.sign( { taskId: new mongoose.Types.ObjectId(), taskName: nome, deadline: dataScadenza, groupName: nomeGruppo, memberID: member.id, groupID: ID_gruppo }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
         
             const acceptRejectLink = process.env.BASE_URL + `/accept-reject-task/${token}`;
     
-            formattedHtmlBody = formattedHtmlBody.replace('{{acceptRejectLink}}', acceptRejectLink);
-
-            await gestoreEmail([member.email], subject, formattedHtmlBody);
+            await GestoreEmail.inviaEmailTaskAssegnata([member.email], subject, nome, dataScadenza, nomeGruppo, acceptRejectLink);
             
             await GestoreDB.salvaToken(token);
         }))

@@ -3,9 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const GestoreDB = require("../components/gestoreDB/gestoreDB");
-const gestoreEmail = require("../components/gestoreEmail/gestoreEmail");
-const htmlBodyRecuperoPwd = require("fs").readFileSync(require("path").join(__dirname, "..", "components", "gestoreEmail", "recuperoPassword.html" ), "utf8");
-const htmlBodyConfermaAcc = require("fs").readFileSync(require("path").join(__dirname, "..", "components", "gestoreEmail", "confermaAccount.html" ), "utf8");
+const GestoreEmail = require("../components/gestoreEmail/gestoreEmail");
+
 
 var bodyParser = require("body-parser");
 var app = express();
@@ -57,9 +56,7 @@ router.post("/nuova-autenticazione", bodyParser.json(), async (req, res) => {
 
     const accountConfirmationLink = process.env.BASE_URL + `/verifica-registrazione/${token}`;
 
-    const formattedHtmlBody = htmlBodyConfermaAcc.replace("{{accountConfirmationLink}}", accountConfirmationLink);
-
-    await gestoreEmail([req.body.email], "Conferma Account", formattedHtmlBody);
+    await GestoreEmail.inviaEmailConfermaAcc([req.body.email], "Conferma Account", accountConfirmationLink);
 
     await GestoreDB.salvaToken(token);
 
@@ -124,9 +121,7 @@ router.post("/richiesta-nuova-password", (req, res) => {
 
             const recoveryLink = process.env.BASE_URL + `/richiesta-reset-password/${token}`;
 
-            const formattedHtmlBody = htmlBodyRecuperoPwd.replace("{{passwordResetLink}}", recoveryLink);
-
-            gestoreEmail([email], "Recupero password", formattedHtmlBody);
+            GestoreEmail.inviaEmailRecuperoPwd([email], "Recupero password", recoveryLink);
 
             res.status(200).json({ success: "true", message: "Email inviata con successo!" });
           }

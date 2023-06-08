@@ -1,7 +1,5 @@
 const  GestoreDB  = require('../gestoreDB/gestoreDB');
-const gestoreEmail = require("../gestoreEmail/gestoreEmail");
-
-const htmlBody = require('fs').readFileSync(require('path').join(__dirname, '..', 'gestoreEmail', 'taskCompletata.html'), 'utf8');
+const  GestoreEmail = require("../gestoreEmail/gestoreEmail");
 
 class Task {
 
@@ -29,12 +27,7 @@ class Task {
             const dataLeader = await GestoreDB.getDataFromID(this.ID_leader);
             const dataUtente = await GestoreDB.getDataFromID(this.ID_utente);
 
-            const formattedHtmlBody = htmlBody
-                .replace('{{taskName}}', this.nome)
-                .replace('{{deadline}}', this.dataScadenza)
-                .replace('{{groupName}}', this.nomeGruppo)
-                .replace('{{memberName}}', dataUtente.username);
-            gestoreEmail([dataLeader.email], 'Notifica completamento task', formattedHtmlBody);
+            await GestoreEmail.inviaEmailTaskCompletata([dataLeader.email], 'Notifica completamento task', this.nome, this.dataScadenza, this.nomeGruppo, dataUtente.username);
         }
         return result;
     }

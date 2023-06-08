@@ -3,8 +3,7 @@ require('dotenv').config();
 const express = require("express")
 const router = express.Router()
 const GestoreDB = require("../components/gestoreDB/gestoreDB")
-const gestoreEmail = require("../components/gestoreEmail/gestoreEmail");
-const htmlBodyConfermaEmail = require("fs").readFileSync(require("path").join(__dirname, "..", "components", "gestoreEmail", "confermaModificaEmail.html" ), "utf8");
+const GestoreEmail = require("../components/gestoreEmail/gestoreEmail");
 
 
 var bodyParser = require('body-parser')
@@ -67,9 +66,7 @@ router.put("/email", bodyParser.json(), async (req, res) => {
 
         const emailConfirmationLink = process.env.BASE_URL + `/verifica-email/${token}`;
 
-        const formattedHtmlBody = htmlBodyConfermaEmail.replace("{{emailConfirmationLink}}", emailConfirmationLink);
-
-        await gestoreEmail([req.body.email], "Conferma Modifica Email", formattedHtmlBody);
+        await GestoreEmail.inviaEmailConfermaModificaEmail([req.body.email], "Conferma Modifica Email", emailConfirmationLink);
     
         await GestoreDB.salvaToken(token);
 
