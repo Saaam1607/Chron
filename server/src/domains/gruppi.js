@@ -180,7 +180,7 @@ router.post("/task", async (req, res) => {
     const { nome, dataScadenza, members, nomeGruppo, ID_gruppo } = req.body;
 
     if (!nome || !members || !nomeGruppo) {
-        return res.status(400).json({ success: false, message: "Nome task, nome gruppo o membri mancanti" });
+        return res.status(400).json({ success: false, message: `I parametri "Nome task", "nome gruppo" o "membri" mancanti` });
     }
 
     try {
@@ -197,9 +197,9 @@ router.post("/task", async (req, res) => {
             await GestoreDB.salvaToken(token);
         }))
 
-        res.status(200).json({ success: true, message: "Email inviate con successo!" });
+        res.status(200).json({ success: true, message: `Email di assegnazione task inviata con successo!` });
     } catch (error) {
-        res.status(500).json({ success: false, message: `Si è verificato un errore durante l'invio delle email per l'assegnazione task. Errore: ${error.message}` });
+        res.status(500).json({ success: false, message: `L'operazione di invio delle email per l'assegnazione task non è andata a buon fine.  ${error.message}` });
     }
 });
 
@@ -207,12 +207,12 @@ router.get("/verificaToken/:token", async (req, res) => {
     const { token } = req.params;
 
     if (!token) {  
-        return res.status(400).json({ success: false, message: "Token mancante" });
+        return res.status(400).json({ success: false, message: `Il parametro "token" mancante!` });
     }
 
     try {
         if(!await GestoreDB.checkIfTokenExist(token)) {
-            return res.status(409).json({ success: false, message: "Task già rifiutata o accettata!" });
+            return res.status(409).json({ success: false, message: `Task già rifiutata o accettata!` });
         }
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
@@ -225,14 +225,14 @@ router.get("/verificaToken/:token", async (req, res) => {
             memberID: decodedToken.memberID
         };
 
-        return res.status(200).json({ success: true, message: "Token verificato con successo!", result: task });
+        return res.status(200).json({ success: true, message: `Token verificato con successo!`, result: task });
     }
     catch (error) {
         if (error.name === 'TokenExpiredError') {
-            return res.status(401).json({ success: false, message: 'Token scaduto' });
+            return res.status(401).json({ success: false, message: `Token scaduto` });
         }
 
-        return res.status(500).json({ success: false, message: `Si è verificato un errore durante la verifica del token. Errore: ${error.message}` });
+        return res.status(500).json({ success: false, message: `L'operazione di verifica del token non è andato a buon fine.  ${error.message}` });
     }
 });
 
@@ -241,17 +241,17 @@ router.delete('/rejectTask', async (req, res) => {
     const {token} = req.body;
     
     if (!token) {
-        return res.status(400).json({ success: false, message: "Token mancante" });
+        return res.status(400).json({ success: false, message: `Il parametro "token" mancante!` });
     }
     
     try {
         if(!await GestoreDB.checkIfTokenExist(token)) {
-           return res.status(409).json({ success: false, message: "Task già rifiutata o accettata!" });
+           return res.status(409).json({ success: false, message: `Task già rifiutata o accettata!` });
         }
         await GestoreDB.deleteToken(token);
-        return res.status(200).json({ success: true, message: "Task rifiutata con sucesso!" });
+        return res.status(200).json({ success: true, message: `Task rifiutata con sucesso!` });
     } catch (error) {
-        return res.status(500).json({ success: false, message: `Si è verificato un errore durante il rifiuto della task Errore: ${error.message}` });
+        return res.status(500).json({ success: false, message: `L'operazione di rifiuto della task non è andato a buon fine. ${error.message}` });
     }
 });
 
@@ -260,13 +260,13 @@ router.post('/acceptTask', async (req, res) => {
     const {token} = req.body;
 
     if (!token) {
-        return res.status(400).json({ success: false, message: "Token mancante" });
+        return res.status(400).json({ success: false, message: `Il parametro "token" mancante!` });
     }
 
     try {
 
         if(!await GestoreDB.checkIfTokenExist(token)) {
-            return res.status(409).json({ success: false, message: "Task già rifiutata o accettata!" });
+            return res.status(409).json({ success: false, message: `Task già rifiutata o accettata!` });
         }
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         nuovaTask = new Task(decodedToken.memberID, decodedToken.taskName, decodedToken.deadline);
@@ -277,9 +277,9 @@ router.post('/acceptTask', async (req, res) => {
 
         await GestoreDB.deleteToken(token);
 
-        return res.status(201).json({ success: true, message: "Task accettata con sucesso!", result: task});
+        return res.status(201).json({ success: true, message: `Task accettata con sucesso!`, result: task});
     } catch (error) {
-        return res.status(500).json({ success: false, message: `Si è verificato un errore durante l'accettazione della task Errore: ${error.message}` });
+        return res.status(500).json({ success: false, message: `L'operazione di accettazione della task non è andata a buon fine. ${error.message}` });
     }
 });
 
