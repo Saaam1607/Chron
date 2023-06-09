@@ -2,79 +2,242 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const TaskModel = require('../src/models/Task');
 const jwt = require('jsonwebtoken');
-const app = require('../src/server'); 
+const app = require('../src/server');
 let server;
+let api_url = '/api/v1/todos';
 
-beforeAll( async () => { 
-    jest.setTimeout(8000);
-    await mongoose.connect(process.env.TEST_DB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .then(() => {
-        console.log("Connected to MongoDB")
+beforeAll(async () => {
+  jest.setTimeout(8000);
+  await mongoose.connect(process.env.TEST_DB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  console.log('Connected to MongoDB');
 
-    })
-    .catch((err) => console.log(err))
-
-    await new Promise((resolve) => {
-        server = app.listen(process.env.PORT || 8080, resolve);
-    });
+  server = app.listen(process.env.PORT || 8080);
 });
 
-afterAll( () => { 
-    mongoose.connection.close(true); 
-    server.close();
+afterAll(async () => {
+  await mongoose.connection.close();
+  server.close();
 });
-    
-
 
 test('app module should be defined', () => {
-    expect(app).toBeDefined();
+  expect(app).toBeDefined();
 });
-    
 
+describe('API endpoints', () => {
+    let token;
 
-describe('SUIT API GET /api/v1/todos', () => {
+    beforeAll(() => {
+        token =
+        'Bearer ' +
+        jwt.sign({ id: '64765870316275628c4870b9' }, process.env.ACCESS_TOKEN_SECRET);
+    });
 
-    let token = 'Bearer ' + jwt.sign({ id: "64765870316275628c4870b9" }, process.env.ACCESS_TOKEN_SECRET)
+    afterEach(async () => {
+        //await TaskModel.deleteMany({});
+    });
 
-    test('should respond with status 200 and an array of tasks if tasks exist', async () => {
-        // inserimento di un task nel database
-        await TaskModel.create({ nome: "Test task", ID_utente: "64765870316275628c4870b9" });
+    test('GET /api/v1/todos should respond with status 200 and an array of tasks if tasks exist', async () => {
+        await TaskModel.create({ nome: 'Test task', ID_utente: '64765870316275628c4870b9' });
 
-        const response = await request(app).get('/api/v1/todos').set('Authorization', token).set('Accept', 'application/json');
+        const response = await request(app)
+        .get(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json');
 
         expect(response.status).toBe(200);
         expect(response.body).toBeDefined();
         expect(Array.isArray(response.body.tasks)).toBe(true);
     });
 
-    test('should respond with status 204 if no tasks exist', async () => {
-        // rimozione di tutti i task dal database
-        await TaskModel.deleteMany({});
-
-        const response = await request(app).get('/api/v1/todos').set('Authorization', token).set('Accept', 'application/json');
+    test('GET /api/v1/todos should respond with status 204 if no tasks exist', async () => {
+        const response = await request(app)
+        .get(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json');
 
         expect(response.status).toBe(204);
     });
 
-    test('should respond with status 500 if an error occurs', async () => {
-        // Simula un errore nel server
+    test('GET /api/v1/todos should respond with status 500 if an error occurs', async () => {
         const getMock = jest.spyOn(TaskModel, 'find').mockImplementationOnce(() => {
-            throw new Error('Errore generato dal mock');
+        throw new Error('Errore generato dal mock');
         });
 
         const response = await request(app)
-            .get('/api/v1/todos')
-            .set('Authorization', token)
-            .set('Accept', 'application/json');
+        .get(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json');
 
         expect(response.status).toBe(500);
         expect(response.body.success).toBe(false);
 
         getMock.mockRestore();
-
     });
 
+    test('POST /api/v1/todos should create a new task and respond with status 201', async () => {
+        const sendBody = {
+            nome: 'New task',
+            ID_utente: '64765870316275628c4870b9',
+        };
+
+        const response = await request(app)
+        .post(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json')
+        .send(sendBody);
+
+        expect(response.status).toBe(201);
+        expect(response.body.success).toBe(true);
+        expect(response.body.task).toBeDefined();
+        expect(response.body.task.nome).toBe(sendBody.nome);
+        expect(response.body.task.ID_utente).toBe(sendBody.ID_utente);
+    });
+
+    test('POST /api/v1/todos should respond with status 500 if an error occurs', async () => {
+        const sendBody = {
+            nome: 'New task',
+            ID_utente: '64765870316275628c4870b9',
+        };
+
+        const createMock = jest.spyOn(TaskModel, 'findOne').mockImplementationOnce(() => {
+            throw new Error('Errore generato dal mock');
+        });
+
+        const response = await request(app)
+        .post(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json')
+        .send(sendBody);
+
+        expect(response.status).toBe(500);
+        expect(response.body.success).toBe(false);
+
+        createMock.mockRestore();
+    });
+
+    test('PUT /api/v1/todos/ should update an existing task and respond with status 200', async () => {
+        let idTask = new mongoose.Types.ObjectId();
+
+        const existingTask = await TaskModel.create({
+            _id: idTask,
+            nome: 'Test task',
+            ID_utente: '64765870316275628c4870b9',
+            constrassegna: false,
+        });
+
+        console.log("existing: "+existingTask)
+
+
+        const response = await request(app)
+        .put(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json')
+        .send(existingTask._id);
+
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+        expect(response.body.task).toBeDefined();
+        expect(response.body.task.constrassegna).toBe(!existingTask.constrassegna);
+    });
+
+    test('PUT /api/v1/todos should respond with status 404 if task is not found', async () => {
+
+        const nonExistentTaskId = '12345678901234567890abcd';
+
+        const response = await request(app)
+        .put(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json')
+        .send({ id: nonExistentTaskId });
+
+        expect(response.status).toBe(404);
+        expect(response.body.success).toBe(false);
+    });
+
+    test('PUT /api/v1/todos/:id should respond with status 500 if an error occurs', async () => {
+        let idTask = new mongoose.Types.ObjectId();
+
+        const existingTask = await TaskModel.create({
+            _id: idTask,
+            nome: 'Test task',
+            ID_utente: '64765870316275628c4870b9',
+            constrassegna: false,
+        });
+
+        const updateMock = jest.spyOn(TaskModel, 'updateOne').mockImplementationOnce(() => {
+            throw new Error('Errore generato dal mock');
+        });
+
+        const response = await request(app)
+        .put(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json')
+        .send({ id: idTask });
+
+        expect(response.status).toBe(500);
+        expect(response.body.success).toBe(false);
+
+        updateMock.mockRestore();
+    });
+
+    test('DELETE /api/v1/todos/ should delete an existing task and respond with status 200', async () => {
+        let idTask = new mongoose.Types.ObjectId();
+
+        const existingTask = await TaskModel.create({
+            _id: idTask,
+            nome: 'Test task',
+            ID_utente: '64765870316275628c4870b9',
+            constrassegna: false,
+        });
+
+        const response = await request(app)
+        .delete(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json')
+        .send({ id: idTask });
+
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+    });
+
+    test('DELETE /api/v1/todos/ should respond with status 404 if task is not found', async () => {
+        const nonExistentTaskId = '12345678901234567890abcd';
+
+        const response = await request(app)
+        .delete(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json')
+        .send({ id: nonExistentTaskId });
+
+        expect(response.status).toBe(404);
+        expect(response.body.success).toBe(false);
+    });
+
+    test('DELETE /api/v1/todos/:id should respond with status 500 if an error occurs', async () => {
+        let idTask = new mongoose.Types.ObjectId();
+
+        const existingTask = await TaskModel.create({
+            _id: idTask,
+            nome: 'Test task',
+            ID_utente: '64765870316275628c4870b9'
+        });
+
+        const deleteMock = jest.spyOn(TaskModel, 'findByIdAndDelete').mockImplementationOnce(() => {
+            throw new Error('Errore generato dal mock');
+        });
+
+        const response = await request(app)
+        .delete(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json')
+        .send({ id: idTask });
+
+        expect(response.status).toBe(500);
+        expect(response.body.success).toBe(false)
+
+        deleteMock.mockRestore();
+    });
 });
