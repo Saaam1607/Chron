@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
 	const { nome, dataScadenza } = req.body;
   
 	if (!nome) {
-        return res.status(400).json({ success: false, message: "Nome mancante" }); 
+        return res.status(400).json({ success: false, message: `Il parametro "nome" mancante.` }); 
 	}
     
 	try {
@@ -58,7 +58,7 @@ router.put('/', async (req, res) => {
     let listaTask = new ListaTasks(req.id);
 
     if (!idTask) {
-        return res.status(400).json({ success: false, message: "id Task mancante" }); 
+        return res.status(400).json({ success: false, message: `Il parametro "idTask" mancante.` }); 
 	}
     
     try {
@@ -86,7 +86,7 @@ router.delete('/', async (req, res) => {
     let listaTask = new ListaTasks(req.id);
 
     if (!idTask) {
-        return res.status(400).json({ success: false, message: "id Task mancante" }); 
+        return res.status(400).json({ success: false, message: `Il parametro "idTask" mancante.` }); 
 	}
 
     try {
@@ -98,7 +98,7 @@ router.delete('/', async (req, res) => {
             await task.elimina();
             res.status(200).json({ success: true, result: task });
         } else {
-            res.status(404).json({ success: false, message: `Task con id ${idTask} non trovata` });
+            res.status(404).json({ success: false, message: `La task con id ${idTask} non trovata.` });
         }
 
     } catch (error) {
@@ -132,7 +132,7 @@ router.get('/ordinata', async (req, res) => {
                   listaTask.ordinaPerGruppo();
                   break;
                 default:
-                  return res.status(400).json({ success: false, message: "Parametro di ordinamento non valido. Utilizzare 'name', 'date' o 'group'." });
+                  return res.status(400).json({ success: false, message: `Parametro di ordinamento non valido. Utilizzare "name", "date" o "group".` });
               }
 
             res.status(200).json({ success: true, tasks: listaTask.tasks });
