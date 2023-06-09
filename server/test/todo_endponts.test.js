@@ -36,7 +36,7 @@ describe('API endpoints', () => {
     });
 
     afterEach(async () => {
-        //await TaskModel.deleteMany({});
+        await TaskModel.deleteMany({});
     });
 
     test('GET /api/v1/todos should respond with status 200 and an array of tasks if tasks exist', async () => {
@@ -125,22 +125,19 @@ describe('API endpoints', () => {
             _id: idTask,
             nome: 'Test task',
             ID_utente: '64765870316275628c4870b9',
-            constrassegna: false,
+            contrassegna: false,
         });
-
-        console.log("existing: "+existingTask)
-
 
         const response = await request(app)
         .put(api_url)
         .set('Authorization', token)
         .set('Accept', 'application/json')
-        .send(existingTask._id);
+        .send({id:existingTask._id});
 
         expect(response.status).toBe(200);
         expect(response.body.success).toBe(true);
-        expect(response.body.task).toBeDefined();
-        expect(response.body.task.constrassegna).toBe(!existingTask.constrassegna);
+        expect(response.body.result).toBeDefined();
+        expect(response.body.result.contrassegna).toBe(!existingTask.contrassegna);
     });
 
     test('PUT /api/v1/todos should respond with status 404 if task is not found', async () => {
@@ -157,14 +154,14 @@ describe('API endpoints', () => {
         expect(response.body.success).toBe(false);
     });
 
-    test('PUT /api/v1/todos/:id should respond with status 500 if an error occurs', async () => {
+    test('PUT /api/v1/todos/ should respond with status 500 if an error occurs', async () => {
         let idTask = new mongoose.Types.ObjectId();
 
         const existingTask = await TaskModel.create({
             _id: idTask,
             nome: 'Test task',
             ID_utente: '64765870316275628c4870b9',
-            constrassegna: false,
+            contrassegna: false,
         });
 
         const updateMock = jest.spyOn(TaskModel, 'updateOne').mockImplementationOnce(() => {
@@ -190,7 +187,7 @@ describe('API endpoints', () => {
             _id: idTask,
             nome: 'Test task',
             ID_utente: '64765870316275628c4870b9',
-            constrassegna: false,
+            contrassegna: true,
         });
 
         const response = await request(app)
@@ -216,7 +213,7 @@ describe('API endpoints', () => {
         expect(response.body.success).toBe(false);
     });
 
-    test('DELETE /api/v1/todos/:id should respond with status 500 if an error occurs', async () => {
+    test('DELETE /api/v1/todos/ should respond with status 500 if an error occurs', async () => {
         let idTask = new mongoose.Types.ObjectId();
 
         const existingTask = await TaskModel.create({
@@ -239,5 +236,34 @@ describe('API endpoints', () => {
         expect(response.body.success).toBe(false)
 
         deleteMock.mockRestore();
+    });
+
+    test('GET /ordinata should respond with status 200 and sorted tasks', async () => {
+        // insert some tasks
+        let tempTasks = [
+            await TaskModel.create({ nome: 'Task 4323', ID_utente: '64765870316275628c4870b9' }),
+            await TaskModel.create({ nome: 'Task 1234', ID_utente: '64765870316275628c4870b9' }),
+            await TaskModel.create({ nome: 'Task 442', ID_utente: '64765870316275628c4870b9' }),
+        ];
+        
+        tempTasks.sort((a, b) => a.nome.localeCompare(b.nome));
+
+        const response = await request(app).get('/api/v1/todos/ordinata/?sort=name')
+        .set('Accept', 'application/json')
+        .set('Authorization', token)
+      
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+        expect(response.body.tasks.map(task => task.nome)).toEqual(tempTasks.map(task => task.nome));
+      
+
+    });
+      
+    test('GET /ordinata should respond with status 204 if no tasks exist', async () => {
+        const response = await request(app).get('/api/v1/todos/ordinata?sort=name')
+        .set('Accept', 'application/json')
+        .set('Authorization', token)
+      
+        expect(response.status).toBe(204);
     });
 });
