@@ -7,26 +7,26 @@ let server;
 let api_url = '/api/v1/todos';
 
 beforeAll(async () => {
-  jest.setTimeout(8000);
-  await mongoose.connect(process.env.TEST_DB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  console.log('Connected to MongoDB');
+    jest.setTimeout(8000);
+    await mongoose.connect(process.env.TEST_DB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+    console.log('Connected to MongoDB');
 
-  server = app.listen(process.env.PORT || 8080);
+    server = app.listen(process.env.PORT || 8080);
 });
 
 afterAll(async () => {
-  await mongoose.connection.close();
-  server.close();
+    await mongoose.connection.close();
+    server.close();
 });
 
 test('app module should be defined', () => {
-  expect(app).toBeDefined();
+    expect(app).toBeDefined();
 });
 
-describe('API endpoints', () => {
+describe('API /api/v1/todos endpoints', () => {
     let token;
 
     beforeAll(() => {
