@@ -273,7 +273,23 @@ describe('API endpoints', () => {
         deleteMock.mockRestore();
     });
 
-    test('GET /ordinata should respond with status 200 and sorted tasks', async () => {
+    test('GET /api/v1/todos//ordinata should respond with status 400 if name, group, date or missing', async () => {
+        let tempTasks = [
+            await TaskModel.create({ nome: 'Task 4323', ID_utente: '64765870316275628c4870b9' }),
+            await TaskModel.create({ nome: 'Task 1234', ID_utente: '64765870316275628c4870b9' }),
+            await TaskModel.create({ nome: 'Task 442', ID_utente: '64765870316275628c4870b9' }),
+        ];
+
+        const response = await request(app)
+        .get('/api/v1/todos/ordinata/?sort=')
+        .set('Authorization', token)
+        .set('Accept', 'application/json');
+
+        expect(response.status).toBe(400);
+        expect(response.body.success).toBe(false);
+    });
+
+    test('GET /api/v1/todos/ordinata should respond with status 200 and sorted tasks', async () => {
         // insert some tasks
         let tempTasks = [
             await TaskModel.create({ nome: 'Task 4323', ID_utente: '64765870316275628c4870b9' }),
@@ -283,6 +299,7 @@ describe('API endpoints', () => {
         
         tempTasks.sort((a, b) => a.nome.localeCompare(b.nome));
 
+        // name
         const response = await request(app).get('/api/v1/todos/ordinata/?sort=name')
         .set('Accept', 'application/json')
         .set('Authorization', token)
@@ -290,7 +307,20 @@ describe('API endpoints', () => {
         expect(response.status).toBe(200);
         expect(response.body.success).toBe(true);
         expect(response.body.tasks.map(task => task.nome)).toEqual(tempTasks.map(task => task.nome));
-      
+
+        // group
+        const response2 = await request(app).get('/api/v1/todos/ordinata/?sort=group')
+        .set('Accept', 'application/json')
+        .set('Authorization', token)
+        
+        expect(response2.status).toBe(200);
+
+        // data
+        const response3 = await request(app).get('/api/v1/todos/ordinata/?sort=date')
+        .set('Accept', 'application/json')
+        .set('Authorization', token)
+
+        expect(response3.status).toBe(200);
 
     });
       
@@ -301,4 +331,20 @@ describe('API endpoints', () => {
       
         expect(response.status).toBe(204);
     });
+
+    test('GET /api/v1/todos/ordinata should respond with status 500 if an error occurs', async () => {
+        const findMock = jest.spyOn(TaskModel, 'find').mockImplementationOnce(() => {
+            throw new Error('Errore generato dal mock');
+        });
+
+        const response = await request(app).get('/api/v1/todos/ordinata?sort=name')
+        .set('Accept', 'application/json')
+        .set('Authorization', token)
+      
+        expect(response.status).toBe(500);
+        expect(response.body.success).toBe(false);
+
+        findMock.mockRestore();
+    }
+    );
 });
