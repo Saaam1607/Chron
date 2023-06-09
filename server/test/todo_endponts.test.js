@@ -13,9 +13,13 @@ beforeAll( async () => {
     })
     .then(() => {
         console.log("Connected to MongoDB")
-        server = app.listen(process.env.PORT || 8080);
+
     })
     .catch((err) => console.log(err))
+
+    await new Promise((resolve) => {
+        server = app.listen(process.env.PORT || 8080, resolve);
+    });
 });
 
 afterAll( () => { 
@@ -36,6 +40,9 @@ describe('SUIT API GET /api/v1/todos', () => {
     let token = 'Bearer ' + jwt.sign({ id: "64765870316275628c4870b9" }, process.env.ACCESS_TOKEN_SECRET)
 
     test('should respond with status 200 and an array of tasks if tasks exist', async () => {
+        // inserimento di un task nel database
+        await TaskModel.create({ nome: "Test task", ID_utente: "64765870316275628c4870b9" });
+
         const response = await request(app).get('/api/v1/todos').set('Authorization', token).set('Accept', 'application/json');
 
         expect(response.status).toBe(200);
@@ -54,13 +61,14 @@ describe('SUIT API GET /api/v1/todos', () => {
 
     test('should respond with status 500 if an error occurs', async () => {
         // Simula un errore nel server
-        const getMock = jest.spyOn(app, 'get');
-        getMock.mockImplementationOnce(() => {
-            throw new Error("Simulated server error");
+        const getMock = jest.spyOn(TaskModel, 'find').mockImplementationOnce(() => {
+            throw new Error('Errore generato dal mock');
         });
 
-        const response = await request(app).get('/api/v1/todos').set('Authorization', token).set('Accept', 'application/json');
-
+        const response = await request(app)
+            .get('/api/v1/todos')
+            .set('Authorization', token)
+            .set('Accept', 'application/json');
 
         expect(response.status).toBe(500);
         expect(response.body.success).toBe(false);
