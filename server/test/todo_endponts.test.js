@@ -77,6 +77,21 @@ describe('API endpoints', () => {
         getMock.mockRestore();
     });
 
+    test('POST /api/v1/todos should respond with status 400 if nome is missing', async () => {
+        const sendBody = {
+            ID_utente: '64765870316275628c4870b9',
+        };
+
+        const response = await request(app)
+        .post(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json')
+        .send(sendBody);
+
+        expect(response.status).toBe(400);
+        expect(response.body.success).toBe(false);
+    });
+
     test('POST /api/v1/todos should create a new task and respond with status 201', async () => {
         const sendBody = {
             nome: 'New task',
@@ -116,6 +131,16 @@ describe('API endpoints', () => {
         expect(response.body.success).toBe(false);
 
         createMock.mockRestore();
+    });
+
+    test('PUT /api/v1/todos/ should respond with status 400 if id is missing', async () => {
+        const response = await request(app)
+        .put(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json');
+
+        expect(response.status).toBe(400);
+        expect(response.body.success).toBe(false);
     });
 
     test('PUT /api/v1/todos/ should update an existing task and respond with status 200', async () => {
@@ -178,6 +203,16 @@ describe('API endpoints', () => {
         expect(response.body.success).toBe(false);
 
         updateMock.mockRestore();
+    });
+
+    test('DELETE /api/v1/todos/ should respond with status 400 if id is missing', async () => {
+        const response = await request(app)
+        .delete(api_url)
+        .set('Authorization', token)
+        .set('Accept', 'application/json');
+
+        expect(response.status).toBe(400);
+        expect(response.body.success).toBe(false);
     });
 
     test('DELETE /api/v1/todos/ should delete an existing task and respond with status 200', async () => {
