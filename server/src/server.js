@@ -1,4 +1,4 @@
-require("./config/db")
+//require("./config/db")
 
 const app = require("express")()
 const bodyParser = require("express").json
