@@ -174,7 +174,7 @@ router.post("/richiesta-reset-password", (req, res) => {
 });
 
 
-router.post("/autenticazioneEsterna", async (req, res) => {
+router.post("/autenticazione-esterna", async (req, res) => {
   const { gToken, clientId } = req.body;
 
   if (!gToken || !clientId) {

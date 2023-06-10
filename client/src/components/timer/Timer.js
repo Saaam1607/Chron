@@ -54,6 +54,7 @@ export default function Timer(){
                 }
             })
                 .then(data => {
+
                     // setting up timer
                     setTime(data.durata * 60)
                     durata = (data.durata * 60)
@@ -70,7 +71,7 @@ export default function Timer(){
                         case 2:
                             setMessage("È ORA DI PRENDERSI UNA PAUSA LUNGA!");
                             break;
-                            default:
+                        default:
                             break;
                     };
 
@@ -87,7 +88,7 @@ export default function Timer(){
           fase: fase,
         };
       
-        await fetch('api/v1/timer/end', {
+        await fetch('api/v1/timer/fine', {
           method: 'PUT',
           body: JSON.stringify(requestBody),
           headers: {
@@ -96,20 +97,17 @@ export default function Timer(){
         })
             .then(response => {
                 if (response.ok) {
-                } else if (response.status === 400){
+                    // aggiornamento riuscito
+                } else {
                     throw new Error("Errore durante l'aggiornamento del timer");
                 }
             })
-                .then(data => {
-                })
                 .catch(error => {
                     alert(error.message);
                 })
-            
     };
 
     const salvaSessione = async (tempo) =>{
-
         fetch('api/v1/sessione/salva-sessione', {
             method: 'PUT',
             headers: {
@@ -124,17 +122,13 @@ export default function Timer(){
                     return response.json();
                 } else if (response.status === 400){
                     throw new Error("Input non validi");
-                } else if (response.status === 401){
-                    throw new Error("Devi essere autenticato per poter salvare una sessione!");
                 } else if (response.status === 500){
                     throw new Error("Errore durante il salvataggio della sessione");
                 }
             })
-                .then(data => {
+                .catch(error => {
+                    alert(error.message);
                 })
-                    .catch(error => {
-                        alert(error.message);
-                    })
     }
 
 

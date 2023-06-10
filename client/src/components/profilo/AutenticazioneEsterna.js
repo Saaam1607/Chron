@@ -11,7 +11,7 @@ export default function AutenticazioneEsterna({setIsAuthenticated}) {
     
     const continueWithGoogle =(credentialResponse)=>{
 
-        fetch("api/v1/profilo/autenticazioneEsterna", {
+        fetch("api/v1/profilo/autenticazione-esterna", {
         method: "post",
         headers: {
             'Accept': 'application/json, text/plain, */*',
