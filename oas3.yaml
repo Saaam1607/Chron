@@ -405,15 +405,19 @@ paths:
                 pomdoro:
                   type: integer
                   description: "Durata del pomodoro, ovvero il tempo della singola sessione"
+                  example: 25
                 pausaCorta:
                   type: integer
                   description: "Durata della pausaCorta"
+                  example: 5
                 pausaLunga:
                   type: integer
                   description: "Durata della pausaLunga"
+                  example: 15
                 sessioni:
                   type: integer
                   description: "Numero di sessioni prima della pausaLunga"
+                  example: 4
       responses:
         "204":
           description: Modifica delle impostazioni avvenuta con successo
@@ -464,6 +468,14 @@ paths:
         Crea o aggiorna una sessione nel database.
         Se esiste già una sessione con la stessa data e ID_utente,
         aggiorna il campo "minuti". Altrimenti, crea una nuova sessione.
+      parameters:
+        - in: header
+          name: security
+          description: Token JWT di autorizzazione
+          required: true
+          schema:
+            type: string
+            example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
       requestBody:
         content:
           application/json:
@@ -475,10 +487,10 @@ paths:
               properties:
                 minuti:
                   type: integer
-                  description: "tempo in minuti"
+                  example: 25
                 date:
                   type: string
-                  description: "data nella quale si è effettualta la sessione"
+                  example: "2023-06-10"
       responses:
         "201":
           description: Sessione salvata con successo.
