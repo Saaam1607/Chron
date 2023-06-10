@@ -808,6 +808,137 @@ paths:
                 description: Token di accesso generato
                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFhZGJjNTQzLWU4MmMtNGIyZS1ilo
                 
+  /profiloData:
+    get:
+      summary: Ottieni i dati dall'ID
+      security:
+        - JWT: []
+      description: Restituisce i dati corrispondenti all'ID fornito
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                description: Esito della lettura dei dati
+                example: true
+              data:
+                $ref: '#/definitions/Task'
+        400:
+          description: Richiesta non valida
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                description: Esito della lettura dei dati
+                example: false
+              message:
+                type: string
+                description: Messaggio di errrore
+                example: "Errore, ID non trovato"
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        500:
+          description: Errore del server
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                description: Esito della lettura dei dati
+                example: false
+              message:
+                type: string
+                description: Messaggio di errrore
+                example: "Errore durante la lettura dei dati"  
+                
+  /username:
+    put:
+      summary: Aggiornamento dello username dell'utente
+      security:
+        - JWT: []
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID dell'utente
+              password:
+                type: string
+                description: Password dell'utente
+              username:
+                type: string
+                description: Nuovo username dell'utente
+      responses:
+        200:
+          description: Lo username dell'utente è stato aggiornato con successo.
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se l'operazione è stata completata con successo
+                example: true
+              message:
+                type: string
+                description: Messaggio di conferma dell'aggiornamento dello username
+                example: Username aggiornato
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        500:
+          description: Internal Server Error. Si è verificato un errore durante l'aggiornamento dello username.
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se l'operazione è stata completata con successo
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore relativo all'errore di aggiornamento dello username
+                example: Errore durante l'aggiornamento dello username
+                
   /todos:
     get:
       summary: Ottiene la lista delle tasks
@@ -1192,6 +1323,15 @@ definitions:
       nomeGruppo:
         type: string
         description: Nome del gruppo a cui appartiene la task
+  Data:
+    type: object
+    properties:
+      username:
+        type: string
+        description: Username dell'utente
+      email:
+        type: string
+        description: Email dell'utente
 
   # /profilo/nuova-autenticazione:
   #   post:
