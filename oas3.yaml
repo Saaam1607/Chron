@@ -22,6 +22,309 @@ produces:
 
 paths:
 
+  /timer/stato:
+    get:
+      summary: Stato del timer
+      description: Restituisce lo stato corrente del timer Pomodoro.
+      responses:
+        200:
+          description: Stato del timer ottenuto con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se lo stato è stato ottenuto con successo
+                example: true
+              fase:
+                type: number
+                description: Numero della fase corrente del timer Pomodoro
+                example: 0
+              durata:
+                type: number
+                description: Durata della fase corrente del timer Pomodoro in minuti
+                example: 25
+        500:
+          description: Errore durante la lettura dello stato del timer
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore durante la lettura dello stato
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore durante la lettura dello stato del timer
+              
+  /timer/fine:
+    put:
+      summary: Fine della fase del timer
+      description: Aggiorna lo stato del timer Pomodoro alla fine della fase corrente.
+      parameters:
+        - in: body
+          name: body
+          description: Oggetto contenente la fase corrente del timer
+          required: true
+          schema:
+            type: object
+            properties:
+              fase:
+                type: number
+                description: Numero della fase corrente del timer Pomodoro
+                example: 0
+      responses:
+        200:
+          description: Aggiornamento del timer effettuato con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se l'aggiornamento del timer è stato effettuato con successo
+                example: true
+              fase:
+                type: number
+                description: Numero della fase aggiornata del timer Pomodoro
+                example: 1
+              durata:
+                type: number
+                description: Durata della fase aggiornata del timer Pomodoro in minuti
+                example: 5
+        400:
+          description: Errore, input non validi
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa di input non validi
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore, input non validi
+        404:
+          description: Errore, sessione mancante o non valida
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa di una sessione mancante o non valida
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore, sessione mancante o non valida
+        500:
+          description: Errore interno durante l'aggiornamento del timer
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore interno durante l'aggiornamento del timer
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore interno durante l'aggiornamento del timer
+                
+  /timer/impostazioni:
+    get:
+      summary: Ottiene le impostazioni del timer Pomodoro
+      description: Restituisce le impostazioni correnti del timer Pomodoro.
+      responses:
+        200:
+          description: Impostazioni del timer ottenute con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se il recupero delle impostazioni è stato effettuato con successo
+                example: true
+              durataPomodoro:
+                type: number
+                description: Durata del pomodoro in minuti
+                example: 25
+              durataPausaCorta:
+                type: number
+                description: Durata della pausa corta in minuti
+                example: 5
+              durataPausaLunga:
+                type: number
+                description: Durata della pausa lunga in minuti
+                example: 15
+              pomodoriPerSessione:
+                type: number
+                description: Numero di pomodori completati per ogni sessione
+                example: 4
+        404:
+          description: Errore, impostazioni della sessione mancanti o non valide
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa di impostazioni mancanti o non valide
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore, impostazioni della sessione mancanti o non valide
+        500:
+          description: Errore nella lettura delle impostazioni
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore nella lettura delle impostazioni
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore nella lettura delle impostazioni
+    put:
+      summary: Modifica le impostazioni del timer Pomodoro
+      description: Modifica le impostazioni del timer Pomodoro con i nuovi valori specificati.
+      parameters:
+        - in: body
+          name: body
+          description: Oggetto contenente la i valori corrente del timer
+          required: true
+          schema:
+            type: object
+            properties:
+              pomodoro:
+                type: number
+                description: Durata del pomodoro in minuti
+                example: 25
+              pausaCorta:
+                type: number
+                description: Durata della pausa corta in minuti
+                example: 5
+              pausaLunga:
+                type: number
+                description: Durata della pausa lunga in minuti
+                example: 15
+              sessioni:
+                type: number
+                description: Numero di pomodori completati per ogni sessione
+                example: 4
+      responses:
+        204:
+          description: Impostazioni del timer modificate con successo
+        400:
+          description: Errore, input non validi
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa di input non validi
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore, input non validi
+        404:
+          description: Errore, sessione mancante o non valida
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa di una sessione mancante o non valida
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore, sessione mancante o non valida
+        500:
+          description: Errore durante la modifica delle impostazioni
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore durante la modifica delle impostazioni
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore durante la modifica delle impostazioni
+                
+  /timer/salva-sessione:
+    x-summary: Salva o crea sessione
+    put:
+      summary: api/v1/sessione/
+      security:
+        - JWT: []
+      description: >-
+        Crea o aggiorna una sessione nel database.
+        Se esiste già una sessione con la stessa data e ID_utente,
+        aggiorna il campo "minuti". Altrimenti, crea una nuova sessione.
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Oggetto contentente il tempo di studio espresso in minuti
+          schema:
+            type: object
+            properties:
+              minuti:
+                type: number
+                description: Tempo di studio espresso in minuti
+                example: 120
+      responses:
+        201:
+          description: Sessione salvata con successo.
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore durante il salvataggio della sessione
+                example: true
+              message:
+                type: string
+                description: Messaggio di conferma
+                example: Sessione salvata con successo.
+        400:
+          description: Parametro minuti mancante o non valido.
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore durante il salvataggio della sessione
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Parametro minuti mancante o non valido.
+        500:
+          description: Errore del server.
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore durante il salvataggio della sessione
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Non è stato possibile salvare la sessione. Errore del server.
+
   /profilo/autenticazione:
     post:
       summary: Effetua il login
