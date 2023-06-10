@@ -1091,6 +1091,79 @@ paths:
                 description: Messaggio di errore
                 example: L'operazione di rimozione della task non è andata a buon fine
 
+  /ordinata:
+    get:
+      summary: Ottieni la lista delle task ordinata
+      security:
+        - JWT: []
+      description: Restituisce la lista delle task ordinate in base al parametro di ordinamento specificato.
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - name: sort
+          in: query
+          description: Parametro di ordinamento delle task.
+          required: true
+          type: string
+          enum: [name, date, group]
+      responses:
+        200:
+          description: Successo. La lista delle task ordinata è stata restituita correttamente.
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se la richiesta è stata completata con successo.
+                example: true
+              tasks:
+                type: array
+                items:
+                  $ref: '#/definitions/Task'
+        204:
+          description: Nessun contenuto. La lista delle task è vuota.
+        400:
+          description: Parametro non valido. Il parametro di ordinamento specificato non è valido.
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se la richiesta è stata completata con successo
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Parametro di ordinamento non valido. Utilizzare name, date o group
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        500:
+          description: Errore del server. Si è verificato un errore durante l'ordinamento delle task.
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se la richiesta è stata completata con successo
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'operazione di ordinamento delle task non è andata a buon fine
+
 definitions:
   NewTask:
     type: object
