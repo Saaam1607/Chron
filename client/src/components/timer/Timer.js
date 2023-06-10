@@ -108,7 +108,6 @@ export default function Timer(){
     };
 
     const salvaSessione = async (tempo) =>{
-
         fetch('api/v1/sessione/salva-sessione', {
             method: 'PUT',
             headers: {
@@ -127,11 +126,9 @@ export default function Timer(){
                     throw new Error("Errore durante il salvataggio della sessione");
                 }
             })
-                .then(data => {
+                .catch(error => {
+                    alert(error.message);
                 })
-                    .catch(error => {
-                        alert(error.message);
-                    })
     }
 
 

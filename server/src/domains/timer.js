@@ -52,12 +52,10 @@ router.get("/stato", (req, res) => {
             res.status(200).json({success: true, fase: 0, durata: DefaultSettings.getDefaultDurataPomodoro()})
 
         } else{
-
             const durata = getDurataFromSettings(req.session.fase, req.session.impostazioni);
-
             res.status(200).json({success: true, fase: req.session.fase, durata: durata})
-            
         }
+
     } catch (err){
         console.log(err)
         res.status(500).json({success: false, message: "Errore durante la lettura dello stato del timer"})
@@ -107,7 +105,7 @@ router.put("/fine", (req, res) => {
         }
 
     } catch (err){
-        res.status(500).json({success: false, message: "Errore durante l'aggiornamento del timer"})
+        res.status(500).json({success: false, message: "Errore interno durante l'aggiornamento del timer"})
     }
 })
 
@@ -136,6 +134,8 @@ router.get("/impostazioni", (req, res) => {
         res.status(500).json({success: false, message: "Errore nella lettura delle impostazioni"})
     }
 })
+
+
 
 router.put("/impostazioni", async (req, res) => {
     try {
