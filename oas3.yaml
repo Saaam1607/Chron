@@ -10,8 +10,8 @@ servers:
   - url: http://localhost:8000/api/v1
     description: localhost
 paths:
+
   /profilo/autenticazione:
-    x-summary: Effetua il login
     post:
       summary: Effetua il login
       description: >-
@@ -36,7 +36,7 @@ paths:
         "200":
           description: Autenticazione completata con successo
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -49,7 +49,7 @@ paths:
         "401":
           description: Autenticazione non riuscita, credenziali non corrispondenti o valide
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -62,7 +62,7 @@ paths:
         "500":
           description: Errore durante l'autenticazione
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -72,8 +72,8 @@ paths:
                   message:
                     type: string
                     example: Errore durante l'autenticazione
+                    
   /profilo/nuova-autenticazione:
-    x-summary: Effetua la registrazione
     post:
       summary: Effetua la registrazione
       description: >-
@@ -102,7 +102,7 @@ paths:
         "200":
           description: Registrazione e autenticazione completate con successo
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -115,7 +115,7 @@ paths:
         "401":
           description: Errore, credenziali non valide
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -128,7 +128,7 @@ paths:
         "409":
           description: Errore, email già utilizzata
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -141,7 +141,7 @@ paths:
         "500":
           description: Errore durante la registrazione
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -151,8 +151,8 @@ paths:
                   message:
                     type: string
                     example: Errore durante la registrazione
+                    
   /profilo/data:
-    x-summary: Recupera i dati di un utente (email e username)
     get:
       summary: Recupera i dati di un utente (email e username)
       description: >-
@@ -172,7 +172,7 @@ paths:
         "200":
           description: Registrazione e autenticazione completate con successo
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -188,7 +188,7 @@ paths:
         "400":
           description: Errore, ID non trovato
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -201,7 +201,7 @@ paths:
         "500":
           description: Errore durante la lettura dei dati
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -212,16 +212,15 @@ paths:
                     type: string
                     example: Errore durante la lettura dei dati
   /timer/stato:
-    x-summary: Legge fase e durata del timer
     get:
       summary: Legge fase e durata del timer
       description: >-
-        Legge e restituisce la fase e durata del timer
+        Legge e restituisce la fase e durata del timer. Se non trova i dati riguardo alle impostazioni sullo sessione storage o se questi non sono validi, salva quelli di default
       responses:
         "200":
           description: Modifica delle impostazioni avvenuta con successo
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -237,7 +236,7 @@ paths:
         "500":
           description: Errore durante la lettura dello stato del timer
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -247,13 +246,14 @@ paths:
                   message:
                     type: string
                     example: Errore durante la lettura dello stato del timer
-  /timer/end:
-    x-summary: Aggiorna la fase e durata del timer
+                    
+  /timer/fine:
     put:
-      summary: Aggiorna la fase e durata del timer
+      summary: Aggiorna la fase e durata del timer al suo termine
       description: >-
         Aggiorna la fase e durata del timer. Se il timer è nella fase pomdoro e il tempo non è terminato, la fase non verrà aggiornata e il tempo del pomdoro verra ristabilito
-        Se il timer è nella fase pomdoro e il tempo è esaurito oppure se è nella fase di pausa (lunga o corta), vengono aggiornate fase e durata
+        Se il timer è nella fase pomdoro e il tempo è esaurito oppure se è nella fase di pausa (lunga o corta), vengono aggiornate fase e durata.
+        A questo fine utilizza dei dati salvati all'interno dello session storage che devono quindi essere presenti e validi
       requestBody:
         content:
           application/json:
@@ -274,7 +274,7 @@ paths:
         "200":
           description: Modifica delle impostazioni avvenuta con successo
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -288,9 +288,9 @@ paths:
                     type: integer
                     example: 5
         "400":
-          description: Errore, input non validi
+          description: Input non validi
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -300,18 +300,45 @@ paths:
                   message:
                     type: string
                     example: Errore, input non validi
+        "404":
+          description: Sessione mancante o non valida
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore, sessione mancante o non valida
+        "500":
+          description: Errore interno durante l'aggiornamento del timer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore interno durante l'aggiornamento del timer
+                    
   /timer/impostazioni:
-    x-summary: Legge e ritorna i valori delle impostazioni attuali del timer
     get:
       summary: Legge e ritorna i valori delle impostazioni attuali del timer
       description: >-
-        Legge e ritorna i valori delle impostazioni attuali del timer.
-        I valori sono salvati in locale, quindi sono relativi unicamente alla sessione corrente
+        Legge e ritorna i valori delle impostazioni attuali del timer dallo session storage e le restituisce.
+        I valori delle impostazioni, essendo salvati nella sessione, sono relativi unicamente alla sessione corrente.
+        I dati delle impostazioni salvati nella sessione devono essere presenti e validi.
       responses:
         "200":
           description: Lettura delle impostazioni avvenuta con successo
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -330,10 +357,23 @@ paths:
                   pomodoriPerSessione:
                     type: integer
                     example: 4
+        "404":
+          description: Impostazioni della sessione mancanti o non valide
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore, impostazioni della sessione mancanti o non valide
         "500":
           description: Errore nella lettura delle impostazioni
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -343,14 +383,14 @@ paths:
                   message:
                     type: string
                     example: Errore nella lettura delle impostazioni
+                    
   /timer/impostazioni:
-    x-summary: Aggiorna le impostazioni del timer
     put:
       summary: Modifica le impostazioni del timer
       description: >-
-        Modifica le impostazioni del timer. Le impostazoni rimangono solo localmente.
+        Modifica le impostazioni del timer con i valori ricevuti nel body della richiesta. Le impostazoni rimangono solo localmente poiché vengono salvate nello session storage.
         In particolare permette di modificare la durata della sessione di studio, la durata
-        della pausa breve, della pausa lunga e del numero di sessioni prima della pausa lunga
+        della pausa breve, della pausa lunga e del numero di sessioni prima della pausa lunga.
       requestBody:
         content:
           application/json:
@@ -375,23 +415,12 @@ paths:
                   type: integer
                   description: "Numero di sessioni prima della pausaLunga"
       responses:
-        "200":
+        "204":
           description: Modifica delle impostazioni avvenuta con successo
-          content:
-            text/plain:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  message:
-                    type: string
-                    example: Modifica delle impostazioni avvenuta con successo
         "400":
-          description: Errore, input non validi
+          description: Input non validi
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -401,10 +430,23 @@ paths:
                   message:
                     type: string
                     example: Errore, input non validi
+        "404":
+          description: Sessione mancante o non valida
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Errore, sessione mancante o non valida
         "500":
           description: Errore durante la modifica delle impostazioni
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -414,8 +456,8 @@ paths:
                   message:
                     type: string
                     example: Errore durante la modifica delle impostazioni
+                    
   /timer/salva-sessione:
-    x-summary: Salva o crea sessione
     put:
       summary: Salva o crea sessione
       description: >-
@@ -441,7 +483,7 @@ paths:
         "201":
           description: Sessione salvata con successo.
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -457,7 +499,7 @@ paths:
         "400":
           description: Errore, input non validi
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -470,7 +512,7 @@ paths:
         "500":
           description: Errore del server.
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -481,7 +523,6 @@ paths:
                     type: string
                     example: Non è stato possibile salvare la sessione. Errore del server.
   /todos/:
-    x-summary: Ottieni elenco delle tasks
     get:
       summary: Ottieni elenco delle tasks
       description: >-
@@ -492,7 +533,7 @@ paths:
         "200":
           description: Elenco delle tasks recuperato con successo
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -527,7 +568,7 @@ paths:
         "500":
           description: Errore del server.
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -557,7 +598,7 @@ paths:
         "201":
           description: "Creazione del task completata con successo"
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -582,7 +623,7 @@ paths:
         "400":
           description: "Richiesta non valida"
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -595,7 +636,7 @@ paths:
         "500":
           description: "Errore durante la creazione del task"
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -622,7 +663,7 @@ paths:
         "200":
           description: "Task contrassegnata come completata con successo"
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -647,7 +688,7 @@ paths:
         "404":
           description: "Task non trovata"
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -660,7 +701,7 @@ paths:
         "500":
           description: "Errore durante la contrassegnazione della task"
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -687,7 +728,7 @@ paths:
         "200":
           description: "Task eliminata con successo"
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -712,7 +753,7 @@ paths:
         "404":
           description: "Task non trovata"
           content:
-            text/plain:
+            application/json:
               schema:
                 type: object
                 properties:
