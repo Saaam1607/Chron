@@ -807,6 +807,318 @@ paths:
                 type: string
                 description: Token di accesso generato
                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFhZGJjNTQzLWU4MmMtNGIyZS1ilo
+                
+  /todos:
+    get:
+      summary: Ottiene la lista delle tasks
+      security:
+        - JWT: []
+      description: Restituisce la lista delle tasks dell'utente corrente.
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+      responses:
+        200:
+          description: Lista delle tasks ottenuta con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se l'operazione di lettura delle tasks è stata completata con successo
+                example: true
+              tasks:
+                type: array
+                items:
+                  $ref: '#/definitions/Task'
+        204:
+          description: Nessuna task trovata
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        500:
+          description: Errore durante la lettura delle tasks
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore durante la lettura delle tasks
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'operazione di lettura delle task non è andata a buon fine
+    
+    post:
+      summary: Creare una nuova task
+      security:
+        - JWT: []
+      description: Crea una nuova task per l'utente corrente.
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/NewTask'
+      responses:
+        201:
+          description: Task creata con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se l'operazione di creazione della task è stata completata con successo
+                example: true
+              task:
+                $ref: '#/definitions/Task'
+        400:
+          description: Parametro mancante
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa di un parametro mancante
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Il parametro nome mancante
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        500:
+          description: Errore durante la creazione del task
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore durante la creazione del task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'operazione di creazione della task non è andata a buon fine
+    
+    put:
+      summary: Contrassegnare un task
+      security:
+        - JWT: []
+      description: Contrassegna un task specificato dall'ID.
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: string
+            description: ID della task da contrassegnare
+            example: XXX
+      responses:
+        200:
+          description: Task contrassegnata con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se l'operazione di contrassegnazione della task è stata completata con successo
+                example: true
+              result:
+                $ref: '#/definitions/Task'
+        400:
+          description: Parametro mancante
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa di un parametro mancante
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Il parametro idTask è mancante
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        404:
+          description: Task non trovata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore poiché l'ID specificato non è stata trovato
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Task con id XXX non trovata
+        500:
+          description: Errore durante l'aggiornamento del task
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore durante l'aggiornamento della task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'operazione di aggiornamento della task non è andata a buon fine
+    delete:
+      summary: Elimina una task
+      security:
+        - JWT: []
+      description: Elimina la task specificata dall'ID.
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: string
+            description: ID della task da eliminare
+            example: XXX
+      responses:
+        200:
+          description: Task eliminata con successo
+          schema:
+            type: boolean
+            description: Indica se l'operazione di eliminazione della task è stata completata con successo
+            example: true
+        400:
+          description: Parametro mancante
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore durante l'eliminazione della task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Il parametro idTask è mancante
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        404:
+          description: Task non trovata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore durante l'eliminazione della task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: La task con id XXX non è stata trovata
+        500:
+          description: Errore durante l'eliminazione della task
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore durante l'eliminazione della task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'operazione di rimozione della task non è andata a buon fine
+
+definitions:
+  NewTask:
+    type: object
+    properties:
+      nome:
+        type: string
+        description: Nome della task
+      dataScadenza:
+        type: string
+        description: Data di scadenza della task (YYYY-MM-DD)
+  Task:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: ID della task
+      nome:
+        type: string
+        description: Nome della task
+      dataScadenza:
+        type: string
+        description: Data di scadenza della task
+      contrassegna:
+        type: boolean
+        description: Indica se la task è contrassegnato
+      nomeGruppo:
+        type: string
+        description: Nome del gruppo a cui appartiene la task
 
   # /profilo/nuova-autenticazione:
   #   post:
