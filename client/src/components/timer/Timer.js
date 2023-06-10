@@ -54,6 +54,7 @@ export default function Timer(){
                 }
             })
                 .then(data => {
+
                     // setting up timer
                     setTime(data.durata * 60)
                     durata = (data.durata * 60)
@@ -70,7 +71,7 @@ export default function Timer(){
                         case 2:
                             setMessage("È ORA DI PRENDERSI UNA PAUSA LUNGA!");
                             break;
-                            default:
+                        default:
                             break;
                     };
 
@@ -87,7 +88,7 @@ export default function Timer(){
           fase: fase,
         };
       
-        await fetch('api/v1/timer/end', {
+        await fetch('api/v1/timer/fine', {
           method: 'PUT',
           body: JSON.stringify(requestBody),
           headers: {

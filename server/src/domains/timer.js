@@ -67,7 +67,7 @@ router.get("/stato", (req, res) => {
 
 
 
-router.put("/end", (req, res) => {
+router.put("/fine", (req, res) => {
 
     try {
 

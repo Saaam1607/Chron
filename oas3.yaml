@@ -247,7 +247,7 @@ paths:
                   message:
                     type: string
                     example: Errore durante la lettura dello stato del timer
-  /timer/end:
+  /timer/fine:
     x-summary: Aggiorna la fase e durata del timer
     put:
       summary: Aggiorna la fase e durata del timer
