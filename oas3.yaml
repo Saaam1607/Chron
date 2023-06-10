@@ -490,8 +490,21 @@ paths:
                   example: 25
                 date:
                   type: string
-                  example: "2023-06-10"
+                  example: "2023-05-23T00:00:00"
       responses:
+        "200":
+          description: Sessione salvata con successo.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Sessione salvata con successo
         "201":
           description: Sessione salvata con successo.
           content:
@@ -502,14 +515,11 @@ paths:
                   success:
                     type: boolean
                     example: true
-                  minuti:
-                    type: integer
-                    example: 10
-                  data:
+                  message:
                     type: string
-                    example: "2023-05-23T00:00:00"
+                    example: Sessione salvata con successo
         "400":
-          description: Errore, input non validi
+          description: Parametri mancanti o non validi
           content:
             application/json:
               schema:
@@ -520,9 +530,9 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: Parametro minuti mancante o non valido.
+                    example: Errore, parametri mancanti o non validi
         "500":
-          description: Errore del server.
+          description: Errore interno durante il salvataggio della sessione
           content:
             application/json:
               schema:
@@ -533,7 +543,7 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: Non è stato possibile salvare la sessione. Errore del server.
+                    example: Errore interno durante il salvataggio della sessione
   /todos/:
     get:
       summary: Ottieni elenco delle tasks
