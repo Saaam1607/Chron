@@ -147,7 +147,7 @@ describe('API /api/v1/profilo endpoints', () => {
 
     });
 
-    test('POST /api/v1/profilo/nuova-autenticazione should respond with status 201 and a token if registration is successful', async () => {
+    test('POST /api/v1/profilo/nuova-autenticazione should respond with status 200 and a token if registration is successful', async () => {
         //deleting all users
         await Credenziali.deleteMany({});
 
