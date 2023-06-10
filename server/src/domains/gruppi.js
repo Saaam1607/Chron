@@ -203,7 +203,7 @@ router.post("/task", async (req, res) => {
     }
 });
 
-router.get("/verificaToken/:token", async (req, res) => {
+router.get("/verifica-task/:token", async (req, res) => {
     const { token } = req.params;
 
     if (!token) {  
@@ -236,8 +236,8 @@ router.get("/verificaToken/:token", async (req, res) => {
     }
 });
 
-router.delete('/rejectTask', async (req, res) => {
-    console.log("DELETE /rejectTask");
+router.delete('/task-assegnata', async (req, res) => {
+    console.log("DELETE /task-assegnata");
     const {token} = req.body;
     
     if (!token) {
@@ -255,8 +255,8 @@ router.delete('/rejectTask', async (req, res) => {
     }
 });
 
-router.post('/acceptTask', async (req, res) => {
-    console.log("POST /acceptTask");
+router.post('/task-assegnata', async (req, res) => {
+    console.log("POST /task-assegnata");
     const {token} = req.body;
 
     if (!token) {
