@@ -97,16 +97,14 @@ export default function Timer(){
         })
             .then(response => {
                 if (response.ok) {
-                } else if (response.status === 400){
+                    // aggiornamento riuscito
+                } else {
                     throw new Error("Errore durante l'aggiornamento del timer");
                 }
             })
-                .then(data => {
-                })
                 .catch(error => {
                     alert(error.message);
                 })
-            
     };
 
     const salvaSessione = async (tempo) =>{

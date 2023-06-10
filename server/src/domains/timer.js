@@ -68,10 +68,8 @@ router.get("/stato", (req, res) => {
 
 
 router.put("/fine", (req, res) => {
-
     try {
-
-        if (req.session.fase != undefined){ // forse qui vanno controlli più completi
+        if (req.session.fase !== undefined && req.session.streak !== undefined && req.session.impostazioni !== undefined){
             
             // controlli su input
             if (req.body.fase < 0 || req.body.fase > 2){
@@ -116,10 +114,14 @@ router.put("/fine", (req, res) => {
 
 
 router.get("/impostazioni", (req, res) => {
-
     try {
-
-        if (!req.session.impostazioni){ // se c'è un dato nella sessione lo uso
+        if (
+            !req.session.impostazioni ||
+            req.session.impostazioni.durataPomodoro === undefined ||
+            req.session.impostazioni.durataPausaCorta === undefined ||
+            req.session.impostazioni.durataPausaLunga === undefined ||
+            req.session.impostazioni.pomodoriPerSessione === undefined
+        ){
             res.status(404).json({success: false, message: "Errore, impostazioni della sessione mancanti o non valide"})
         } else{
             res.status(200).json({
@@ -130,7 +132,6 @@ router.get("/impostazioni", (req, res) => {
                 pomodoriPerSessione: req.session.impostazioni.pomodoriPerSessione
             })
         }
-
     } catch (err){
         res.status(500).json({success: false, message: "Errore nella lettura delle impostazioni"})
     }
@@ -138,7 +139,6 @@ router.get("/impostazioni", (req, res) => {
 
 router.put("/impostazioni", async (req, res) => {
     try {
-
         const pomdoro = parseInt(req.body.pomdoro);
         const pausaCorta = parseInt(req.body.pausaCorta);
         const pausaLunga = parseInt(req.body.pausaLunga);
@@ -160,11 +160,15 @@ router.put("/impostazioni", async (req, res) => {
             return res.status(400).json({success: false, message: "Errore, input non validi"})
         }
 
-        req.session.impostazioni = {durataPomodoro: pomdoro, durataPausaCorta: pausaCorta, durataPausaLunga: pausaLunga, pomodoriPerSessione: sessioni}
-        res.status(200).json({success: true})
+        if (req.session.impostazioni){
+            req.session.impostazioni = {durataPomodoro: pomdoro, durataPausaCorta: pausaCorta, durataPausaLunga: pausaLunga, pomodoriPerSessione: sessioni}
+            return res.status(204).end()
+        } else{
+            return res.status(404).json({success: false, message: "Errore, sessione mancante o non valida"})
+        }
 
     } catch (error) {
-        res.status(500).json({success: false, message: "Errore durante la modifica delle impostazioni"})
+        return res.status(500).json({success: false, message: "Errore durante la modifica delle impostazioni"})
     }
 })
 
