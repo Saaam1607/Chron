@@ -29,6 +29,8 @@ test('app module should be defined', () => {
 });
 
 describe('API /api/v1/profilo endpoints', () => {
+
+    const clientId = process.env.CLIENT_ID;
     
     const user = {
         _id: new mongoose.Types.ObjectId(),
@@ -41,12 +43,13 @@ describe('API /api/v1/profilo endpoints', () => {
         _id: new mongoose.Types.ObjectId(),
         username: 'test2',
         email: 'test1@example.com',
-        password: 'test1@example.com'+process.env.CLIENT_ID,
+        password: 'test1@example.com'+clientId,
     };
     
     let token = 'Bearer ' + jwt.sign({ id: '64765870316275628c4870b9' }, process.env.ACCESS_TOKEN_SECRET);
     const tokenRegistrazione =  jwt.sign({ emai: user.email, password: user.password, username:user.username}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
-    
+    const gToken = jwt.sign({ name: 'test2', email: 'test1@example.com', userName: 'test2', email_verified: true }, process.env.ACCESS_TOKEN_SECRET);
+
 
 
     beforeAll(() => {
@@ -58,14 +61,14 @@ describe('API /api/v1/profilo endpoints', () => {
     });
 
 
-    test('POST /api/v1/profilo/nuova-autenticazione should respond with status 400 if parameters are missing', async () => {
+    test('POST /api/v1/profilo/autenticazione should respond with status 400 if parameters are missing', async () => {
         const response = await request(app)
-        .post(`${api_url}/nuova-autenticazione`)
+        .post(`${api_url}/autenticazione`)
         .send({email: user.email });
 
         expect(response.status).toBe(400);
         expect(response.body.success).toBe(false);
-        expect(response.body.message).toBe('I parametri "username, "email" o "password" mancanti.');
+        expect(response.body.message).toBe( `I parametri "email" o "password" mancanti.`);
     });
 
 
@@ -132,6 +135,18 @@ describe('API /api/v1/profilo endpoints', () => {
         expect(response.body.message).toBe('Errore, email già utilizzata');
     });
 
+    test('POST /api/v1/profilo/nuova-autenticazione should respond with status 401', async () => {
+        await Credenziali.deleteMany({});
+
+        const response = await request(app)
+        .post(`${api_url}/nuova-autenticazione`)
+        .send({ email: user.email, password: 'ddd', username: user.username});
+
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+
+    });
+
     test('POST /api/v1/profilo/nuova-autenticazione should respond with status 201 and a token if registration is successful', async () => {
         //deleting all users
         await Credenziali.deleteMany({});
@@ -168,6 +183,18 @@ describe('API /api/v1/profilo endpoints', () => {
         expect(response.status).toBe(400);
         expect(response.body.success).toBe(false);
         expect(response.body.message).toBe('Il parametro "token" mancante!');
+    });
+
+    test('POST /api/v1/profilo/verifica-registrazione should respond with status 401 if token is not valid', async () => {
+        // Simulate that the token does not exist
+        jest.spyOn(GestoreDB, 'checkIfTokenExist').mockReturnValueOnce(true);
+      
+        const response = await request(app)
+          .post(`${api_url}/verifica-registrazione`)
+          .send({ token: 'wrongtoken' });
+      
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
     });
     
     test('POST /api/v1/profilo/verifica-registrazione should respond with status 409 if account already exists', async () => {
@@ -235,7 +262,7 @@ describe('API /api/v1/profilo endpoints', () => {
         // Mock the function to return a successful login, indicating an externally registered account
         //jest.spyOn(GestoreDB, 'login').mockResolvedValueOnce(true);
         
-        Credenziali.create(externalUser);
+        await Credenziali.create(externalUser);
 
         const response = await request(app)
           .post(`${api_url}/richiesta-nuova-password`)
@@ -318,11 +345,100 @@ describe('API /api/v1/profilo endpoints', () => {
         const response = await request(app)
           .post(`${api_url}/richiesta-reset-password`)
           .send({ token: tokenRegistrazione, password: 'newPassword123' });      
-          
+
         expect(response.status).toBe(500);
         expect(response.body.success).toBe(false);
         expect(response.body.message).toBe('L\'operazione di ripristino della password non è andato a buon fine. Password update error');
     });
 
+   
+
+    test('POST /api/v1/profilo/autenticazioneEsterna should respond with status 400 if gToken or clientId is missing', async () => {
+        const response = await request(app)
+          .post(`${api_url}/autenticazioneEsterna`)
+          .send({});
+      
+        expect(response.status).toBe(400);
+        expect(response.body.success).toBe(false);
+        expect(response.body.message).toBe('I parametri "gToken" o "clientId" mancanti!');
+    });
+      
+    test('POST /api/v1/profilo/autenticazioneEsterna should respond with status 401 if email is not verified', async () => {
+        const gTokenNotValid = jwt.sign({ name: 'John Doe', email: 'john@example.com', userName: 'johndoe', email_verified: false }, process.env.ACCESS_TOKEN_SECRET);
+
+        const response = await request(app)
+          .post(`${api_url}/autenticazioneEsterna`)
+          .send({ gToken:gTokenNotValid , clientId });
+      
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+    });
+    
+    test('POST /api/v1/profilo/autenticazioneEsterna should respond with status 409 if the email is already used for internal registration', async () => {
+        // Mock the necessary functions
+        //jest.spyOn(GestoreDB, 'controllaEsistenzaEmail').mockResolvedValueOnce(true);
+        //jest.spyOn(GestoreDB, 'login').mockResolvedValueOnce(false);
+      
+        const gTokenEmail = jwt.sign({ name: 'John Doe', email: user.email, userName: 'johndoe', email_verified: true }, process.env.ACCESS_TOKEN_SECRET);
+      
+        const response = await request(app)
+          .post(`${api_url}/autenticazioneEsterna`)
+          .send({ gToken: gTokenEmail, clientId });
+      
+        expect(response.status).toBe(409);
+        expect(response.body.success).toBe(false);
+    });
+    
+    
+    test('POST /api/v1/profilo/autenticazioneEsterna should respond with status 200 and token if the email is not already registered internally', async () => {
+        // Mock the necessary functions
+        //jest.spyOn(GestoreDB, 'controllaEsistenzaEmail').mockResolvedValueOnce(false);
+        //jest.spyOn(GestoreDB, 'login').mockResolvedValueOnce(true);
+        //jest.spyOn(GestoreDB, 'getIDfromEmail').mockResolvedValueOnce('user-id');
+        //jest.spyOn(jwt, 'sign').mockReturnValueOnce('valid-token');
+        await Credenziali.deleteMany({});
+        await Credenziali.create(externalUser);
+        
+        const response = await request(app)
+          .post(`${api_url}/autenticazioneEsterna`)
+          .send({ gToken, clientId });
+      
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+        //expect(response.body.token).toBe('valid-token');
+    });
+    
+     
+    test('POST /api/v1/profilo/autenticazioneEsterna should respond with status 201 and token if the email is not registered internally', async () => {
+        // Mock the necessary functions
+        //jest.spyOn(GestoreDB, 'controllaEsistenzaEmail').mockResolvedValueOnce(false);
+        //jest.spyOn(GestoreDB, 'registra').mockResolvedValueOnce({ _id: 'user-id' });
+        //jest.spyOn(jwt, 'sign').mockReturnValueOnce('valid-token');
+        //jest.spyOn(GestoreEmail, 'inviaEmailBenvenuto').mockImplementation();
+      
+        await Credenziali.deleteMany({});
+
+        const response = await request(app)
+          .post(`${api_url}/autenticazioneEsterna`)
+          .send({ gToken, clientId });
+      
+        expect(response.status).toBe(201);
+        expect(response.body.success).toBe(true);
+        //expect(response.body.token).toBe('valid-token');
+    });
+    
+    test('POST /api/v1/profilo/autenticazioneEsterna should respond with status 500 if an error occurs', async () => {
+        // Mock the necessary functions
+        jest.spyOn(GestoreDB, 'controllaEsistenzaEmail').mockImplementation(() => {
+            throw new Error('Database error');
+        });
+      
+        const response = await request(app)
+          .post(`${api_url}/autenticazioneEsterna`)
+          .send({ gToken, clientId });
+      
+        expect(response.status).toBe(500);
+        expect(response.body.success).toBe(false);
+    });
 });
 
