@@ -22,7 +22,7 @@ export default function AcceptRejectTaskForm() {
                         "Authorization": `Bearer ${CookieManager.getAuthToken()}`,
                     },
                 };
-                const response = await fetch(`/api/v1/gruppi/verificaToken/${token}`, requestOptions);
+                const response = await fetch(`/api/v1/gruppi/verifica-task/${token}`, requestOptions);
                 const data = await response.json();
             if (response.ok) {
                 setTaskData(data.result);
@@ -48,7 +48,7 @@ export default function AcceptRejectTaskForm() {
             body: JSON.stringify({ token: token})
         };
 
-        fetch('/api/v1/gruppi/acceptTask', requestOptions)
+        fetch('/api/v1/gruppi/task-assegnata', requestOptions)
         .then(response => {
             if (response.ok) {
                 return response.json(); 
@@ -87,7 +87,7 @@ export default function AcceptRejectTaskForm() {
             body: JSON.stringify({ token: token})
         };
 
-        fetch('/api/v1/gruppi/rejectTask', requestOptions)
+        fetch('/api/v1/gruppi/task-assegnata', requestOptions)
         .then(response => {
             if (response.ok) {
                 return response.json(); 
