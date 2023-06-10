@@ -12,9 +12,11 @@ app.use(bodyParser.json());
 
 const jwt = require("jsonwebtoken");
 
+
+
 router.post("/autenticazione", bodyParser.json(), (req, res) => {
   if(!req.body.email || !req.body.password){
-    return res.status(400).json({ success: false, message: `I parametri "email" o "password" mancanti.` });
+    return res.status(400).json({ success: false, message: `Parametri email o password mancanti` });
   }
   GestoreDB.login(req.body.email, req.body.password)
       .then((esito) => {
@@ -35,9 +37,11 @@ router.post("/autenticazione", bodyParser.json(), (req, res) => {
       });
 })
 
+
+
 router.post("/nuova-autenticazione", bodyParser.json(), async (req, res) => {
   if(!req.body.email || !req.body.password || !req.body.username){
-    return res.status(400).json({ success: false, message: `I parametri "username, "email" o "password" mancanti.` }); 
+    return res.status(400).json({ success: false, message: `I parametri username, email o password mancanti` }); 
   }
 
   try {
@@ -74,11 +78,13 @@ router.post("/nuova-autenticazione", bodyParser.json(), async (req, res) => {
   }
 });
 
+
+
 router.post("/verifica-registrazione", bodyParser.json(), async (req, res) => {
   const { token } = req.body;
 
   if (!token) {
-    return res.status(400).json({ success: false, message: `Il parametro "token" mancante!` }); 
+    return res.status(400).json({ success: false, message: `Il parametro token è mancante!` }); 
   }
 
   if(!await GestoreDB.checkIfTokenExist(token)) {
@@ -146,6 +152,8 @@ router.post("/richiesta-nuova-password", (req, res) => {
   }
 });
 
+
+
 // API per il reset della password
 router.post("/richiesta-reset-password", (req, res) => {
   const { token, password } = req.body;
@@ -172,6 +180,7 @@ router.post("/richiesta-reset-password", (req, res) => {
       });
     });
 });
+
 
 
 router.post("/autenticazione-esterna", async (req, res) => {

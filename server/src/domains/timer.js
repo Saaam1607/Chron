@@ -38,7 +38,6 @@ router.use(
 
 
 router.get("/stato", (req, res) => {
-
     try{
         if (!req.session.impostazioni || req.session.streak == undefined || req.session.fase == undefined){ // se non c'è una sessione la creo
             
