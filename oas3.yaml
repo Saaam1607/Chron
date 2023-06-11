@@ -1286,6 +1286,8 @@ paths:
       summary: Elimina un gruppo
       tags:
         - Gruppi
+      security:
+        - JWT: []
       parameters:
         - name: idGruppo
           in: path
@@ -1304,10 +1306,12 @@ paths:
             type: object
             properties:
               success:
-                type: string
+                type: boolean
+                description: Esito della richiesta di eliminazione
                 example: true
               message:
                 type: string
+                description: Messaggi di conferma
                 example: Gruppo eliminato correttamente
         400:
           description: Parametri assenti o non validi
@@ -1315,21 +1319,37 @@ paths:
             type: object
             properties:
               success:
-                type: string
+                type: boolean
+                description: Esito della richiesta di eliminazione
                 example: false
               message:
                 type: string
                 example: Errore, parametri assenti o non validi
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
         403:
           description: L'utente che ha richiesto l'eliminazione del gruppo non è il leader
           schema:
             type: object
             properties:
               success:
-                type: string
+                type: boolean
+                description: Esito della richiesta di eliminazione
                 example: false
               message:
                 type: string
+                description: Messaggio di errore
                 example: L'utente che ha richiesto l'eliminazione del gruppo non è il leader!
         404:
           description: Il gruppo specificato non esiste
@@ -1338,9 +1358,11 @@ paths:
             properties:
               success:
                 type: boolean
+                description: Esito della richiesta di eliminazione
                 example: false
               message:
                 type: string
+                description: Messaggio di errore
                 example: Il gruppo specificato non esiste!
         500:
           description: Errore durante l'eliminazione del gruppo
@@ -1349,10 +1371,191 @@ paths:
             properties:
               success:
                 type: boolean
+                description: Esito della richiesta di eliminazione
                 example: false
               message:
                 type: string
+                description: Messaggio di errore
                 example: Errore durante l'eliminazione del gruppo
+                
+  /gruppo/{idGruppo}/membro/{idMembro}:
+    delete:
+      summary: Rimuove un membro da un gruppo
+      tags:
+        - Gruppi
+      security:
+        - JWT: []
+      parameters:
+        - name: idGruppo
+          in: path
+          description: ID del gruppo
+          required: true
+          type: string
+        - name: idMembro
+          in: path
+          description: ID del membro da rimuovere
+          required: true
+          type: string
+        - name: Authorization
+          in: header
+          description: Token di autenticazione
+          required: true
+          type: string
+      responses:
+        204:
+          description: Membro rimosso correttamente dal gruppo
+        400:
+          description: Parametri assenti o non validi
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito richiesta rimozione membro
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore, parametri assenti o non validi
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        403:
+          description: L'utente che ha richiesto la rimozione del membro non è il leader
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito richiesta rimozione membro
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'utente che ha richiesto la rimozione del membro non è il leader!
+        404:
+          description: Il gruppo specificato non esiste o il membro non è presente nel gruppo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito richiesta rimozione membro
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Il gruppo specificato non esiste o il membro non è presente nel gruppo!
+        500:
+          description: Errore durante l'eliminazione del membro dal gruppo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito richiesta rimozione membro
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore durante l'eliminazione del gruppo
+                
+  /gruppo/{idGruppo}/abbandono:
+    delete:
+      summary: Rimuove l'utente corrente da un gruppo
+      tags:
+        - Gruppiou
+      security:
+        - JWT: []
+      parameters:
+        - name: idGruppo
+          in: path
+          description: ID del gruppo
+          required: true
+          type: string
+        - name: Authorization
+          in: header
+          description: Token di autenticazione
+          required: true
+          type: string
+      responses:
+        204:
+          description: Membro rimosso correttamente dal gruppo
+        400:
+          description: Parametri assenti o non validi
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della richiesta di abbandono
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore, parametri assenti o non validi
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        403:
+          description: L'utente che ha richiesto l'abbandono è leader
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della richiesta di abbandono
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'utente che ha richiesto l'abbandono è leader!
+        404:
+          description: Il gruppo specificato non esiste o l'utente non è membro del gruppo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della richiesta di abbandono
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Il gruppo specificato non esiste o l'utente non è membro del gruppo!
+        500:
+          description: Errore durante l'abbandono del gruppo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della richiesta di abbandono
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore durante l'abbandono
 
   /profiloData:
     get:
