@@ -1281,7 +1281,7 @@ paths:
                 description: Messaggio di errore
                 example: L'operazione di invio delle email per l'assegnazione del task non è andata a buon fine
                 
-  /gruppo/{idGruppo}:
+  /gruppi/{idGruppo}:
     delete:
       summary: Elimina un gruppo
       tags:
@@ -1378,7 +1378,7 @@ paths:
                 description: Messaggio di errore
                 example: Errore durante l'eliminazione del gruppo
                 
-  /gruppo/{idGruppo}/membro/{idMembro}:
+  /gruppi/{idGruppo}/membro/{idMembro}:
     delete:
       summary: Rimuove un membro da un gruppo
       tags:
@@ -1470,11 +1470,11 @@ paths:
                 description: Messaggio di errore
                 example: Errore durante l'eliminazione del gruppo
                 
-  /gruppo/{idGruppo}/abbandono:
+  /gruppi/{idGruppo}/abbandono:
     delete:
       summary: Rimuove l'utente corrente da un gruppo
       tags:
-        - Gruppiou
+        - Gruppi
       security:
         - JWT: []
       parameters:
@@ -1556,7 +1556,287 @@ paths:
                 type: string
                 description: Messaggio di errore
                 example: Errore durante l'abbandono
+                
+  /gruppi/verifica-task/{token}:
+    get:
+      summary: Verifica un token di task
+      tags:
+        - Gruppi
+      security:
+        - JWT: []
+      parameters:
+        - name: token
+          in: path
+          description: Token da verificare
+          required: true
+          type: string
+      responses:
+        200:
+          description: Token verificato con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della verifica della task
+                example: true
+              message:
+                type: string
+                description: Messaggio di conferma
+                example: Token verificato con successo!
+              result:
+                type: object
+                properties:
+                  taskId:
+                    type: string
+                    example: 12345
+                  taskName:
+                    type: string
+                    example: Task 1
+                  deadline:
+                    type: string
+                    example: 2023-06-30T12:00:00Z
+                  groupName:
+                    type: string
+                    example: Group 1
+                  groupID:
+                    type: string
+                    example: 67890
+                  memberID:
+                    type: string
+                    example: abcdef
+        400:
+          description: Parametro token mancante
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della verifica della task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Il parametro token è mancante!
+        401:
+          description: Token scaduto
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della verifica della task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Token scaduto
+        409:
+          description: Task già rifiutato o accettato
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della verifica della task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Task già rifiutato o accettato!
+        500:
+          description: Errore durante la verifica del token
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della verifica della task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'operazione di verifica del token non è andata a buon fine
+                
+  /gruppi/task-assegnata:
+    delete:
+      summary: Rifiuta una task assegnata
+      tags:
+        - Gruppi
+      security:
+        - JWT: []
+      parameters:
+        - name: token
+          in: body
+          description: Token della task da rifiutare
+          required: true
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+      responses:
+        200:
+          description: Task rifiutata con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della richiesta di rifiuto della task
+                example: true
+              message:
+                type: string
+                description: Messaggio di conferma
+                example: Task rifiutata con successo!
+        400:
+          description: Parametro token mancante
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della richiesta di rifiuto della task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Il parametro token è mancante!
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        409:
+          description: Task già rifiutata o accettata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della richiesta di rifiuto della task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Task già rifiutata o accettata!
+        500:
+          description: Errore durante il rifiuto della task
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della richiesta di rifiuto della task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'operazione di rifiuto della task non è andata a buon fine
 
+    post:
+      summary: Accetta una task assegnata
+      tags:
+        - Task
+      security:
+        - JWT: []
+      parameters:
+        - name: token
+          in: body
+          description: Token della task da accettare
+          required: true
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+      responses:
+        201:
+          description: Task accettata con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito accettazione task
+                example: true
+              message:
+                type: string
+                description: Messaggio di conferma
+                example: Task accettata con successo!
+              result:
+                $ref: "#/definitions/Task"
+        400:
+          description: Parametro "token" mancante
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito accettazione task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Il parametro token è mancante!
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        409:
+          description: Task già rifiutata o accettata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito accettazione task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Task già rifiutata o accettata!
+        500:
+          description: Errore durante l'accettazione della task
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito accettazione task
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'operazione di accettazione della task non è andata a buon fine
+  
   /profiloData:
     get:
       summary: Ottieni i dati dell'utente
@@ -2198,7 +2478,7 @@ paths:
                 description: Messaggio di errore
                 example: L'operazione di rimozione della task non è andata a buon fine
 
-  /ordinata:
+  /todos/ordinata:
     get:
       summary: Ottieni la lista delle task ordinata
       tags:
