@@ -237,12 +237,14 @@ router.get("/verifica-task/:token", async (req, res) => {
     }
 });
 
+
+
 router.delete('/task-assegnata', async (req, res) => {
     console.log("DELETE /task-assegnata");
     const {token} = req.body;
     
     if (!token) {
-        return res.status(400).json({ success: false, message: `Il parametro "token" mancante!` });
+        return res.status(400).json({ success: false, message: `Il parametro token è mancante!` });
     }
     
     try {
@@ -256,12 +258,14 @@ router.delete('/task-assegnata', async (req, res) => {
     }
 });
 
+
+
 router.post('/task-assegnata', async (req, res) => {
     console.log("POST /task-assegnata");
     const {token} = req.body;
 
     if (!token) {
-        return res.status(400).json({ success: false, message: `Il parametro "token" mancante!` });
+        return res.status(400).json({ success: false, message: `Il parametro token mancante!` });
     }
 
     try {
