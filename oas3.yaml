@@ -25,6 +25,8 @@ paths:
   /timer/stato:
     get:
       summary: Stato del timer
+      tags:
+        - Timer
       description: Restituisce lo stato corrente del timer Pomodoro.
       responses:
         200:
@@ -61,6 +63,8 @@ paths:
   /timer/fine:
     put:
       summary: Fine della fase del timer
+      tags:
+        - Timer
       description: Aggiorna lo stato del timer Pomodoro alla fine della fase corrente.
       parameters:
         - in: body
@@ -135,6 +139,8 @@ paths:
   /timer/impostazioni:
     get:
       summary: Ottiene le impostazioni del timer Pomodoro
+      tags:
+        - Timer
       description: Restituisce le impostazioni correnti del timer Pomodoro.
       responses:
         200:
@@ -191,6 +197,8 @@ paths:
                 
     put:
       summary: Modifica le impostazioni del timer Pomodoro
+      tags:
+        - Timer
       description: Modifica le impostazioni del timer Pomodoro con i nuovi valori specificati.
       parameters:
         - in: body
@@ -259,10 +267,12 @@ paths:
                 description: Messaggio di errore
                 example: Errore durante la modifica delle impostazioni
                 
-  /timer/salva-sessione:
+  /sessione/salva-sessione:
     x-summary: Salva o crea una sessione
     put:
       summary: api/v1/sessione/
+      tags:
+        - Sessione
       security:
         - JWT: []
       description: >-
@@ -330,6 +340,8 @@ paths:
   /profilo/autenticazione:
     post:
       summary: Effetua il login
+      tags:
+        - Profilo
       description: >-
         Effetua il login, controllando la corrispondenza tra le credenziali ricevute (email e password).
         Se l'autenticazione avviene con successo viene restituito un jwt token
@@ -410,6 +422,8 @@ paths:
   /profilo/nuova-autenticazione:
     post:
       summary: Richiesta di nuova autenticazione
+      tags:
+        - Profilo
       description: >-
         Effetua la registrazione, controllando la validità e la corrispondenza tra le credenziali ricevute (email e password).
         Se l'autenticazione avviene con successo viene restituito un jwt token. Invia una email di conferma all'utente con un link di verifica.
@@ -505,6 +519,8 @@ paths:
   /profilo/verifica-registrazione:
     post:
       summary: Verifica registrazione
+      tags:
+        - Profilo
       description: >-
         Verifica la registrazione di un account utilizzando un token di conferma.
       consumes:
@@ -591,6 +607,8 @@ paths:
   /profilo/richiesta-nuova-password:
     post:
       summary: Richiesta di nuova password
+      tags:
+        - Profilo
       description: >-
         Invia una email di recupero password all'utente con un link per il reset della password.
       consumes:
@@ -677,6 +695,8 @@ paths:
   /profilo/richiesta-reset-password:
     post:
       summary: Richiesta di reset password
+      tags:
+        - Profilo
       description: >-
         Resetta la password dell'utente utilizzando il token di recupero password e la nuova password forniti.
       consumes:
@@ -754,6 +774,8 @@ paths:
   /profilo/autenticazione-esterna:
     post:
       summary: Autenticazione esterna
+      tags:
+        - Profilo
       description: >-
         Gestisce l'autenticazione dell'utente utilizzando un token di autenticazione Google e l'ID del client.
       consumes:
@@ -813,6 +835,8 @@ paths:
   /gruppi/membro:
     get:
       summary: Otteniene i dati del membro
+      tags:
+        - Gruppi
       security:
         - JWT: []
       description: Restituisce i dati relativi ai gruppi rispetto al membro che li richiede
@@ -895,6 +919,8 @@ paths:
   /gruppi/leader:
     get:
       summary: Otteniene i dati del leader
+      tags:
+        - Gruppi
       security:
         - JWT: []
       description: Restituisce i dati relativi al leader
@@ -978,6 +1004,8 @@ paths:
   /gruppi:
     post:
       summary: Creazione di un gruppo
+      tags:
+        - Gruppi
       security:
         - JWT: []
       description: Crea un nuovo gruppo con il nome specificato dal body della richiesta
@@ -1053,6 +1081,8 @@ paths:
                 
     put:
       summary: Unione ad un gruppo
+      tags:
+        - Gruppi
       security:
         - JWT: []
       description: Permette a un utente di unirsi a un gruppo utilizzando un codice di accesso
@@ -1155,6 +1185,8 @@ paths:
   /gruppi/task:
     post:
       summary: Assegnazione di una task
+      tags:
+        - Gruppi
       security:
         - JWT: []
       description: Assegna una nuova task ai membri specificati e invia loro una notifica via email
@@ -1249,79 +1281,84 @@ paths:
                 description: Messaggio di errore
                 example: L'operazione di invio delle email per l'assegnazione del task non è andata a buon fine
                 
-  # /{idGruppo}:
-  #   delete:
-  #     summary: Eliminare un gruppo
-  #     description: Permette di eliminare un gruppo esistente utilizzando l'ID del gruppo
-  #     produces:
-  #       - application/json
-  #     parameters:
-  #       - name: idGruppo
-  #         in: path
-  #         description: ID del gruppo da eliminare
-  #         required: true
-  #         type: string
-  #         example: "groupId1"
-  #     responses:
-  #       200:
-  #         description: Gruppo eliminato con successo
-  #         schema:
-  #           type: object
-  #           properties:
-  #             success:
-  #               type: boolean
-  #               example: true
-  #             message:
-  #               type: string
-  #               example: "Gruppo eliminato correttamente"
-  #       400:
-  #         description: Parametri mancanti o non validi
-  #         schema:
-  #           type: object
-  #           properties:
-  #             success:
-  #               type: boolean
-  #               example: false
-  #             message:
-  #               type: string
-  #               example: "Errore, parametri assenti o non validi"
-  #       404:
-  #         description: Il gruppo specificato non esiste
-  #         schema:
-  #           type: object
-  #           properties:
-  #             success:
-  #               type: boolean
-  #               example: false
-  #             message:
-  #               type: string
-  #               example: "Il gruppo specificato non esiste!"
-  #       403:
-  #         description: L'utente che ha richiesto l'eliminazione non è il leader del gruppo
-  #         schema:
-  #           type: object
-  #           properties:
-  #             success:
-  #               type: boolean
-  #               example: false
-  #             message:
-  #               type: string
-  #               example: "L'utente che ha richiesto l'eliminazione del gruppo non è il leader!"
-  #       500:
-  #         description: Errore durante l'eliminazione del gruppo
-  #         schema:
-  #           type: object
-  #           properties:
-  #             success:
-  #               type: boolean
-  #               example: false
-  #             message:
-  #               type: string
-  #               example: "Errore durante l'eliminazione del gruppo"
-                
+  /gruppo/{idGruppo}:
+    delete:
+      summary: Elimina un gruppo
+      tags:
+        - Gruppi
+      parameters:
+        - name: idGruppo
+          in: path
+          description: ID del gruppo da eliminare
+          required: true
+          type: string
+        - name: Authorization
+          in: header
+          description: Token di autenticazione
+          required: true
+          type: string
+      responses:
+        200:
+          description: Gruppo eliminato correttamente
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                example: true
+              message:
+                type: string
+                example: Gruppo eliminato correttamente
+        400:
+          description: Parametri assenti o non validi
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                example: false
+              message:
+                type: string
+                example: Errore, parametri assenti o non validi
+        403:
+          description: L'utente che ha richiesto l'eliminazione del gruppo non è il leader
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                example: false
+              message:
+                type: string
+                example: L'utente che ha richiesto l'eliminazione del gruppo non è il leader!
+        404:
+          description: Il gruppo specificato non esiste
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Il gruppo specificato non esiste!
+        500:
+          description: Errore durante l'eliminazione del gruppo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: Errore durante l'eliminazione del gruppo
+
   /profiloData:
     get:
       summary: Ottieni i dati dell'utente
+      tags:
+        - Dati Profilo
       security:
         - JWT: []
       description: Restituisce i dati del profilo dell'utente
@@ -1386,6 +1423,8 @@ paths:
   /profiloData/username:
     put:
       summary: Aggiornamento dello username dell'utente
+      tags:
+        - Dati Profilo
       security:
         - JWT: []
       parameters:
@@ -1450,6 +1489,8 @@ paths:
   /profiloData/email:
     put:
       summary: Modifica dell'email e invio conferma
+      tags:
+        - Dati Profilo
       security:
         - JWT: []
       description: Permette di modificare l'email dell'utente e inviare un'email di conferma
@@ -1518,6 +1559,8 @@ paths:
   /profiloData/verifica-email:
     put:
       summary: Verifica email e aggiorna
+      tags:
+        - Dati Profilo
       security:
         - JWT: []
       description: Verifica l'email utilizzando un token e aggiorna l'email dell'utente
@@ -1594,6 +1637,8 @@ paths:
   /profiloData/password:
     put:
       summary: Aggiornamento della password
+      tags:
+        - Dati Profilo
       security:
         - JWT: []
       description: Permette di aggiornare la password dell'utente
@@ -1662,6 +1707,8 @@ paths:
   /todos:
     get:
       summary: Ottiene la lista delle tasks
+      tags:
+        - TO DO
       security:
         - JWT: []
       description: Restituisce la lista delle tasks dell'utente corrente.
@@ -1716,6 +1763,8 @@ paths:
     
     post:
       summary: Creare una nuova task
+      tags:
+        - TO DO
       security:
         - JWT: []
       description: Crea una nuova task per l'utente corrente.
@@ -1784,6 +1833,8 @@ paths:
     
     put:
       summary: Contrassegnazinoe di una task
+      tags:
+        - TO DO
       security:
         - JWT: []
       description: Contrassegna una task specificata dall'ID.
@@ -1866,6 +1917,8 @@ paths:
                 example: L'operazione di aggiornamento della task non è andata a buon fine
     delete:
       summary: Elimina una task
+      tags:
+        - TO DO
       security:
         - JWT: []
       description: Elimina la task specificata dall'ID.
@@ -1945,6 +1998,8 @@ paths:
   /ordinata:
     get:
       summary: Ottieni la lista delle task ordinata
+      tags:
+        - TO DO
       security:
         - JWT: []
       description: Restituisce la lista delle task ordinate in base al parametro di ordinamento specificato.
