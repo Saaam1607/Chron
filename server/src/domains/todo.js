@@ -116,14 +116,14 @@ router.delete('/', async (req, res) => {
 
 
 
-router.get('/ordinata', async (req, res) => {
-    console.log("GET /ordinata");
+router.get('/ordinata/:sort', async (req, res) => {
+    console.log("GET /ordinata/:sort");
     const listaTask = new ListaTasks(req.id);
 
     try {
 
         await listaTask.leggiTasks();
-        const { sort } = req.params;
+        const sort = req.query.sort;
 
         if(listaTask.tasks.length == 0) {
             return res.status(204).end();
