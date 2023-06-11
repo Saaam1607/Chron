@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
             return res.status(204).end();
         } else {
             // filtro la lista di task per restituire solo i campi necessari
-            todos.map(task => ({
+            const filteredTodos= todos.map(task => ({
                 _id: task._id,
                 nome: task.nome,
                 dataScadenza: task.dataScadenza,
@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
                 nomeGruppo: task.nomeGruppo,
             }));
 
-            res.status(200).json({ success: true, tasks: todos });
+            res.status(200).json({ success: true, tasks: filteredTodos });
         }
 
     } catch (error) {
