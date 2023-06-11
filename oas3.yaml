@@ -872,7 +872,7 @@ paths:
                 description: Messaggio di errrore
                 example: "Errore durante la lettura dei dati"  
                 
-  /username:
+  /profiloData/username:
     put:
       summary: Aggiornamento dello username dell'utente
       security:
@@ -938,6 +938,218 @@ paths:
                 type: string
                 description: Messaggio di errore relativo all'errore di aggiornamento dello username
                 example: Errore durante l'aggiornamento dello username
+                
+  /profiloData/email:
+    put:
+      summary: Modifica dell'email e invio conferma
+      security:
+        - JWT: []
+      description: Permette di modificare l'email dell'utente e inviare un'email di conferma
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Dati per la modifica dell'email
+          required: true
+          schema:
+            type: object
+            properties:
+              password:
+                type: string
+                description: Password corrente dell'utente
+                example: randomPassword123!
+              email:
+                type: string
+                description: Nuova email desiderata
+                example: randomEmail@gmail.com
+      responses:
+        200:
+          description: Email di conferma inviata con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della modifica e invio dell'email
+                example: true
+              message:
+                type: string
+                description: Messaggio di conferma
+                example: Email di conferma modifica inviata con successo!
+        401:
+          description: Password errata (o token non presente/valido)
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della modifica e invio dell'email
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore, password errata
+        500:
+          description: Errore durante l'invio dell'email
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della modifica e invio dell'email
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore durante l'invio dell'email
+                
+  /profiloData/verifica-email:
+    put:
+      summary: Verifica email e aggiorna
+      security:
+        - JWT: []
+      description: Verifica l'email utilizzando un token e aggiorna l'email dell'utente
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Token di verifica dell'email
+          required: true
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: Token di verifica dell'email
+      responses:
+        201:
+          description: Email aggiornata con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della modifica
+                example: true
+              message:
+                type: string
+                description: Messaggio di conferma
+                example: L'email è stata aggiornata con successo
+        401:
+          description: Token di verifica non valido o scaduto
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della modifica
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Token di verifica non valido o scaduto
+        409:
+          description: Email già aggiornata o token non valido
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della modifica
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'email già aggiornata o token non valido!
+        500:
+          description: Errore durante l'aggiornamento dell'email
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della modifica
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'operazione di aggiornamento dell'email non è andato a buon fine
+                
+  /profiloData/password:
+    put:
+      summary: Aggiornamento della password
+      security:
+        - JWT: []
+      description: Permette di aggiornare la password dell'utente
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Dati per l'aggiornamento della password
+          required: true
+          schema:
+            type: object
+            properties:
+              password:
+                type: string
+                description: Password corrente dell'utente
+                example: currentRandomPassword123!
+              nuovaPassword:
+                type: string
+                description: Nuova password desiderata
+                example: newRandomPassword123!
+      responses:
+        200:
+          description: Password aggiornata con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della modifica
+                example: true
+              message:
+                type: string
+                description: Messaggio di conferma
+                example: Password aggiornata con successo
+        401:
+          description: Password errata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della modifica
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore, password errata
+        500:
+          description: Errore durante l'aggiornamento della password
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della modifica
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore durante l'aggiornamento della password
                 
   /todos:
     get:
@@ -1294,6 +1506,15 @@ paths:
                 type: string
                 description: Messaggio di errore
                 example: L'operazione di ordinamento delle task non è andata a buon fine
+              
+
+
+
+
+
+
+
+
 
 definitions:
   NewTask:
@@ -1332,719 +1553,3 @@ definitions:
       email:
         type: string
         description: Email dell'utente
-
-  # /profilo/nuova-autenticazione:
-  #   post:
-  #     summary: Effetua la registrazione
-  #     description: >-
-  #       Effetua la registrazione, controllando la validità e la corrispondenza tra le credenziali ricevute (email e password).
-  #       Se l'autenticazione avviene con successo viene restituito un jwt token
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             required:
-  #               - username
-  #               - email
-  #               - password
-  #             properties:
-  #               username:
-  #                 type: string
-  #                 description: "Username ricevuto dall'utente"
-  #               email:
-  #                 type: string
-  #                 description: "Email ricevuta dall'utente"
-  #               password:
-  #                 type: string
-  #                 description: "Password ricevuta dall'utente"
-  #     responses:
-  #       "200":
-  #         description: Registrazione e autenticazione completate con successo
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: true
-  #                 token:
-  #                   type: string
-  #                   example: xxxx
-  #       "401":
-  #         description: Errore, credenziali non valide
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore, credenziali non valide
-  #       "409":
-  #         description: Errore, email già utilizzata
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore, email già utilizzata
-  #       "500":
-  #         description: Errore durante la registrazione
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore durante la registrazione
-                    
-  # /profilo/data:
-  #   get:
-  #     summary: Recupera i dati di un utente (email e username)
-  #     description: >-
-  #       Recupera i dati di un utente (email e username). A questo proposito viene gestita l'interazione con il db
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             required:
-  #               - id
-  #             properties:
-  #               id:
-  #                 type: integer
-  #                 description: "ID dell'utente"
-  #     responses:
-  #       "200":
-  #         description: Registrazione e autenticazione completate con successo
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: true
-  #                 username:
-  #                   type: string
-  #                   example: username
-  #                 email:
-  #                   type: string
-  #                   example: email
-  #       "400":
-  #         description: Errore, ID non trovato
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore, ID non trovato
-  #       "500":
-  #         description: Errore durante la lettura dei dati
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore durante la lettura dei dati
-  # /timer/stato:
-  #   get:
-  #     summary: Legge fase e durata del timer
-  #     description: >-
-  #       Legge e restituisce la fase e durata del timer. Se non trova i dati riguardo alle impostazioni sullo sessione storage o se questi non sono validi, salva quelli di default
-  #     responses:
-  #       "200":
-  #         description: Modifica delle impostazioni avvenuta con successo
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: true
-  #                 fase:
-  #                   type: integer
-  #                   example: 1
-  #                 durata:
-  #                   type: integer
-  #                   example: 5
-  #       "500":
-  #         description: Errore durante la lettura dello stato del timer
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore durante la lettura dello stato del timer
-                    
-  # /timer/fine:
-  #   put:
-  #     summary: Aggiorna la fase e durata del timer al suo termine
-  #     description: >-
-  #       Aggiorna la fase e durata del timer. Se il timer è nella fase pomdoro e il tempo non è terminato, la fase non verrà aggiornata e il tempo del pomdoro verra ristabilito
-  #       Se il timer è nella fase pomdoro e il tempo è esaurito oppure se è nella fase di pausa (lunga o corta), vengono aggiornate fase e durata.
-  #       A questo fine utilizza dei dati salvati all'interno dello session storage che devono quindi essere presenti e validi
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             required:
-  #               - fase
-  #               - time
-  #             properties:
-  #               fase:
-  #                 type: integer
-  #                 enum: [0, 1, 2]
-  #                 description: "Fase del timer (pomodoro, pausaCorta, pausaLunga)"
-  #               time:
-  #                 type: integer
-  #                 description: "Durata della fase"
-  #     responses:
-  #       "200":
-  #         description: Modifica delle impostazioni avvenuta con successo
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: true
-  #                 fase:
-  #                   type: integer
-  #                   example: 1
-  #                 durata:
-  #                   type: integer
-  #                   example: 5
-  #       "400":
-  #         description: Input non validi
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore, input non validi
-  #       "404":
-  #         description: Sessione mancante o non valida
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore, sessione mancante o non valida
-  #       "500":
-  #         description: Errore interno durante l'aggiornamento del timer
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore interno durante l'aggiornamento del timer
-                    
-  # /timer/impostazioni:
-  #   get:
-  #     summary: Legge e ritorna i valori delle impostazioni attuali del timer
-  #     description: >-
-  #       Legge e ritorna i valori delle impostazioni attuali del timer dallo session storage e le restituisce.
-  #       I valori delle impostazioni, essendo salvati nella sessione, sono relativi unicamente alla sessione corrente.
-  #       I dati delle impostazioni salvati nella sessione devono essere presenti e validi.
-  #     responses:
-  #       "200":
-  #         description: Lettura delle impostazioni avvenuta con successo
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: true
-  #                 durataPomodoro:
-  #                   type: integer
-  #                   example: 15
-  #                 durataPausaCorta:
-  #                   type: integer
-  #                   example: 5
-  #                 durataPausaLunga:
-  #                   type: integer
-  #                   example: 15
-  #                 pomodoriPerSessione:
-  #                   type: integer
-  #                   example: 4
-  #       "404":
-  #         description: Impostazioni della sessione mancanti o non valide
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore, impostazioni della sessione mancanti o non valide
-  #       "500":
-  #         description: Errore nella lettura delle impostazioni
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore nella lettura delle impostazioni
-                    
-  #   put:
-  #     summary: Modifica le impostazioni del timer
-  #     description: >-
-  #       Modifica le impostazioni del timer con i valori ricevuti nel body della richiesta. Le impostazoni rimangono solo localmente poiché vengono salvate nello session storage.
-  #       In particolare permette di modificare la durata della sessione di studio, la durata
-  #       della pausa breve, della pausa lunga e del numero di sessioni prima della pausa lunga.
-  #     parameters:
-  #       - name: pomodoro
-  #         in: body
-  #         required: true
-  #       #   example: 25
-  #       # content:
-  #       #   application/json:
-  #       #     schema:
-  #       #       type: object
-  #       #       required:
-  #       #         - pomdoro
-  #       #         - pausaCorta
-  #       #         - pausaLunga
-  #       #         - sessioni
-  #       #       properties:
-  #       #         pomdoro:
-  #       #           type: integer
-  #       #           description: "Durata del pomodoro, ovvero il tempo della singola sessione"
-  #       #           example: 25
-  #       #         pausaCorta:
-  #       #           type: integer
-  #       #           description: "Durata della pausaCorta"
-  #       #           example: 5
-  #       #         pausaLunga:
-  #       #           type: integer
-  #       #           description: "Durata della pausaLunga"
-  #       #           example: 15
-  #       #         sessioni:
-  #       #           type: integer
-  #       #           description: "Numero di sessioni prima della pausaLunga"
-  #       #           example: 4
-  #     responses:
-  #       "204":
-  #         description: Modifica delle impostazioni avvenuta con successo
-  #       "400":
-  #         description: Input non validi
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore, input non validi
-  #       "404":
-  #         description: Sessione mancante o non valida
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore, sessione mancante o non valida
-  #       "500":
-  #         description: Errore durante la modifica delle impostazioni
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore durante la modifica delle impostazioni
-                    
-  # /timer/salva-sessione:
-  #   put:
-  #     summary: Salva o crea sessione
-  #     description: >-
-  #       Crea o aggiorna una sessione nel database.
-  #       Se esiste già una sessione con la stessa data e ID_utente,
-  #       aggiorna il campo "minuti". Altrimenti, crea una nuova sessione.
-  #     parameters:
-  #       - in: header
-  #         name: security
-  #         description: Token JWT di autorizzazione
-  #         required: true
-  #         schema:
-  #           type: string
-  #           example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             required:
-  #               - minuti
-  #               - date
-  #             properties:
-  #               minuti:
-  #                 type: integer
-  #                 example: 25
-  #               date:
-  #                 type: string
-  #                 example: "2023-05-23T00:00:00"
-  #     responses:
-  #       "200":
-  #         description: Sessione salvata con successo.
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: true
-  #                 message:
-  #                   type: string
-  #                   example: Sessione salvata con successo
-  #       "201":
-  #         description: Sessione salvata con successo.
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: true
-  #                 message:
-  #                   type: string
-  #                   example: Sessione salvata con successo
-  #       "400":
-  #         description: Parametri mancanti o non validi
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore, parametri mancanti o non validi
-  #       "500":
-  #         description: Errore interno durante il salvataggio della sessione
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: Errore interno durante il salvataggio della sessione
-  # /todos/:
-  #   get:
-  #     summary: Ottieni elenco delle tasks
-  #     description: >-
-  #       L'API delle attività è progettata per gestire le attività degli utenti.
-  #       Questo endpoint consente agli utenti di ottenere l'elenco delle task salvati nel sistema.
-  #       Neccessita che l'utente sia autenticato quindi nel header ci deve essere il token.
-  #     responses:
-  #       "200":
-  #         description: Elenco delle tasks recuperato con successo
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: true
-  #                 tasks:
-  #                   type: array
-  #                   items:
-  #                     type: object
-  #                     properties:
-  #                       _id:
-  #                         type: string
-  #                         example: "6462912e2af3e04ffc16c84d"
-  #                       ID_utente:
-  #                         type: integer
-  #                         example: 1
-  #                       nome:
-  #                         type: string
-  #                         example: "temp6"
-  #                       dataScadenza:
-  #                         type: string
-  #                         example: "2023-05-27T00:00:00.000Z"
-  #                       contrassegna:
-  #                         type: boolean
-  #                         example: false
-  #                       nomeGruppo:
-  #                         type: string
-  #                         example: "vxvc"
-  #       "204":
-  #         description: Nessuna task da mostrare. NO CONTENT
-  #       "500":
-  #         description: Errore del server.
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: "L'operazione di lettura delle task non è andata a buon fine. ID_utdfente is not defined"
-
-  #   post:
-  #     summary: Crea una nuova task
-  #     description: "Crea una nuova task e la aggiunge sia alla ListaTasks che nel database. La data di scadenza è facoltativa."
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             properties:
-  #               nome:
-  #                 type: string
-  #                 description: "Nome della task"
-  #               dataScadenza:
-  #                 type: string
-  #                 description: "Data di scadenza della task"
-  #     responses:
-  #       "201":
-  #         description: "Creazione del task completata con successo"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: true
-  #                 task:
-  #                   type: object
-  #                   properties:
-  #                     _id:
-  #                       type: string
-  #                       description: "ID della task creato"
-  #                     ID_utente:
-  #                       type: string
-  #                       description: "ID del utente a cui appartiene la task"
-  #                     contrassegna:
-  #                       type: boolean
-  #                       description: "stato di completamento della task"
-  #                     nomeGruppo:
-  #                       type: string
-  #                       description: "ID del gruppo a cui appartiene la task"
-  #       "400":
-  #         description: "Richiesta non valida"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: "Nome mancante"
-  #       "500":
-  #         description: "Errore durante la creazione del task"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: "Si è verificato un errore durante la creazione del task. Errore: [messaggio di errore]"
-
-  #   put:
-  #     summary: Contrassegna una task come completata
-  #     description: "Contrassegna una task come completata sulla base dell'ID fornito nella richiesta."
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             properties:
-  #               id:
-  #                 type: string
-  #                 description: "ID della task da contrassegnare come completata"
-  #     responses:
-  #       "200":
-  #         description: "Task contrassegnata come completata con successo"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: true
-  #                 result:
-  #                   type: object
-  #                   properties:
-  #                     _id:
-  #                       type: string
-  #                       description: "ID della task contrassegnata"
-  #                     ID_utente:
-  #                       type: string
-  #                       description: "ID dell'utente a cui appartiene la task"
-  #                     contrassegna:
-  #                       type: boolean
-  #                       description: "Stato di completamento della task"
-  #                     nomeGruppo:
-  #                       type: string
-  #                       description: "ID del gruppo a cui appartiene la task"
-  #       "404":
-  #         description: "Task non trovata"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: "Task con ID [ID della task] non trovata"
-  #       "500":
-  #         description: "Errore durante la contrassegnazione della task"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: "Si è verificato un errore durante l'operazione. Messaggio: [messaggio di errore]"
-
-  #   delete:
-  #     summary: Elimina una task contrassegnata
-  #     description: "Elimina una task contrassegnata sulla base dell'ID fornito nella richiesta. Una task può essere eliminata soltanto se è stata contrassegnata in precedenza."
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             properties:
-  #               id:
-  #                 type: string
-  #                 description: "ID della task da eliminare"
-  #     responses:
-  #       "200":
-  #         description: "Task eliminata con successo"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: true
-  #                 result:
-  #                   type: object
-  #                   properties:
-  #                     _id:
-  #                       type: string
-  #                       description: "ID della task eliminata"
-  #                     ID_utente:
-  #                       type: string
-  #                       description: "ID dell'utente a cui apparteneva la task"
-  #                     contrassegna:
-  #                       type: boolean
-  #                       description: "Stato di completamento della task"
-  #                     nomeGruppo:
-  #                       type: string
-  #                       description: "ID del gruppo a cui apparteneva la task"
-  #       "404":
-  #         description: "Task non trovata"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 success:
-  #                   type: boolean
-  #                   example: false
-  #                 message:
-  #                   type: string
-  #                   example: "Task con ID [ID della task] non trovata"
