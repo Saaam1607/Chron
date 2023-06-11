@@ -386,6 +386,19 @@ paths:
                 type: string
                 description: Messaggio di conferma
                 example: Non ci sono sessioni da mostrare
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
         500:
           description: Errore durante la lettura delle sessioni
           schema:
@@ -2616,6 +2629,42 @@ paths:
                 description: Messaggio di errore
                 example: L'operazione di ordinamento delle task non è andata a buon fine
               
+  /saleStudio/:
+    get:
+      summary: Ottieni elenco sale studio
+      tags:
+        - SaleStudio
+      parameters:
+        - name: nome
+          in: query
+          description: Nome della sala studio
+          required: false
+          type: string
+        - name: indirizzo
+          in: query
+          description: Indirizzo della sala studio
+          required: false
+          type: string
+      responses:
+        200:
+          description: Successo nell'ottenere l'elenco delle sale studio
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/SalaStudio"
+        500:
+          description: Errore durante la lettura delle sale studio
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito della lettura delle sale studio
+                example: false
+              error:
+                type: string
+                description: Messaggio di errore
+                example: Errore durante la lettura delle sale studio
 
 
 
@@ -2638,43 +2687,93 @@ definitions:
   Task:
     type: object
     properties:
-      _id:
+      ID_utente:
         type: string
-        description: ID della task
+        format: uuid
+        description: Identificatore univoco dell'utente associato alla task
+        example: 60c5e9330a4c501638e924b2
+      ID_gruppo:
+        type: string
+        format: uuid
+        description: Identificatore univoco del gruppo associato alla task
+        example: 60c5e9330a4c501638e924b3
       nome:
         type: string
-        description: Nome della task
+        description: Nome del task
+        example: randomTask
       dataScadenza:
         type: string
+        format: date-time
         description: Data di scadenza della task
+        default: null
+        example: 2023-06-30T18:00:00Z
       contrassegna:
         type: boolean
-        description: Indica se la task è contrassegnato
-      nomeGruppo:
-        type: string
-        description: Nome del gruppo a cui appartiene la task
-  Data:
-    type: object
-    properties:
-      username:
-        type: string
-        description: Username dell'utente
-      email:
-        type: string
-        description: Email dell'utente
+        description: Indica se la task è stata contrassegnata
+        default: false
+        example: true
   Session:
     type: object
     properties:
-      sessionId:
+      _id:
         type: string
+        description: Identificatore univoco per la sessione
         example: "session123"
-      sessionName:
+      ID_utente:
         type: string
-        example: "Session 1"
-      sessionDate:
+        description: Identificatore univoco per l'utente associato alla sessione
+        example: "utente123"
+      data:
         type: string
+        description: Data della sessione
         format: date-time
         example: "2023-06-11T12:00:00Z"
-      duration:
+      minuti:
         type: number
+        description: Durata della sessione in minuti
         example: 60
+  SalaStudio:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Identificatore univoco della sala studio
+        example: 60c5e9330a4c501638e924b4
+      name:
+        type: string
+        description: Nome della sala studio
+        example: Biblioteca Comunale
+      address:
+        type: string
+        description: Indirizzo della sala studio
+        example: Via Roma 123
+      restrictions:
+        type: string
+        description: Restrizioni o regolamenti specifici della sala studio
+        example: Accesso solo per studenti universitari
+      rating:
+        type: number
+        description: Valutazione della sala studio
+        example: 4.5
+      openingHours:
+        type: array
+        description: Orari di apertura della sala studio per ogni giorno della settimana
+        items:
+          type: object
+          properties:
+            day:
+              type: string
+              description: Giorno della settimana
+              example: Lunedì
+            isOpen:
+              type: boolean
+              description: Indica se la sala studio è aperta in quel giorno
+              example: true
+            openingTime:
+              type: string
+              description: Orario di apertura della sala studio nel giorno specificato
+              example: 08:00
+            closingTime:
+              type: string
+              description: Orario di chiusura della sala studio nel giorno specificato
+              example: 18:00
