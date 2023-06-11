@@ -353,9 +353,9 @@ describe('API /api/v1/profilo endpoints', () => {
 
    
 
-    test('POST /api/v1/profilo/autenticazioneEsterna should respond with status 400 if gToken or clientId is missing', async () => {
+    test('POST /api/v1/profilo/autenticazione-esterna should respond with status 400 if gToken or clientId is missing', async () => {
         const response = await request(app)
-          .post(`${api_url}/autenticazioneEsterna`)
+          .post(`${api_url}/autenticazione-esterna`)
           .send({});
       
         expect(response.status).toBe(400);
@@ -363,18 +363,18 @@ describe('API /api/v1/profilo endpoints', () => {
         expect(response.body.message).toBe('I parametri "gToken" o "clientId" mancanti!');
     });
       
-    test('POST /api/v1/profilo/autenticazioneEsterna should respond with status 401 if email is not verified', async () => {
+    test('POST /api/v1/profilo/autenticazione-esterna should respond with status 401 if email is not verified', async () => {
         const gTokenNotValid = jwt.sign({ name: 'John Doe', email: 'john@example.com', userName: 'johndoe', email_verified: false }, process.env.ACCESS_TOKEN_SECRET);
 
         const response = await request(app)
-          .post(`${api_url}/autenticazioneEsterna`)
+          .post(`${api_url}/autenticazione-esterna`)
           .send({ gToken:gTokenNotValid , clientId });
       
         expect(response.status).toBe(401);
         expect(response.body.success).toBe(false);
     });
     
-    test('POST /api/v1/profilo/autenticazioneEsterna should respond with status 409 if the email is already used for internal registration', async () => {
+    test('POST /api/v1/profilo/autenticazione-esterna should respond with status 409 if the email is already used for internal registration', async () => {
         // Mock the necessary functions
         //jest.spyOn(GestoreDB, 'controllaEsistenzaEmail').mockResolvedValueOnce(true);
         //jest.spyOn(GestoreDB, 'login').mockResolvedValueOnce(false);
@@ -382,7 +382,7 @@ describe('API /api/v1/profilo endpoints', () => {
         const gTokenEmail = jwt.sign({ name: 'John Doe', email: user.email, userName: 'johndoe', email_verified: true }, process.env.ACCESS_TOKEN_SECRET);
       
         const response = await request(app)
-          .post(`${api_url}/autenticazioneEsterna`)
+          .post(`${api_url}/autenticazione-esterna`)
           .send({ gToken: gTokenEmail, clientId });
       
         expect(response.status).toBe(409);
@@ -390,7 +390,7 @@ describe('API /api/v1/profilo endpoints', () => {
     });
     
     
-    test('POST /api/v1/profilo/autenticazioneEsterna should respond with status 200 and token if the email is not already registered internally', async () => {
+    test('POST /api/v1/profilo/autenticazione-esterna should respond with status 200 and token if the email is not already registered internally', async () => {
         // Mock the necessary functions
         //jest.spyOn(GestoreDB, 'controllaEsistenzaEmail').mockResolvedValueOnce(false);
         //jest.spyOn(GestoreDB, 'login').mockResolvedValueOnce(true);
@@ -400,7 +400,7 @@ describe('API /api/v1/profilo endpoints', () => {
         await Credenziali.create(externalUser);
         
         const response = await request(app)
-          .post(`${api_url}/autenticazioneEsterna`)
+          .post(`${api_url}/autenticazione-esterna`)
           .send({ gToken, clientId });
       
         expect(response.status).toBe(200);
@@ -409,7 +409,7 @@ describe('API /api/v1/profilo endpoints', () => {
     });
     
      
-    test('POST /api/v1/profilo/autenticazioneEsterna should respond with status 201 and token if the email is not registered internally', async () => {
+    test('POST /api/v1/profilo/autenticazione-esterna should respond with status 201 and token if the email is not registered internally', async () => {
         // Mock the necessary functions
         //jest.spyOn(GestoreDB, 'controllaEsistenzaEmail').mockResolvedValueOnce(false);
         //jest.spyOn(GestoreDB, 'registra').mockResolvedValueOnce({ _id: 'user-id' });
@@ -419,7 +419,7 @@ describe('API /api/v1/profilo endpoints', () => {
         await Credenziali.deleteMany({});
 
         const response = await request(app)
-          .post(`${api_url}/autenticazioneEsterna`)
+          .post(`${api_url}/autenticazione-esterna`)
           .send({ gToken, clientId });
       
         expect(response.status).toBe(201);
@@ -427,14 +427,14 @@ describe('API /api/v1/profilo endpoints', () => {
         //expect(response.body.token).toBe('valid-token');
     });
     
-    test('POST /api/v1/profilo/autenticazioneEsterna should respond with status 500 if an error occurs', async () => {
+    test('POST /api/v1/profilo/autenticazione-esterna should respond with status 500 if an error occurs', async () => {
         // Mock the necessary functions
         jest.spyOn(GestoreDB, 'controllaEsistenzaEmail').mockImplementation(() => {
             throw new Error('Database error');
         });
       
         const response = await request(app)
-          .post(`${api_url}/autenticazioneEsterna`)
+          .post(`${api_url}/autenticazione-esterna`)
           .send({ gToken, clientId });
       
         expect(response.status).toBe(500);

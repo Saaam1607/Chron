@@ -27,13 +27,7 @@ test('app module should be defined', () => {
 });
 
 describe('API /api/v1/todos endpoints', () => {
-    let token;
-
-    beforeAll(() => {
-        token =
-        'Bearer ' +
-        jwt.sign({ id: '64765870316275628c4870b9' }, process.env.ACCESS_TOKEN_SECRET);
-    });
+    let token = 'Bearer ' + jwt.sign({ id: '64765870316275628c4870b9' }, process.env.ACCESS_TOKEN_SECRET);
 
     afterEach(async () => {
         await TaskModel.deleteMany({});
@@ -273,7 +267,7 @@ describe('API /api/v1/todos endpoints', () => {
         deleteMock.mockRestore();
     });
 
-    test('GET /api/v1/todos//ordinata should respond with status 400 if name, group, date or missing', async () => {
+    test('GET /api/v1/todos/ordinata/:sort should respond with status 400 if name, group, date or missing', async () => {
         let tempTasks = [
             await TaskModel.create({ nome: 'Task 4323', ID_utente: '64765870316275628c4870b9' }),
             await TaskModel.create({ nome: 'Task 1234', ID_utente: '64765870316275628c4870b9' }),
@@ -281,7 +275,7 @@ describe('API /api/v1/todos endpoints', () => {
         ];
 
         const response = await request(app)
-        .get('/api/v1/todos/ordinata/?sort=')
+        .get('/api/v1/todos/ordinata/invaldSort')
         .set('Authorization', token)
         .set('Accept', 'application/json');
 
@@ -289,7 +283,7 @@ describe('API /api/v1/todos endpoints', () => {
         expect(response.body.success).toBe(false);
     });
 
-    test('GET /api/v1/todos/ordinata should respond with status 200 and sorted tasks', async () => {
+    test('GET /api/v1/todos/ordinata/:sort should respond with status 200 and sorted tasks', async () => {
         // insert some tasks
         let tempTasks = [
             await TaskModel.create({ nome: 'Task 4323', ID_utente: '64765870316275628c4870b9' }),
@@ -300,7 +294,7 @@ describe('API /api/v1/todos endpoints', () => {
         tempTasks.sort((a, b) => a.nome.localeCompare(b.nome));
 
         // name
-        const response = await request(app).get('/api/v1/todos/ordinata/?sort=name')
+        const response = await request(app).get('/api/v1/todos/ordinata/name')
         .set('Accept', 'application/json')
         .set('Authorization', token)
       
@@ -309,14 +303,14 @@ describe('API /api/v1/todos endpoints', () => {
         expect(response.body.tasks.map(task => task.nome)).toEqual(tempTasks.map(task => task.nome));
 
         // group
-        const response2 = await request(app).get('/api/v1/todos/ordinata/?sort=group')
+        const response2 = await request(app).get('/api/v1/todos/ordinata/group')
         .set('Accept', 'application/json')
         .set('Authorization', token)
         
         expect(response2.status).toBe(200);
 
         // data
-        const response3 = await request(app).get('/api/v1/todos/ordinata/?sort=date')
+        const response3 = await request(app).get('/api/v1/todos/ordinata/date')
         .set('Accept', 'application/json')
         .set('Authorization', token)
 
@@ -324,20 +318,20 @@ describe('API /api/v1/todos endpoints', () => {
 
     });
       
-    test('GET /ordinata should respond with status 204 if no tasks exist', async () => {
-        const response = await request(app).get('/api/v1/todos/ordinata?sort=name')
+    test('GET/api/v1/todos/ordinata/:sort should respond with status 204 if no tasks exist', async () => {
+        const response = await request(app).get('/api/v1/todos/ordinata/name')
         .set('Accept', 'application/json')
         .set('Authorization', token)
       
         expect(response.status).toBe(204);
     });
 
-    test('GET /api/v1/todos/ordinata should respond with status 500 if an error occurs', async () => {
+    test('GET /api/v1/todos/ordinata/:sort should respond with status 500 if an error occurs', async () => {
         const findMock = jest.spyOn(TaskModel, 'find').mockImplementationOnce(() => {
             throw new Error('Errore generato dal mock');
         });
 
-        const response = await request(app).get('/api/v1/todos/ordinata?sort=name')
+        const response = await request(app).get('/api/v1/todos/ordinata/name')
         .set('Accept', 'application/json')
         .set('Authorization', token)
       
