@@ -275,7 +275,7 @@ describe('API /api/v1/todos endpoints', () => {
         ];
 
         const response = await request(app)
-        .get('/api/v1/todos/ordinata/invaldSort')
+        .get('/api/v1/todos/ordinata?sort=invalidSort')
         .set('Authorization', token)
         .set('Accept', 'application/json');
 
@@ -294,7 +294,7 @@ describe('API /api/v1/todos endpoints', () => {
         tempTasks.sort((a, b) => a.nome.localeCompare(b.nome));
 
         // name
-        const response = await request(app).get('/api/v1/todos/ordinata/name')
+        const response = await request(app).get('/api/v1/todos/ordinata?sort=name')
         .set('Accept', 'application/json')
         .set('Authorization', token)
       
@@ -303,14 +303,14 @@ describe('API /api/v1/todos endpoints', () => {
         expect(response.body.tasks.map(task => task.nome)).toEqual(tempTasks.map(task => task.nome));
 
         // group
-        const response2 = await request(app).get('/api/v1/todos/ordinata/group')
+        const response2 = await request(app).get('/api/v1/todos/ordinata?sort=group')
         .set('Accept', 'application/json')
         .set('Authorization', token)
         
         expect(response2.status).toBe(200);
 
         // data
-        const response3 = await request(app).get('/api/v1/todos/ordinata/date')
+        const response3 = await request(app).get('/api/v1/todos/ordinata?sort=date')
         .set('Accept', 'application/json')
         .set('Authorization', token)
 
@@ -319,7 +319,7 @@ describe('API /api/v1/todos endpoints', () => {
     });
       
     test('GET/api/v1/todos/ordinata/:sort should respond with status 204 if no tasks exist', async () => {
-        const response = await request(app).get('/api/v1/todos/ordinata/name')
+        const response = await request(app).get('/api/v1/todos/ordinata?sort=name')
         .set('Accept', 'application/json')
         .set('Authorization', token)
       
@@ -331,7 +331,7 @@ describe('API /api/v1/todos endpoints', () => {
             throw new Error('Errore generato dal mock');
         });
 
-        const response = await request(app).get('/api/v1/todos/ordinata/name')
+        const response = await request(app).get('/api/v1/todos/ordinata?sort=name')
         .set('Accept', 'application/json')
         .set('Authorization', token)
       

@@ -12,14 +12,14 @@ let api_url = '/api/v1/sessione';
 
 beforeAll(async () => {
     jest.setTimeout(8000);
-    await mongoose.connect(process.env.MONGODB_URI, {
+    await mongoose.connect(process.env.TEST_DB_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
     console.log('Connected to MongoDB');
 
     //delte all collections
-    await mongoose.connection.db.dropDatabase();
+    //await mongoose.connection.db.dropDatabase();
 
     server = app.listen(process.env.PORT || 8080);
 });

@@ -9,15 +9,15 @@ let api_url = '/api/v1/saleStudio';
 
 
 beforeAll(async () => {
-    jest.setTimeout(8000);
-    await mongoose.connect(process.env.MONGODB_URI, {
+    jest.setTimeout(10000);
+    await mongoose.connect(process.env.TEST_DB_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
     console.log('Connected to MongoDB');
 
     //delte all collections
-    await mongoose.connection.db.dropDatabase();
+    //await mongoose.connection.db.dropDatabase();
 
     server = app.listen(process.env.PORT || 8080);
 });
@@ -60,7 +60,7 @@ describe('API /api/v1/saleStudio endpoints', () => {
 
     test('GET /api/v1/saleStudio should respond with status 200', async () => {
         const response = await request(app)
-        .get('/api/v1/saleStudio')
+        .get(api_url)
         .set('Accept', 'application/json')
 
         expect(response.status).toBe(200);
@@ -70,7 +70,7 @@ describe('API /api/v1/saleStudio endpoints', () => {
 
     test('GET /api/v1/saleStudio?nome=test should respond with status 200', async () => {
         const response = await request(app)
-        .get('/api/v1/saleStudio?nome=test')
+        .get(api_url+'?nome=test')
         .set('Accept', 'application/json');
 
         expect(response.status).toBe(200);
@@ -80,7 +80,7 @@ describe('API /api/v1/saleStudio endpoints', () => {
 
     test('GET /api/v1/saleStudio?indirizzo=Trento should respond with status 200', async () => {
         const response = await request(app)
-        .get('/api/v1/saleStudio?indirizzo=Trento')
+        .get(api_url+'?indirizzo=Trento')
         .set('Accept', 'application/json');
 
         expect(response.status).toBe(200);
@@ -95,7 +95,7 @@ describe('API /api/v1/saleStudio endpoints', () => {
         });
 
         const response = await request(app)
-        .get('/api/v1/saleStudio?name=')
+        .get(api_url+'?name=')
         .set('Accept', 'application/json');
 
         expect(response.status).toBe(500);

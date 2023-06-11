@@ -18,7 +18,7 @@ beforeAll(async () => {
     console.log('Connected to MongoDB');
 
     //delte all collections
-    await mongoose.connection.db.dropDatabase();
+    //await mongoose.connection.db.dropDatabase();
 
 
     server = app.listen(process.env.PORT || 8080);
