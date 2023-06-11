@@ -749,7 +749,7 @@ paths:
                 description: Messaggio di errore
                 example: L'operazione di ripristino della password non è andata a buon fine.      
     
-  /autenticazione-esterna:
+  /profilo/autenticazione-esterna:
     post:
       summary: Autenticazione esterna
       description: >-
@@ -807,6 +807,362 @@ paths:
                 type: string
                 description: Token di accesso generato
                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFhZGJjNTQzLWU4MmMtNGIyZS1ilo
+      
+  /gruppi/membro:
+    get:
+      summary: Otteniene i dati del membro
+      security:
+        - JWT: []
+      description: Restituisce i dati relativi ai gruppi rispetto al membro che li richiede
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID dell'utente
+      responses:
+        200:
+          description: Successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                description: Esito della lettura dei gruppi
+                example: true
+              result:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: "1"
+                    name:
+                      type: string
+                      example: "Nome Gruppo"
+                    leader_id:
+                      type: string
+                      example: "2"
+                    leader_username:
+                      type: string
+                      example: "Username Leader"
+                    members:
+                      type: array
+                      items:
+                        type: string
+                      example: ["3", "4"]
+                    membersData:
+                      type: array
+                      items:
+                        type: array
+                        items:
+                          type: string
+                      example:
+                        - ["3", "Username Membro 1", "email1@example.com"]
+                        - ["4", "Username Membro 2", "email2@example.com"]
+        204:
+          description: Nessun risultato
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        500:
+          description: Errore durante la lettura dei dati
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                description: Esito della lettura
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore durante la lettura dei dati
+                
+  /gruppi/leader:
+    get:
+      summary: Otteniene i dati del leader
+      security:
+        - JWT: []
+      description: Restituisce i dati relativi al leader
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID dell'utente
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                description: Esito della lettura dei dati
+                example: true
+              result:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: "1"
+                    name:
+                      type: string
+                      example: "Nome Gruppo"
+                    leader_id:
+                      type: string
+                      example: "2"
+                    leader_username:
+                      type: string
+                      example: "Username Leader"
+                    members:
+                      type: array
+                      items:
+                        type: string
+                      example: ["3", "4"]
+                    membersData:
+                      type: array
+                      items:
+                        type: array
+                        items:
+                          type: string
+                      example:
+                        - ["3", "Username Membro 1", "email1@example.com"]
+                        - ["4", "Username Membro 2", "email2@example.com"]
+        204:
+          description: Nessun risultato
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        500:
+          description: Errore durante la lettura dei dati
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                description: Esito della lettura
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore durante la lettura dei dati
+                
+                
+  /gruppi:
+    post:
+      summary: Creazione di un gruppo
+      security:
+        - JWT: []
+      description: Crea un nuovo gruppo con il nome specificato dal body della richiesta
+      parameters:
+        - name: body
+          in: body
+          description: Oggetto contenente il nome del gruppo
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: Nome Gruppo
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+      responses:
+        201:
+          description: Gruppo creato con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                description: Esito della creazione del gruppo
+                example: true
+              message:
+                type: string
+                description: Messaggio di conferma
+                example: Gruppo creato con successo
+        400:
+          description: Parametri non validi
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                description: Esito della creazione del gruppo
+                example: false
+              message:
+                type: string
+                description: Messaggio di errrore
+                example: Errore, Parametri ricevuti non validi
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        500:
+          description: Errore durante la creazione del gruppo
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                description: Esito della creazione del gruppo
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore durante la creazione del gruppo
+                
+  /gruppi/task:
+    post:
+      summary: Assegnazione di una task
+      security:
+        - JWT: []
+      description: Assegna una nuova task ai membri specificati e invia loro una notifica via email
+      parameters:
+        - name: body
+          in: body
+          description: Oggetto contenente i dettagli della task
+          required: true
+          schema:
+            type: object
+            properties:
+              nome:
+                type: string
+                example: Nome Task
+              dataScadenza:
+                type: string
+                format: date
+                example: 2023-06-30
+              members:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: memberId1
+                    email:
+                      type: string
+                      example: email@example.com
+              nomeGruppo:
+                type: string
+                example: Nome Gruppo
+              ID_gruppo:
+                type: string
+                example: groupId1
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+      responses:
+        200:
+          description: Email di assegnazione task inviata con successo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito dell'assegnazione e invio email
+                example: true
+              message:
+                type: string
+                description: Messaggio di conferma
+                example: Email di assegnazione task inviata con successo!
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        400:
+          description: Parametri mancanti o non validi
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito dell'assegnazione e invio email
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: I parametri Nome task, nome gruppo o membri sono mancanti
+        500:
+          description: Errore durante l'invio delle email per l'assegnazione del task
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito dell'assegnazione e invio email
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'operazione di invio delle email per l'assegnazione del task non è andata a buon fine
                 
   /profiloData:
     get:
@@ -870,7 +1226,7 @@ paths:
               message:
                 type: string
                 description: Messaggio di errrore
-                example: "Errore durante la lettura dei dati"  
+                example: Errore durante la lettura dei dati  
                 
   /profiloData/username:
     put:
