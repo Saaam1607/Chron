@@ -4,10 +4,8 @@ const ListaSessioni = require("../components/chron/Chron.js")
 
 router.get('/', async (req, res) => {
 
-
     let listaSessioni = new ListaSessioni(req.id);
      
-    
 	try {
             //fetch data from listaSessioni
             const sessions = await listaSessioni.leggiStorico(req.query.arrowClick, req.query.isMonth);
@@ -23,5 +21,7 @@ router.get('/', async (req, res) => {
         res.status(500).json({ success: false, message: `L'operazione di lettura delle sessioni non è andata a buon fine. ${error.message}` });
 	    }
 });
+
+
 
 module.exports = router;

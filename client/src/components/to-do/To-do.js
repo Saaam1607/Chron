@@ -16,16 +16,16 @@ export default function Todo(){
     const [addButtonDisabled, setAddButtonDisabled] = useState(false);
     const [deleteButtonDisabled, setDeleteButtonDisabled] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(CookieManager.generateHeader() !== undefined);
-    const [sort, setsort] = useState("");
+    const [sortOption, setSortOption] = useState("");
 
 
     useEffect(() => {
         GetTodos();
-    }, [sort]);
+    }, [sortOption]);
 
     const GetTodos = async () => {
         try {
-            const url = sort ? `${api_base}/ordinata/${sort}` : `${api_base}/`;
+            const url = sortOption ? `${api_base}/ordinata?sort=${sortOption}` : `${api_base}/`;
             const res = await fetch(url, {
                 method: "GET",
                 headers: CookieManager.generateHeader(),
@@ -141,11 +141,10 @@ export default function Todo(){
         }
     };
 
-    const handlesortChange = (e) => {
+    const handleSortOptionChange = (e) => {
         const selectedOption = e.target.value;
         if (selectedOption !== "") {
-            setsort(selectedOption);
-            GetTodos();
+            setSortOption(selectedOption);
         } 
     };
 
@@ -160,7 +159,7 @@ export default function Todo(){
                         <Button variant="primary" className="add-button" onClick={() => setPopupActive(true)}>
                             Aggiungi Task
                         </Button>
-                        <Form.Select className="sort-select" value={sort} onChange={handlesortChange}>
+                        <Form.Select className="sort-select" value={sortOption} onChange={handleSortOptionChange}>
                             <option value="">Ordina per...</option>
                             <option value="name">Nome</option>
                             <option value="date">Deadline</option>

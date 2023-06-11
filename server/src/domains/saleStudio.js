@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
         return res.status(200).json(listaSaleStudio);
 
     } catch (error) {
-        return res.status(500).json({ error: "Errore durante la lettura delle sale studio" });
+        return res.status(500).json({success: false, error: "Errore durante la lettura delle sale studio" });
     }
 
 })

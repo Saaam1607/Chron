@@ -17,7 +17,6 @@ const jwt = require("jsonwebtoken");
 const { default: mongoose } = require('mongoose');
 
 router.get("/membro", bodyParser.json(), (req, res) => {
-
     try{
         GestoreDB.ottieniGruppiMembro(req.id)
             .then((results) => {
@@ -156,8 +155,9 @@ router.get("/leader", bodyParser.json(), (req, res) => {
     }
 })
 
-router.post("/", (req, res) => {
-    
+
+
+router.post("/", (req, res) => { 
     if (req.body.name == undefined || req.body.name == "" || req.id == undefined) {
         return res.status(400).json({success: "false", message: `Errore, Parametri ricevuti non validi: ${error}`})
     }
@@ -165,7 +165,7 @@ router.post("/", (req, res) => {
     try{
         GestoreDB.creaGruppo(req.body.name, req.id)
             .then(() => {
-                res.status(201).json({success: "true"})
+                res.status(201).json({success: "true", message: "Gruppo creato con successo"})
             })
                 .catch((error) => {
                     res.status(500).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
@@ -173,14 +173,15 @@ router.post("/", (req, res) => {
     } catch (error) {
         res.status(500).json({success: "false", message: `Errore durante la creazione del gruppo: ${error}`})
     }
-
 })
+
+
 
 router.post("/task", async (req, res) => {
     const { nome, dataScadenza, members, nomeGruppo, ID_gruppo } = req.body;
 
     if (!nome || !members || !nomeGruppo) {
-        return res.status(400).json({ success: false, message: `I parametri "Nome task", "nome gruppo" o "membri" mancanti` });
+        return res.status(400).json({ success: false, message: `I parametri Nome task, nome gruppo o membri sono mancanti` });
     }
 
     try {
@@ -236,12 +237,14 @@ router.get("/verifica-task/:token", async (req, res) => {
     }
 });
 
+
+
 router.delete('/task-assegnata', async (req, res) => {
     console.log("DELETE /task-assegnata");
     const {token} = req.body;
     
     if (!token) {
-        return res.status(400).json({ success: false, message: `Il parametro "token" mancante!` });
+        return res.status(400).json({ success: false, message: `Il parametro token è mancante!` });
     }
     
     try {
@@ -255,12 +258,14 @@ router.delete('/task-assegnata', async (req, res) => {
     }
 });
 
+
+
 router.post('/task-assegnata', async (req, res) => {
     console.log("POST /task-assegnata");
     const {token} = req.body;
 
     if (!token) {
-        return res.status(400).json({ success: false, message: `Il parametro "token" mancante!` });
+        return res.status(400).json({ success: false, message: `Il parametro token mancante!` });
     }
 
     try {
@@ -283,6 +288,8 @@ router.post('/task-assegnata', async (req, res) => {
     }
 });
 
+
+
 router.put("/", (req, res) => {
     
     if (req.body.codice == undefined || req.id == undefined) {
@@ -296,7 +303,7 @@ router.put("/", (req, res) => {
     try{
         GestoreDB.uniscitiGruppo(req.body.codice, req.id)
             .then(() => {
-                res.status(201).json({success: "true"})
+                res.status(201).json({success: "true", message: "Unione completata con successo"})
             })
                 .catch((error) => {
                     switch (error.stato) {
@@ -317,8 +324,9 @@ router.put("/", (req, res) => {
 
 })
 
-router.delete("/:idGruppo", async (req, res) => {
 
+
+router.delete("/:idGruppo", async (req, res) => {
     try {
 
         // controllo che ci sia l'id del gruppo e l'id dell'utente
@@ -360,10 +368,9 @@ router.delete("/:idGruppo", async (req, res) => {
     }
 })
 
+
+
 router.delete("/:idGruppo/membro/:idMembro", async (req, res) => {
-
-    console.log("SONO DENTRO RIMOZIONE MEMBRO DA GRUPPO")
-
     try {
 
         // 400 Bad Request: La richiesta non è valida o mancano parametri necessari. Ad esempio, potrebbe mancare l'ID del gruppo da eliminare.
@@ -407,6 +414,8 @@ router.delete("/:idGruppo/membro/:idMembro", async (req, res) => {
         res.status(500).json({ success: false, message: `Errore durante l'eliminazione del gruppo: ${error}` });
     }
 })
+
+
 
 router.delete("/:idGruppo/abbandono", async (req, res) => {
     try {
@@ -450,51 +459,6 @@ router.delete("/:idGruppo/abbandono", async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ success: false, message: `Errore durante l'abbandono: ${error}` });
-    }
-})
-
-router.put("/:idGruppo/:idMembro", async (req, res) => {
-    try {
-
-        // 400 Bad Request: La richiesta non è valida o mancano parametri necessari. Ad esempio, potrebbe mancare l'ID del gruppo da eliminare.
-        // controllo che ci sia l'id del gruppo e l'id dell'utente
-        if (req.params.idGruppo == undefined || req.params.idMembro == undefined || req.id == undefined) {
-            return res.status(400).json({success: "false", message: `Errore, parametri assenti o non validi`})
-        }
-        // controllo che l'id del gruppo sia un ObjectId
-        if (!GestoreDB.checkIfObjectId(req.params.idGruppo) || !GestoreDB.checkIfObjectId(req.params.idMembro)) {
-            return res.status(400).json({success: "false", message: `Errore, formato del codice o del membro non valido`})
-        }
-
-        // 404 Not Found: Il gruppo specificato non è stato trovato. Potrebbe non esistere o essere già stato eliminato in precedenza.
-        // controllo sull'esistenza del gruppo
-        const esistenzaGruppo = await GestoreDB.controllaEsistenzaGruppo(req.params.idGruppo);
-        if (!esistenzaGruppo) {
-            return res.status(404).json({ success: false, message: `Il gruppo specificato non esiste!` });
-        }
-        // controllo che il membro faccia parte del gruppo
-        const esistenzaMembro = await GestoreDB.controllaMembroInGruppo(req.params.idMembro, req.params.idGruppo);
-        if (!esistenzaMembro) {
-            return res.status(404).json({ success: false, message: `Il membro specificato non esiste o non è membro del gruppo indicato!` });
-        }
-
-        // 403 Forbidden: L'utente è autenticato, ma non ha i privilegi necessari per eliminare il gruppo.
-        // ricerca del leader del gruppo (ID) e verifica che sia l'utente che ha richiesto l'eliminazione
-        let leader = await GestoreDB.getLeaderIDfromGroupID(req.params.idGruppo)
-        if (leader){
-            leader = leader.toString();
-            const utente_id = req.id
-            if (leader !== utente_id){
-                return res.status(403).json({success: "false", message: `L'utente che ha richiesto la rimozione del membro non è il leader!`})
-            }
-        }
-
-        // elimino il gruppo
-        await GestoreDB.rimuoviMembroDaGruppo(req.params.idMembro, req.params.idGruppo)
-        return res.status(204).end()
-
-    } catch (error) {
-        res.status(500).json({ success: false, message: `Errore durante l'eliminazione del gruppo: ${error}` });
     }
 })
 
