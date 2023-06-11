@@ -1,6 +1,6 @@
 const { before } = require('node:test');
 const ListaSessioni = require('../src/components/chron/Chron.js');
-const GestoreDB = require('../src/components/gestoreDB/gestoreDB');
+const GestoreDB = require('../src/components/gestoreDB/gestoreDB.js');
 
 jest.mock('../src/components/gestoreDB/gestoreDB'); // Mocking the GestoreDB module
 
@@ -139,11 +139,6 @@ describe('ListaSessioni', () => {
       );
       expect(result).toBe((100-135)/135*100); // You can provide the expected value based on your calculation logic
     });
-
-    // it('should calculate the rate of 100', async () => {
-    //   const result = await listaSessioni.calcolaTassoSettimana(new Date('2023-06-05'), 100);
-    //   expect(result).toBe(100);
-    // });
   });
 
 
