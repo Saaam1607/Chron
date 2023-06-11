@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken")
 const leggiToken = require("./leggiToken")
 
 const timer = require("../domains/timer")
-const timerSessione = require("../domains/Timersessione")
+const timerSessione = require("../domains/timerSessione")
 const gruppi = require("../domains/gruppi")
 const profilo = require("../domains/profilo")
 const profiloData = require("../domains/profiloData")
