@@ -116,8 +116,8 @@ router.delete('/', async (req, res) => {
 
 
 
-router.get('/ordinata/:sort', async (req, res) => {
-    console.log("GET /ordinata/:sort");
+router.get('/ordinata/', async (req, res) => {
+    console.log("GET /ordinata/");
     const listaTask = new ListaTasks(req.id);
 
     try {
