@@ -7,5 +7,4 @@ module.exports = {
     "coverageDirectory": "coverage",
     "coverageReporters": ["text", "html"],
     "testEnvironment": "node",
-    "detectOpenHandles": true,
 }
