@@ -268,7 +268,6 @@ paths:
                 example: Errore durante la modifica delle impostazioni
                 
   /sessione/salva-sessione:
-    x-summary: Salva o crea una sessione
     put:
       summary: api/v1/sessione/
       tags:
@@ -336,6 +335,70 @@ paths:
                 type: string
                 description: Messaggio di errore
                 example: Non è stato possibile salvare la sessione. Errore del server.
+                
+  /:
+    get:
+      summary: Ottieni elenco sessioni
+      tags:
+        - Analisi dati
+      security:
+        - JWT: []
+      parameters:
+        - name: arrowClick
+          in: query
+          description: Indicatore di clic su freccia (true o false)
+          required: false
+          type: boolean
+        - name: isMonth
+          in: query
+          description: Indicatore di mese (true o false)
+          required: false
+          type: boolean
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successo nell'ottenere l'elenco delle sessioni
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito lettura delle sessioni
+                example: true
+              sessions:
+                type: array
+                items:
+                  $ref: "#/definitions/Session"
+        204:
+          description: Non ci sono sessioni da mostrare
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito lettura delle sessioni
+                example: true
+              message:
+                type: string
+                description: Messaggio di conferma
+                example: Non ci sono sessioni da mostrare
+        500:
+          description: Errore durante la lettura delle sessioni
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito lettura delle sessioni
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: L'operazione di lettura delle sessioni non è andata a buon fine
 
   /profilo/autenticazione:
     post:
@@ -2599,3 +2662,19 @@ definitions:
       email:
         type: string
         description: Email dell'utente
+  Session:
+    type: object
+    properties:
+      sessionId:
+        type: string
+        example: "session123"
+      sessionName:
+        type: string
+        example: "Session 1"
+      sessionDate:
+        type: string
+        format: date-time
+        example: "2023-06-11T12:00:00Z"
+      duration:
+        type: number
+        example: 60
