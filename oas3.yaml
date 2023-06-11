@@ -188,6 +188,7 @@ paths:
                 type: string
                 description: Messaggio di errore
                 example: Errore nella lettura delle impostazioni
+                
     put:
       summary: Modifica le impostazioni del timer Pomodoro
       description: Modifica le impostazioni del timer Pomodoro con i nuovi valori specificati.
@@ -259,7 +260,7 @@ paths:
                 example: Errore durante la modifica delle impostazioni
                 
   /timer/salva-sessione:
-    x-summary: Salva o crea sessione
+    x-summary: Salva o crea una sessione
     put:
       summary: api/v1/sessione/
       security:
@@ -284,6 +285,7 @@ paths:
                 type: number
                 description: Tempo di studio espresso in minuti
                 example: 120
+              
       responses:
         201:
           description: Sessione salvata con successo.
@@ -820,15 +822,6 @@ paths:
           description: token
           required: true
           type: string
-        - in: body
-          name: body
-          required: true
-          schema:
-            type: object
-            properties:
-              id:
-                type: string
-                description: ID dell'utente
       responses:
         200:
           description: Successo
@@ -891,7 +884,7 @@ paths:
             type: object
             properties:
               success:
-                type: string
+                type: boolean
                 description: Esito della lettura
                 example: false
               message:
@@ -906,15 +899,6 @@ paths:
         - JWT: []
       description: Restituisce i dati relativi al leader
       parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            type: object
-            properties:
-              id:
-                type: string
-                description: ID dell'utente
         - name: Authorization
           in: header
           description: token
@@ -927,7 +911,7 @@ paths:
             type: object
             properties:
               success:
-                type: string
+                type: boolean
                 description: Esito della lettura dei dati
                 example: true
               result:
@@ -982,7 +966,7 @@ paths:
             type: object
             properties:
               success:
-                type: string
+                type: boolean
                 description: Esito della lettura
                 example: false
               message:
@@ -1000,7 +984,7 @@ paths:
       parameters:
         - name: body
           in: body
-          description: Oggetto contenente il nome del gruppo
+          description: Oggetto contenente il nome del gruppo e l'id del membro
           required: true
           schema:
             type: object
@@ -1020,7 +1004,7 @@ paths:
             type: object
             properties:
               success:
-                type: string
+                type: boolean
                 description: Esito della creazione del gruppo
                 example: true
               message:
@@ -1033,7 +1017,7 @@ paths:
             type: object
             properties:
               success:
-                type: string
+                type: boolean
                 description: Esito della creazione del gruppo
                 example: false
               message:
@@ -1059,13 +1043,114 @@ paths:
             type: object
             properties:
               success:
-                type: string
+                type: boolean
                 description: Esito della creazione del gruppo
                 example: false
               message:
                 type: string
                 description: Messaggio di errore
                 example: Errore durante la creazione del gruppo
+                
+    put:
+      summary: Unione ad un gruppo
+      security:
+        - JWT: []
+      description: Permette a un utente di unirsi a un gruppo utilizzando un codice di accesso
+      parameters:
+        - name: body
+          in: body
+          description: Oggetto contenente il codice di accesso al gruppo e l'id del membro
+          required: true
+          schema:
+            type: object
+            properties:
+              codice:
+                type: string
+                example: groupId1
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+      responses:
+        201:
+          description: Unione al gruppo completata con succeso
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito dell'unione al gruppo
+                example: true
+              message:
+                type: string
+                description: Messaggio di conferma
+                example: Unione completata con successo
+        400:
+          description: Parametri mancanti o non validi
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito dell'unione al gruppo
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore, parametri assenti o non validi
+        401:
+          description: Azione non autorizzata
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Indica se si è verificato un errore a causa dell'autorizzazione non concessa
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Utente non autenticato, codice non valido
+        404:
+          description: Il gruppo non esiste
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito dell'unione al gruppo
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Il gruppo non esiste!
+        409:
+          description: L'utente è già un componente del gruppo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito dell'unione al gruppo
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Sei già un componente di questo gruppo!
+        500:
+          description: Errore durante l'unione al gruppo
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: Esito dell'unione al gruppo
+                example: false
+              message:
+                type: string
+                description: Messaggio di errore
+                example: Errore durante l'unione al gruppo
                 
   /gruppi/task:
     post:
@@ -1164,12 +1249,82 @@ paths:
                 description: Messaggio di errore
                 example: L'operazione di invio delle email per l'assegnazione del task non è andata a buon fine
                 
+  # /{idGruppo}:
+  #   delete:
+  #     summary: Eliminare un gruppo
+  #     description: Permette di eliminare un gruppo esistente utilizzando l'ID del gruppo
+  #     produces:
+  #       - application/json
+  #     parameters:
+  #       - name: idGruppo
+  #         in: path
+  #         description: ID del gruppo da eliminare
+  #         required: true
+  #         type: string
+  #         example: "groupId1"
+  #     responses:
+  #       200:
+  #         description: Gruppo eliminato con successo
+  #         schema:
+  #           type: object
+  #           properties:
+  #             success:
+  #               type: boolean
+  #               example: true
+  #             message:
+  #               type: string
+  #               example: "Gruppo eliminato correttamente"
+  #       400:
+  #         description: Parametri mancanti o non validi
+  #         schema:
+  #           type: object
+  #           properties:
+  #             success:
+  #               type: boolean
+  #               example: false
+  #             message:
+  #               type: string
+  #               example: "Errore, parametri assenti o non validi"
+  #       404:
+  #         description: Il gruppo specificato non esiste
+  #         schema:
+  #           type: object
+  #           properties:
+  #             success:
+  #               type: boolean
+  #               example: false
+  #             message:
+  #               type: string
+  #               example: "Il gruppo specificato non esiste!"
+  #       403:
+  #         description: L'utente che ha richiesto l'eliminazione non è il leader del gruppo
+  #         schema:
+  #           type: object
+  #           properties:
+  #             success:
+  #               type: boolean
+  #               example: false
+  #             message:
+  #               type: string
+  #               example: "L'utente che ha richiesto l'eliminazione del gruppo non è il leader!"
+  #       500:
+  #         description: Errore durante l'eliminazione del gruppo
+  #         schema:
+  #           type: object
+  #           properties:
+  #             success:
+  #               type: boolean
+  #               example: false
+  #             message:
+  #               type: string
+  #               example: "Errore durante l'eliminazione del gruppo"
+                
   /profiloData:
     get:
-      summary: Ottieni i dati dall'ID
+      summary: Ottieni i dati dell'utente
       security:
         - JWT: []
-      description: Restituisce i dati corrispondenti all'ID fornito
+      description: Restituisce i dati del profilo dell'utente
       parameters:
         - name: Authorization
           in: header
@@ -1183,7 +1338,7 @@ paths:
             type: object
             properties:
               success:
-                type: string
+                type: boolean
                 description: Esito della lettura dei dati
                 example: true
               data:
@@ -1194,13 +1349,13 @@ paths:
             type: object
             properties:
               success:
-                type: string
+                type: boolean
                 description: Esito della lettura dei dati
                 example: false
               message:
                 type: string
                 description: Messaggio di errrore
-                example: "Errore, ID non trovato"
+                example: Errore, ID non trovato
         401:
           description: Azione non autorizzata
           schema:
@@ -1220,7 +1375,7 @@ paths:
             type: object
             properties:
               success:
-                type: string
+                type: boolean
                 description: Esito della lettura dei dati
                 example: false
               message:
@@ -1245,9 +1400,6 @@ paths:
           schema:
             type: object
             properties:
-              id:
-                type: string
-                description: ID dell'utente
               password:
                 type: string
                 description: Password dell'utente
@@ -1631,10 +1783,10 @@ paths:
                 example: L'operazione di creazione della task non è andata a buon fine
     
     put:
-      summary: Contrassegnare un task
+      summary: Contrassegnazinoe di una task
       security:
         - JWT: []
-      description: Contrassegna un task specificato dall'ID.
+      description: Contrassegna una task specificata dall'ID.
       parameters:
         - name: Authorization
           in: header
@@ -1803,7 +1955,7 @@ paths:
           required: true
           type: string
         - name: sort
-          in: query
+          in: formData
           description: Parametro di ordinamento delle task.
           required: true
           type: string
