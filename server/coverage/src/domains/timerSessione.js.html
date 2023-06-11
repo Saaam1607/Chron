@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">43.47% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/23</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">43.47% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/23</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -122,31 +122,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -166,32 +166,32 @@ const verificaAutenticazione = require("./../routes/verificaAutenticazione") // 
 &nbsp;
 &nbsp;
 &nbsp;
-router.put('/', verificaAutenticazione, <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >    try{</span>
+router.put('/', verificaAutenticazione, (req, res) =&gt; {
+    try{
 &nbsp;
-        const minuti = <span class="cstat-no" title="statement not covered" >req.body.minuti;</span>
-        const date = <span class="cstat-no" title="statement not covered" >new Date(req.body.date);</span>
+        const minuti = req.body.minuti;
+        const date = new Date(req.body.date);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (!minuti || typeof minuti !== 'number' || !date || isNaN(Date.parse(date))) {</span>
-<span class="cstat-no" title="statement not covered" >            return res.status(400).json({ success: false, message: 'Errore, parametri mancanti o non validi' });</span>
+        if (!minuti || typeof minuti !== 'number' || !date || isNaN(Date.parse(date))) {
+            return res.status(400).json({ success: false, message: 'Errore, parametri mancanti o non validi' });
         }
         
-        const tempo = <span class="cstat-no" title="statement not covered" >new Tempo();</span>
-<span class="cstat-no" title="statement not covered" >        tempo.aggiungiTempo(minuti);</span>
+        const tempo = new Tempo();
+        tempo.aggiungiTempo(minuti);
 &nbsp;
-        const sessione = <span class="cstat-no" title="statement not covered" >new Sessione(new Data(date.getDate(), date.getMonth() + 1,date.getFullYear()), tempo, req.id);</span>
+        const sessione = new Sessione(new Data(date.getDate(), date.getMonth() + 1,date.getFullYear()), tempo, req.id);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        GestoreDB.salvaSessione(sessione)</span>
-            .then(<span class="fstat-no" title="function not covered" >(r</span>esult) =&gt; {
-<span class="cstat-no" title="statement not covered" >                res.status(result.stato).json({ success: true, message: 'Sessione salvata con successo' });</span>
+        GestoreDB.salvaSessione(sessione)
+            .then((result) =&gt; {
+                res.status(result.stato).json({ success: true, message: 'Sessione salvata con successo' });
             })
-                .catch(<span class="fstat-no" title="function not covered" >er</span>ror =&gt; {
-<span class="cstat-no" title="statement not covered" >                    console.error(`Non è stato possibile salvare la sessione. ${error.message}`);</span>
-<span class="cstat-no" title="statement not covered" >                    res.status(500).json({ success: false, message: error.message });</span>
+                .catch(error =&gt; {
+                    console.error(`Non è stato possibile salvare la sessione. ${error.message}`);
+                    res.status(500).json({ success: false, message: error.message });
                 });
 &nbsp;
     } catch (err){
-<span class="cstat-no" title="statement not covered" >        res.status(500).json({success: false, message: "Errore interno durante il salvataggio della sessione"})</span>
+        res.status(500).json({success: false, message: "Errore interno durante il salvataggio della sessione"})
     }
 });
 &nbsp;
@@ -205,7 +205,7 @@ module.exports = router
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-06-11T17:55:05.159Z
+                at 2023-06-11T18:27:32.381Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

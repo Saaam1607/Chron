@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">6.25% </span>
+                <span class="strong">81.25% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/16</span>
+                <span class='fraction'>13/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>3/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>4/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">6.25% </span>
+                <span class="strong">81.25% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/16</span>
+                <span class='fraction'>13/16</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -105,10 +105,10 @@
 <a name='L40'></a><a href='#L40'>40</a>
 <a name='L41'></a><a href='#L41'>41</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -120,22 +120,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -144,11 +144,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">class Data {
-<span class="fstat-no" title="function not covered" >    co</span>nstructor(giorno, mese, anno) {
-      const dataCorrente = <span class="cstat-no" title="statement not covered" >new Date();</span>
-<span class="cstat-no" title="statement not covered" >      this.giorno = giorno || dataCorrente.getDate();</span>
-<span class="cstat-no" title="statement not covered" >      this.mese = mese || dataCorrente.getMonth() + 1;</span>
-<span class="cstat-no" title="statement not covered" >      this.anno = anno || dataCorrente.getFullYear();</span>
+    constructor(giorno, mese, anno) {
+      const dataCorrente = new Date();
+      this.giorno = giorno || <span class="branch-1 cbranch-no" title="branch not covered" >dataCorrente.getDate();</span>
+      this.mese = mese || <span class="branch-1 cbranch-no" title="branch not covered" >dataCorrente.getMonth() + 1;</span>
+      this.anno = anno || <span class="branch-1 cbranch-no" title="branch not covered" >dataCorrente.getFullYear();</span>
     }
   
 <span class="fstat-no" title="function not covered" >    in</span>izializzaDataCorrente(giorno, mese, anno) {
@@ -159,23 +159,23 @@
   }
   
   class Tempo {
-<span class="fstat-no" title="function not covered" >    co</span>nstructor() {
-<span class="cstat-no" title="statement not covered" >      this.ore = 0;</span>
-<span class="cstat-no" title="statement not covered" >      this.minuti = 0;</span>
+    constructor() {
+      this.ore = 0;
+      this.minuti = 0;
     }
   
-<span class="fstat-no" title="function not covered" >    ag</span>giungiTempo(minuti) {
-      const totaleMinuti = <span class="cstat-no" title="statement not covered" >this.minuti + minuti;</span>
-<span class="cstat-no" title="statement not covered" >      this.ore += Math.floor(totaleMinuti / 60);</span>
-<span class="cstat-no" title="statement not covered" >      this.minuti = totaleMinuti % 60;</span>
+    aggiungiTempo(minuti) {
+      const totaleMinuti = this.minuti + minuti;
+      this.ore += Math.floor(totaleMinuti / 60);
+      this.minuti = totaleMinuti % 60;
     }
   }
   
   class Sessione {
-<span class="fstat-no" title="function not covered" >    co</span>nstructor(data, tempo, ID_utente) {
-<span class="cstat-no" title="statement not covered" >      this.data = data;</span>
-<span class="cstat-no" title="statement not covered" >      this.tempo = tempo;</span>
-<span class="cstat-no" title="statement not covered" >      this.ID_utente = ID_utente;</span>
+    constructor(data, tempo, ID_utente) {
+      this.data = data;
+      this.tempo = tempo;
+      this.ID_utente = ID_utente;
     }
   }
   
@@ -190,7 +190,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-06-11T17:55:05.159Z
+                at 2023-06-11T18:27:32.381Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

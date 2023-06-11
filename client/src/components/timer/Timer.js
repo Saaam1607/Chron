@@ -108,7 +108,7 @@ export default function Timer(){
     };
 
     const salvaSessione = async (tempo) =>{
-        fetch('api/v1/sessione/salva-sessione', {
+        fetch('api/v1/sessione', {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
