@@ -31,9 +31,7 @@ router.get("/", (req, res) => {
 
 
 router.put("/username", bodyParser.json(), async (req, res) => {
-
     try {
-
         // controllo corrispondenza id password
         const esitoControlloPassword = await GestoreDB.controllaCredenziali(req.id, req.body.password)
         if (!esitoControlloPassword) {
@@ -49,13 +47,10 @@ router.put("/username", bodyParser.json(), async (req, res) => {
     } catch (error) {
         return res.status(500).json({success: false, message: `Errore durante l'aggiornamento dello username: ${error}` })
     }
-
 })
 
 router.put("/email", bodyParser.json(), async (req, res) => {
-
     try {
-
         // controllo corrispondenza id password
         const esitoControlloPassword = await GestoreDB.controllaCredenziali(req.id, req.body.password)
         if (!esitoControlloPassword) {
@@ -71,24 +66,23 @@ router.put("/email", bodyParser.json(), async (req, res) => {
         await GestoreDB.salvaToken(token);
 
         // ritorno esito positivo
-        res.status(200).json({ success: true, message: `Email di "conferma modifica" inviata con successo!` });
+        res.status(200).json({ success: true, message: `Email di conferma modifica inviata con successo!` });
 
     } catch (error) {
         return res.status(500).json({success: false, message: `Errore durante l'invio dell'email: ${error}` })
     }
-
 })
 
 router.put("/verifica-email", bodyParser.json(), async (req, res) => {
     const { token } = req.body;
 
     if(!await GestoreDB.checkIfTokenExist(token)) {
-      return res.status(409).json({ success: false, message: `l'email già aggiornata o token non valido!` });
+      return res.status(409).json({ success: false, message: `L'email già aggiornata o token non valido!` });
     }
     
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (error, decodedToken) => {
         if (error) {
-          return res.status(401).json({ success: false, message: `Token di verifica non valido o scaduto.` });
+          return res.status(401).json({ success: false, message: `Token di verifica non valido o scaduto` });
         }
     
         const { email, id } = decodedToken;
@@ -99,7 +93,7 @@ router.put("/verifica-email", bodyParser.json(), async (req, res) => {
 
             await GestoreDB.deleteToken(token);
     
-            res.status(201).json({ success: true, message: `l'email è stata aggiornata con successo.` });
+            res.status(201).json({ success: true, message: `L'email è stata aggiornata con successo` });
     
         } catch (error) {
             res.status(500).json({ success: false, message: `L'operazione di aggiornamento dell'email non è andato a buon fine. ${error.message}` });
@@ -108,9 +102,7 @@ router.put("/verifica-email", bodyParser.json(), async (req, res) => {
 });
 
 router.put("/password", bodyParser.json(), async (req, res) => {
-
     try {
-
         // controllo corrispondenza id password
         const esitoControlloPassword = await GestoreDB.controllaCredenziali(req.id, req.body.password)
         if (!esitoControlloPassword) {
@@ -126,7 +118,6 @@ router.put("/password", bodyParser.json(), async (req, res) => {
     } catch (error) {
         return res.status(500).json({success: false, message: `Errore durante l'aggiornamento della password: ${error}` })
     }
-
 })
 
 
