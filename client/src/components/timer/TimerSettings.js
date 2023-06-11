@@ -73,16 +73,16 @@ export default function TimerSettings({readTimerData, onClose}){
             .then(response => {
                 if (response.ok) {
                     return response.json();
-                } else if (response.status === 500){
+                } else {
                     throw new Error("Errore durante la lettura delle impostazioni");
                 }
             })
                 .then(data => {
                     aggiornaImpostazioni(data.durataPomodoro, data.durataPausaCorta, data.durataPausaLunga, data.pomodoriPerSessione);
                 })
-                .catch(error => {
-                    alert(error.message);
-                })
+                    .catch(error => {
+                        alert(error.message);
+                    })
     }
 
 
@@ -113,7 +113,7 @@ export default function TimerSettings({readTimerData, onClose}){
         })
             .then(response => {
                 if (response.ok) {
-                } else if (response.status === 500){
+                } else {
                     throw new Error("Errore durante la modifica delle impostazioni");
                 }
             })
@@ -121,9 +121,9 @@ export default function TimerSettings({readTimerData, onClose}){
                     readTimerData();
                     handleAlert ("Modifica salvata", false, "success", 1000);
                 })
-                .catch(error => {
-                    alert(error.message);
-                })
+                    .catch(error => {
+                        alert(error.message);
+                    })
     };
   
 

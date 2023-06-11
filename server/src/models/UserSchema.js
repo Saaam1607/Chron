@@ -1,5 +1,3 @@
-const GestoreDB = require("../components/gestoreDB/gestoreDB")
-
 const mongoose = require("mongoose")
 
 let UserSchema = new mongoose.Schema({
